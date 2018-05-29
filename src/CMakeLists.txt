@@ -1,5 +1,7 @@
 # Define sources
 set(integral_sources
+    integral_core.f90
+    integral_quadpack.f90
 )
 
 # Define the library
