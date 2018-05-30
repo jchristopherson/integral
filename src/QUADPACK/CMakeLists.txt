@@ -36,4 +36,5 @@ set(quadpack_src
     dqagi.f
     dqagp.f
     dqagpe.f
+    xerror.f
 )
