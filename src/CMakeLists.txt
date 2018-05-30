@@ -1,5 +1,7 @@
 # Define sources
+add_subdirectory(QUADPACK)
 set(integral_sources
+    ${quadpack_src}
     integral_core.f90
     integral_quadpack.f90
 )
