@@ -1,6 +1,6 @@
 # CMake project file for INTEGRAL
 cmake_minimum_required(VERSION 3.7)
-project(integral Fortran)
+project(integral C CXX Fortran)
 
 # Define version information
 set(INTEGRAL_MAJOR_VERSION 1)
