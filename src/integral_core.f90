@@ -6,14 +6,33 @@ module integral_core
     implicit none
     private
     public :: INT_OUT_OF_MEMORY_ERROR
+    public :: INT_COUNT_EXCEEDED_ERROR
+    public :: INT_ROUND_OFF_ERROR
+    public :: INT_INTEGRAND_BEHAVIOR_ERROR
+    public :: INT_CONVERGENCE_ERROR
+    public :: INT_DIVERGENT_ERROR
+    public :: INT_INVALID_INPUT_ERROR
     public :: integrand
     public :: integration_controls
     public :: integration_behavior
     public :: integrate_adaptive
 
 ! ------------------------------------------------------------------------------
-    !> @brief
+    !> @brief An error flag indicating insufficient memory.
     integer(int32), parameter :: INT_OUT_OF_MEMORY_ERROR = 1
+    !> @brief An error flag indicates a specific parameter count has been
+    !!  exceeded.
+    integer(int32), parameter :: INT_COUNT_EXCEEDED_ERROR = 2
+    !> @brief An error flag indicating round off error has become an issue.
+    integer(int32), parameter :: INT_ROUND_OFF_ERROR = 3
+    !> @brief An error flag indicating difficult integrand behavior.
+    integer(int32), parameter :: INT_INTEGRAND_BEHAVIOR_ERROR = 4
+    !> @brief An error flag indicating convergence issues.
+    integer(int32), parameter :: INT_CONVERGENCE_ERROR = 5
+    !> @brief An error flag indicating divergent behavior.
+    integer(int32), parameter :: INT_DIVERGENT_ERROR = 6
+    !> @brief An error flag indicating an invalid input.
+    integer(int32), parameter :: INT_INVALID_INPUT_ERROR = 7
 
 ! ------------------------------------------------------------------------------
     interface
