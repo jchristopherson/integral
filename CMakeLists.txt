@@ -120,11 +120,11 @@ add_subdirectory(src)
 # ------------------------------------------------------------------------------
 # TESTS
 # ------------------------------------------------------------------------------
-# option(BUILD_INTEGRAL_TESTS "Build INTEGRAL tests?" OFF)
-# if (BUILD_INTEGRAL_TESTS)
-#     # Inform the user we're building the tests
-#     message(STATUS "Building INTEGRAL tests.")
-#
-#     # Build and run the tests
-#     add_subdirectory(tests)
-# endif()
+option(BUILD_INTEGRAL_TESTS "Build INTEGRAL tests?" OFF)
+if (BUILD_INTEGRAL_TESTS)
+    # Inform the user we're building the tests
+    message(STATUS "Building INTEGRAL tests.")
+
+    # Build and run the tests
+    add_subdirectory(tests)
+endif()

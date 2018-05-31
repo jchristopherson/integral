@@ -43,6 +43,8 @@ set(quadpack_sources
     QUADPACK/dqagp.f
     QUADPACK/dqagpe.f
     QUADPACK/xerror.f90
+    QUADPACK/d1mach.f
+    QUADPACK/dgtsl.f
 )
 
 # Include the QUADPACK sources
