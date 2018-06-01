@@ -11,7 +11,9 @@ contains
         ! Local Variables
         class(errors), pointer :: errmgr
         type(errors), target :: deferr
-        integer(int32) :: flag, liwork, lwork
+        integer(int32) :: flag, liwork, lwork, n
+        logical :: use_breakpoints
+        real(real64), allocatable, dimension(:) :: breakpoints
 
         ! Initialization
         if (present(err)) then
@@ -19,10 +21,21 @@ contains
         else
             errmgr => deferr
         end if
+        use_breakpoints = .false.
+        if (this%get_use_breakpoints()) then
+            breakpoints = this%get_breakpoints()
+            if (allocated(breakpoints)) use_breakpoints = .true.
+        end if
 
         ! Allocate memory
-        liwork = this%get_max_subintervals()
-        lwork = 4 * liwork
+        if (use_breakpoints) then
+            n = size(breakpoints) + 2
+            liwork = max(2 * this%get_max_subintervals() + n, 3 * n - 2)
+            lenw = liwork * 2 - n
+        else
+            liwork = this%get_max_subintervals()
+            lwork = 4 * liwork
+        end if
 
         if (.not.allocated(this%m_iwork)) then
             allocate(this%m_iwork(liwork), stat = flag)
@@ -62,11 +75,13 @@ contains
         real(real64) :: rst
 
         ! Local Variables
-        integer(int32) :: ier, neval, limit, lenw, last
+        integer(int32) :: ier, neval, limit, lenw, last, leniw, npts, flag
         real(real64) :: abserr, epsabs, epsrel
         class(errors), pointer :: errmgr
         type(errors), target :: deferr
         character(len = 256) :: errmsg
+        logical :: usedqagp
+        real(real64), allocatable, dimension(:) :: breakpoints, pts
 
         ! Initialization
         if (present(err)) then
@@ -74,17 +89,41 @@ contains
         else
             errmgr => deferr
         end if
+
+        usedqagp = .false.
+        if (this%get_use_breakpoints()) then
+            breakpoints = this%get_breakpoints()
+            if (allocated(breakpoints)) then
+                npts = size(breakpoints) + 2
+                allocate(pts(npts), stat = flag)
+                if (flag /= 0) then
+                    call errmgr%report_error("ai_integrate", &
+                        "Insufficient memory available.", &
+                        INT_OUT_OF_MEMORY_ERROR)
+                    return
+                end if
+                pts(1:npts-2) = breakpoints
+                usedqagp = .true.
+            end if
+        end if
+
         call this%initialize(errmgr)
         if (errmgr%has_error_occurred()) return
 
         limit = this%get_max_subintervals()
+        leniw = size(this%m_iwork)
         lenw = size(this%m_work)
         epsabs = this%get_abs_tol()
         epsrel = this%get_rel_tol()
 
         ! Compute the integral
-        call dqags(local_fcn, a, b, epsabs, epsrel, rst, abserr, neval, ier, &
-            limit, lenw, last, this%m_iwork, this%m_work)
+        if (usedqagp) then
+            call dqagp(local_fcn, a, b, npts, pts, epsabs, epsrel, &
+                rst, abserr, neval, ier, leniw, lenw, last, iwork, work)
+        else
+            call dqags(local_fcn, a, b, epsabs, epsrel, rst, abserr, neval, &
+                ier, limit, lenw, last, this%m_iwork, this%m_work)
+        end if
 
         ! Collect info regarding the integration process
         if (present(info)) then
