@@ -19,6 +19,7 @@ module integral_core
     public :: integrator_base
     public :: finite_interval_integrator
     public :: finite_interval_fcn
+    public :: adaptive_integrator
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -196,22 +197,56 @@ module integral_core
         !> @brief Defines the signature of a routine used to integrate
         !! a function of one variable over a finite interval.
         !!
-        !! @param[in] this The finite_interval_integrator object.
+        !! @param[in,out] this The finite_interval_integrator object.
+        !! @param[in] fcn The integrand.
         !! @param[in] a The lower limit of integration.
         !! @param[in] b The upper limit of integration.
         !! @param[out] info An optional output providing information regarding
         !!  behavior of the integrator.
         !! @param[out] err An optional argument that may be used to provide
         !!  customized error handling behaviors.
-        function finite_interval_fcn(this, a, b, info, err)
+        !! @return The value of the integral over the specified range.
+        function finite_interval_fcn(this, fcn, a, b, info, err) result(rst)
             use, intrinsic :: iso_fortran_env, only : real64
             use ferror
             import finite_interval_integrator
+            import integrand
             import integration_behavior
-            class(finite_interval_integrator), intent(in) :: this
+            class(finite_interval_integrator), intent(inout) :: this
+            procedure(integrand), intent(in), pointer :: fcn
             real(real64), intent(in) :: a, b
             type(integration_behavior), intent(out), optional :: info
             class(errors), intent(inout), optional, target :: err
+            real(real64) :: rst
+        end function
+    end interface
+
+! ******************************************************************************
+! INTEGRAL_ADAPTIVE_INTEGRATOR.F90
+! ------------------------------------------------------------------------------
+    type, extends(finite_interval_integrator) :: adaptive_integrator
+    private
+        real(real64), allocatable, dimension(:) :: m_work
+        integer(int32), allocatable, dimension(:) :: m_iwork
+    contains
+        procedure, public :: initialize => ai_init
+        procedure, public :: integrate => ai_integrate
+    end type
+
+! ------------------------------------------------------------------------------
+    interface
+        module subroutine ai_init(this, err)
+            class(adaptive_integrator), intent(inout) :: this
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        module function ai_integrate(this, fcn, a, b, info, err) result(rst)
+            class(adaptive_integrator), intent(inout) :: this
+            procedure(integrand), intent(in), pointer :: fcn
+            real(real64), intent(in) :: a, b
+            type(integration_behavior), intent(out), optional :: info
+            class(errors), intent(inout), optional, target :: err
+            real(real64) :: rst
         end function
     end interface
 

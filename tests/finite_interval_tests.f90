@@ -16,6 +16,7 @@ contains
         ! Local Variables
         logical :: rst
         procedure(integrand), pointer :: fcn
+        type(adaptive_integrator) :: integrator
         real(real64) :: y
 
         ! Initialization
@@ -23,7 +24,7 @@ contains
         fcn => integrand_1
 
         ! Compute the integral
-        y = integrate_adapt(fcn, a, b)
+        y = integrator%integrate(fcn, a, b)
 
         ! Check the answer
         if (abs(y - ans) > tol) then

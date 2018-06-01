@@ -2,10 +2,13 @@
 set(integral_sources
     integral_core.f90
     integral_integrator_base.f90
-    integral_quadpack.f90
+    integral_adaptive_integrator.f90
 )
 
 # Define the QUADPACK source files
+# REF:
+# - http://www.netlib.org/quadpack/
+# - https://people.sc.fsu.edu/~jburkardt/f_src/quadpack/quadpack.html
 set(quadpack_sources
     QUADPACK/dqagie.f
     QUADPACK/dqags.f
