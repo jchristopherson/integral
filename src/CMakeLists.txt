@@ -1,6 +1,7 @@
 # Define sources
 set(integral_sources
     integral_core.f90
+    integral_integrator_base.f90
     integral_quadpack.f90
 )
 

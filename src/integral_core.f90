@@ -16,6 +16,9 @@ module integral_core
     public :: integration_controls
     public :: integration_behavior
     public :: integrate_adapt
+    public :: integrator_base
+    public :: finite_interval_integrator
+    public :: finite_interval_fcn
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -69,6 +72,148 @@ module integral_core
         !! was divided.
         integer(int32) :: subinterval_count
     end type
+
+! ******************************************************************************
+! INTEGRAL_INTEGRATOR_BASE.F90
+! ------------------------------------------------------------------------------
+    !> @brief Defines a base type for integrator types.
+    type integrator_base
+    private
+        !> @brief The absolute tolerance.
+        real(real64) :: m_absTol = 1.0d-8
+        !> @brief The relative tolerance.
+        real(real64) :: m_relTol = 1.0d-8
+        !> @brief The maximum number of subintervals.
+        integer(int32) :: m_maxInt = 100
+    contains
+        !> @brief Gets the absolute tolerance value.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure real(real64) function get_abs_tol(class(integrator_base) this)
+        !! @endcode
+        !!
+        !! @param[in] this The integrator_base object.
+        !! @return The tolerance value.
+        procedure, public :: get_abs_tol => ib_get_abs_tol
+        !> @brief Sets the absolute tolerance value.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_abs_tol(class(integrator_base) this, real(real64) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The integrator_base object.
+        !! @param[in] The tolerance value.
+        procedure, public :: set_abs_tol => ib_set_abs_tol
+        !> @brief Gets the relative tolerance value.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure real(real64) function get_rel_tol(class(integrator_base) this)
+        !! @endcode
+        !!
+        !! @param[in] this The integrator_base object.
+        !! @return The tolerance value.
+        procedure, public :: get_rel_tol => ib_get_rel_tol
+        !> @brief Sets the relative tolerance value.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_rel_tol(class(integrator_base) this, real(real64) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The integrator_base object.
+        !! @param[in] The tolerance value.
+        procedure, public :: set_rel_tol => ib_set_rel_tol
+        !> @brief Gets the maximum number of subintervals into which the
+        !! integrator may divide the problem region.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure integer(int32) function get_max_subintervals(class(integrator_base) this)
+        !! @endcode
+        !!
+        !! @param[in] this The integrator_base object.
+        !! @return The number of intervals.
+        procedure, public :: get_max_subintervals => ib_get_max_subintervals
+        !> @brief Sets the maximum number of subintervals into which the
+        !! integrator may divide the problem region.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_max_subintervals(class(integrator_base) this, integer(int32) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The integrator_base object.
+        !! @param[in] x The number of intervals.
+        procedure, public :: ib_set_max_subintervals => ib_set_max_subintervals
+    end type
+
+! ------------------------------------------------------------------------------
+    interface
+        pure module function ib_get_abs_tol(this) result(x)
+            class(integrator_base), intent(in) :: this
+            real(real64) :: x
+        end function
+
+        module subroutine ib_set_abs_tol(this, x)
+            class(integrator_base), intent(inout) :: this
+            real(real64), intent(in) :: x
+        end subroutine
+
+        pure module function ib_get_rel_tol(this) result(x)
+            class(integrator_base), intent(in) :: this
+            real(real64) :: x
+        end function
+
+        module subroutine ib_set_rel_tol(this, x)
+            class(integrator_base), intent(inout) :: this
+            real(real64), intent(in) :: x
+        end subroutine
+
+        pure module function ib_get_max_subintervals(this) result(x)
+            class(integrator_base), intent(in) :: this
+            integer(int32) :: x
+        end function
+
+        module subroutine ib_set_max_subintervals(this, x)
+            class(integrator_base), intent(inout) :: this
+            integer(int32), intent(in) :: x
+        end subroutine
+    end interface
+
+! ******************************************************************************
+    !> @brief A type that defines an integrator meant to operate on integrands
+    !! over a finite region.
+    type, abstract, extends(integrator_base) :: finite_interval_integrator
+    contains
+        !> @brief Performs the actual integration.
+        procedure(finite_interval_fcn), public, deferred, pass :: integrate
+    end type
+
+    interface
+        !> @brief Defines the signature of a routine used to integrate
+        !! a function of one variable over a finite interval.
+        !!
+        !! @param[in] this The finite_interval_integrator object.
+        !! @param[in] a The lower limit of integration.
+        !! @param[in] b The upper limit of integration.
+        !! @param[out] info An optional output providing information regarding
+        !!  behavior of the integrator.
+        !! @param[out] err An optional argument that may be used to provide
+        !!  customized error handling behaviors.
+        function finite_interval_fcn(this, a, b, info, err)
+            use, intrinsic :: iso_fortran_env, only : real64
+            use ferror
+            import finite_interval_integrator
+            import integration_behavior
+            class(finite_interval_integrator), intent(in) :: this
+            real(real64), intent(in) :: a, b
+            type(integration_behavior), intent(out), optional :: info
+            class(errors), intent(inout), optional, target :: err
+        end function
+    end interface
 
 ! ******************************************************************************
 ! INTEGRAL_QUADPACK.F90
