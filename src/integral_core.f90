@@ -15,7 +15,7 @@ module integral_core
     public :: integrand
     public :: integration_controls
     public :: integration_behavior
-    public :: integrate_adaptive
+    public :: integrate_adapt
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -95,7 +95,7 @@ module integral_core
         !! @par Remarks
         !! This routine utilizes the QUADPACK routine QAGS.  For more
         !! information on this routine see http://www.netlib.org/quadpack/.
-        module function integrate_adaptive(f, a, b, cntrls, bhvr, err) result(rst)
+        module function integrate_adapt(f, a, b, cntrls, bhvr, err) result(rst)
             procedure(integrand), pointer, intent(in) :: f
             real(real64), intent(in) :: a, b
             type(integration_controls), intent(in), optional :: cntrls

@@ -23,7 +23,7 @@ contains
         fcn => integrand_1
 
         ! Compute the integral
-        y = integrate_adaptive(fcn, a, b)
+        y = integrate_adapt(fcn, a, b)
 
         ! Check the answer
         if (abs(y - ans) > tol) then

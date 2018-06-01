@@ -5,7 +5,7 @@
 ! - https://people.sc.fsu.edu/~jburkardt/f_src/quadpack/quadpack.html
 submodule (integral_core) integral_quadpack
 contains
-    module function integrate_adaptive(f, a, b, cntrls, bhvr, err) result(rst)
+    module function integrate_adapt(f, a, b, cntrls, bhvr, err) result(rst)
         ! Arguments
         procedure(integrand), pointer, intent(in) :: f
         real(real64), intent(in) :: a, b
@@ -21,6 +21,7 @@ contains
         real(real64), allocatable, dimension(:) :: work
         class(errors), pointer :: errmgr
         type(errors), target :: deferr
+        character(len = 256) :: errmsg
 
         ! Initialization
         if (present(err)) then
@@ -44,8 +45,8 @@ contains
         allocate(iwork(limit), stat = flag)
         if (flag == 0) allocate(work(lenw), stat = flag)
         if (flag /= 0) then
-            call errmgr%report_error("qags", "Insufficient memory available.", &
-                INT_OUT_OF_MEMORY_ERROR)
+            call errmgr%report_error("integrate_adapt", &
+                "Insufficient memory available.", INT_OUT_OF_MEMORY_ERROR)
             return
         end if
 
@@ -63,11 +64,35 @@ contains
         ! Check for errors
         select case (ier)
         case (1)
+            write(errmsg, '(AI0A)') "The maximum number (", limit, &
+                ") of subdivisions allowed has been achieved."
+            call errmgr%report_error("integrate_adapt", trim(errmsg), &
+                INT_COUNT_EXCEEDED_ERROR)
+            return
         case (2)
+            call errmgr%report_error("integrate_adapt", &
+                "The occurence of roundoff error has been detected " // &
+                "thereby preventing the requested tolerance from being " // &
+                "achieved.", INT_ROUND_OFF_ERROR)
+            return
         case (3)
+            call errmgr%report_error("integrate_adapt", &
+                "The integrand appears to be behaving too poorly to proceed.", &
+                INT_INTEGRAND_BEHAVIOR_ERROR)
+            return
         case (4)
+            call errmgr%report_error("integrate_adapt", &
+                "The algorithm cannot converge with the assigned tolerances.", &
+                INT_CONVERGENCE_ERROR)
+            return
         case (5)
+            call errmgr%report_error("integrate_adapt", &
+                "The integral is likely divergent", INT_DIVERGENT_ERROR)
+            return
         case (6)
+            call errmgr%report_error("integrate_adapt", &
+                "An invalid input has been provided.", INT_INVALID_INPUT_ERROR)
+            return
         end select
 
     contains
