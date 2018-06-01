@@ -15,7 +15,6 @@ module integral_core
     public :: integrand
     public :: integration_controls
     public :: integration_behavior
-    public :: integrate_adapt
     public :: integrator_base
     public :: finite_interval_integrator
     public :: finite_interval_fcn
@@ -224,13 +223,66 @@ module integral_core
 ! ******************************************************************************
 ! INTEGRAL_ADAPTIVE_INTEGRATOR.F90
 ! ------------------------------------------------------------------------------
+    !> @brief Defines an integrator that uses an adaptive Gauss-Kronrod method
+    !! to compute the integral of a function of one variable over a finite
+    !! interval.
     type, extends(finite_interval_integrator) :: adaptive_integrator
     private
+        !> @brief A workspace array.
         real(real64), allocatable, dimension(:) :: m_work
+        !> @brief A workspace array.
         integer(int32), allocatable, dimension(:) :: m_iwork
+        !> @brief True for user defined breakpoints; else, false.
+        logical :: m_userDefinedBreaks = .false.
+        !> @brief A list of user-defined breakpoints.
+        real(real64), allocatable, dimension(:) :: m_breakpoints
     contains
+        !> @brief Initializes the adaptive_integrator object.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine initialize(class(adaptive_integrator) this, optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in] this The adaptive_integrator object.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available to
+        !!      complete this operation.
         procedure, public :: initialize => ai_init
+        !> @brief Performs the actual integration.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! real(real64) function integrate(class(adaptive_integrator) this, procedure(integrand) pointer fcn, real(real64) a, real(real64) b, optional type(integration_behavior) info, optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The adaptive_integrator object.
+        !! @param[in] fcn The integrand.
+        !! @param[in] a The lower limit of integration.
+        !! @param[in] b The upper limit of integration.
+        !! @param[out] info An optional output providing information regarding
+        !!  behavior of the integrator.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available to
+        !!      complete this operation.
+        !!
+        !! @return The value of the integral over the specified range.
+        !!
+        !! @par Remarks
+        !! This routine utilizes the QUADPACK routine QAGS.  For more
+        !! information on this routine see http://www.netlib.org/quadpack/.
         procedure, public :: integrate => ai_integrate
+
+        procedure, public :: get_use_breakpoints => ai_get_use_brkpnts
+        procedure, public :: set_use_breakpoints => ai_set_use_brkpnts
+        procedure, public :: get_breakpoints => ai_get_breakpoints
+        procedure, public :: set_breakpoints => ai_set_breakpoints
     end type
 
 ! ------------------------------------------------------------------------------
@@ -248,40 +300,26 @@ module integral_core
             class(errors), intent(inout), optional, target :: err
             real(real64) :: rst
         end function
+
+        pure module function ai_get_use_brkpnts(this) result(x)
+            class(adaptive_integrator), intent(in) :: this
+            logical :: x
+        end function
+
+        module subroutine ai_set_use_brkpnts(this, x)
+            class(adaptive_integrator), intent(inout) :: this
+            logical, intent(in) :: x
+        end subroutine
+
+        module function ai_get_breakpoints(this) result(x)
+            class(adaptive_integrator), intent(in) :: this
+            real(real64), allocatable, dimension(:) :: x
+        end function
+
+        module subroutine ai_set_breakpoints(this, x)
+            class(adaptive_integrator), intent(inout) :: this
+            real(real64), intent(in), dimension(:) :: x
+        end subroutine
     end interface
 
-! ******************************************************************************
-! INTEGRAL_QUADPACK.F90
-! ------------------------------------------------------------------------------
-    interface
-        !> @brief Utilizes an adaptive 21-point Gauss-Kronrod integrator to
-        !! evaluate the integral of a general integrand over a finite interval.
-        !!
-        !! @param[in] f A pointer to the routine containing the integrand.
-        !! @param[in] a The lower limit of integration.
-        !! @param[in] b The upper limit of integration.
-        !! @param[in] cntrls An optional parameter providing controls over the
-        !!  the integration.  If nothing is specified, default controls are
-        !!  utilized.
-        !! @param[out] bhvr An optional output the can be used to gain
-        !!  additional information about the integration process.
-        !! @param[in,out] err An optional output that can be used to provide
-        !!  an error handling mechanism.  If not provided, a default error
-        !!  handling mechanism will be utilized.  Possible errors that may
-        !!  be encountered are as follows.
-        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available to
-        !!      complete this operation.
-        !!
-        !! @par Remarks
-        !! This routine utilizes the QUADPACK routine QAGS.  For more
-        !! information on this routine see http://www.netlib.org/quadpack/.
-        module function integrate_adapt(f, a, b, cntrls, bhvr, err) result(rst)
-            procedure(integrand), pointer, intent(in) :: f
-            real(real64), intent(in) :: a, b
-            type(integration_controls), intent(in), optional :: cntrls
-            type(integration_behavior), intent(out), optional :: bhvr
-            class(errors), intent(inout), optional, target :: err
-            real(real64) :: rst
-        end function
-    end interface
 end module

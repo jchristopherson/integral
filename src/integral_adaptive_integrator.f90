@@ -137,4 +137,35 @@ contains
     end function
 
 ! ------------------------------------------------------------------------------
+    pure module function ai_get_use_brkpnts(this) result(x)
+        class(adaptive_integrator), intent(in) :: this
+        logical :: x
+        x = this%m_userDefinedBreaks
+    end function
+
+! --------------------
+    module subroutine ai_set_use_brkpnts(this, x)
+        class(adaptive_integrator), intent(inout) :: this
+        logical, intent(in) :: x
+        this%m_userDefinedBreaks = x
+    end subroutine
+
+! ------------------------------------------------------------------------------
+    module function ai_get_breakpoints(this) result(x)
+        class(adaptive_integrator), intent(in) :: this
+        real(real64), allocatable, dimension(:) :: x
+        if (allocated(this%m_breakpoints)) then
+            x = this%m_breakpoints
+        end if
+    end function
+
+! --------------------
+    module subroutine ai_set_breakpoints(this, x)
+        class(adaptive_integrator), intent(inout) :: this
+        real(real64), intent(in), dimension(:) :: x
+        if (allocated(this%m_breakpoints)) deallocate(this%m_breakpoints)
+        this%m_breakpoints = x
+    end subroutine
+
+! ------------------------------------------------------------------------------
 end submodule
