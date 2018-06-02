@@ -13,7 +13,6 @@ contains
         type(errors), target :: deferr
         integer(int32) :: flag, liwork, lwork, n
         logical :: use_breakpoints
-        real(real64), allocatable, dimension(:) :: breakpoints
 
         ! Initialization
         if (present(err)) then
@@ -23,15 +22,14 @@ contains
         end if
         use_breakpoints = .false.
         if (this%get_use_breakpoints()) then
-            breakpoints = this%get_breakpoints()
-            if (allocated(breakpoints)) use_breakpoints = .true.
+            if (allocated(this%m_breakpoints)) use_breakpoints = .true.
         end if
 
         ! Allocate memory
         if (use_breakpoints) then
-            n = size(breakpoints) + 2
+            n = size(this%m_breakpoints) + 2
             liwork = max(2 * this%get_max_subintervals() + n, 3 * n - 2)
-            lenw = liwork * 2 - n
+            lwork = liwork * 2 - n
         else
             liwork = this%get_max_subintervals()
             lwork = 4 * liwork
@@ -81,7 +79,7 @@ contains
         type(errors), target :: deferr
         character(len = 256) :: errmsg
         logical :: usedqagp
-        real(real64), allocatable, dimension(:) :: breakpoints, pts
+        real(real64), allocatable, dimension(:) :: pts
 
         ! Initialization
         if (present(err)) then
@@ -92,9 +90,8 @@ contains
 
         usedqagp = .false.
         if (this%get_use_breakpoints()) then
-            breakpoints = this%get_breakpoints()
-            if (allocated(breakpoints)) then
-                npts = size(breakpoints) + 2
+            if (allocated(this%m_breakpoints)) then
+                npts = size(this%m_breakpoints) + 2
                 allocate(pts(npts), stat = flag)
                 if (flag /= 0) then
                     call errmgr%report_error("ai_integrate", &
@@ -102,7 +99,9 @@ contains
                         INT_OUT_OF_MEMORY_ERROR)
                     return
                 end if
-                pts(1:npts-2) = breakpoints
+                pts(2:npts-1) = this%m_breakpoints
+                pts(1) = a
+                pts(npts) = b
                 usedqagp = .true.
             end if
         end if

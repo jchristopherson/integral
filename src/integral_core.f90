@@ -84,7 +84,7 @@ module integral_core
         !> @brief The relative tolerance.
         real(real64) :: m_relTol = 1.0d-8
         !> @brief The maximum number of subintervals.
-        integer(int32) :: m_maxInt = 100
+        integer(int32) :: m_maxInt = 10
     contains
         !> @brief Gets the absolute tolerance value.
         !!
