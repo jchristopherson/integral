@@ -19,12 +19,16 @@ module integral_core
     public :: INT_51_POINT_RULE
     public :: INT_61_POINT_RULE
     public :: integrand
+    public :: ode_fcn
+    public :: ode_jacobian
     public :: integration_behavior
     public :: integrator_base
     public :: finite_interval_integrator
     public :: finite_interval_fcn
     public :: adaptive_integrator
     public :: nonadaptive_integrator
+    public :: ode_helper
+    public :: ode_integrator
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -69,6 +73,37 @@ module integral_core
             real(real64), intent(in) :: x
             real(real64) :: f
         end function
+
+        !> @brief Defines a routine containing a system of first order
+        !! ODE's.
+        !!
+        !! @param[in] x The value of the independent variable at which to
+        !!  evalaute the ODE's.
+        !! @param[in] y An N-element array cotnaining the current estimates
+        !!  of the dependent variables as evaluated at @p x.
+        !! @param[out] dydx An N-element array where the values of the ODE's
+        !!  as evaluated at @p x are to be written.
+        subroutine ode_fcn(x, y, dydx)
+            use, intrinsic :: iso_fortran_env, only : real64
+            real(real64), intent(in) :: x
+            real(real64), intent(in), dimension(:) :: y
+            real(real64), intent(out), dimension(:) :: dydx
+        end subroutine
+
+        !> @brief Defines a routine capable of computing the Jacobian matrix
+        !! of a system of N first order ODE's of N variables.
+        !!
+        !! @param[in] x The value of the independent variable at which the
+        !!  Jacobian is to be evaluated.
+        !! @param[in] y An N-element array containing the values of the
+        !!  dependent variables at @p x.
+        !! @param[out] jac An N-by-N matrix where the Jacobian is to be written.
+        subroutine ode_jacobian(x, y, jac)
+            use, intrinsic :: iso_fortran_env, only : real64
+            real(real64), intent(in) :: x
+            real(real64), intent(in), dimension(:) :: y
+            real(real64), intent(out), dimension(:,:) :: jac
+        end subroutine
     end interface
 
 ! ------------------------------------------------------------------------------
@@ -490,4 +525,61 @@ module integral_core
     end interface
 
 ! ******************************************************************************
+! INTEGRAL_ODE_HELPER.F90
+! ------------------------------------------------------------------------------
+    type :: ode_helper
+    private
+        !> @brief A pointer to the routine containing the ODE's to integrate.
+        procedure(ode_fcn), pointer, nopass :: m_fcn => null()
+        !> @brief A pointer to the routine containing the Jacobian.
+        procedure(ode_jacobian), pointer, nopass :: m_jac => null()
+        !> @brief The number of first order ODE's to integrate.
+        integer(int32) :: m_count = 0
+    contains
+        procedure, public :: define_equations => oh_init
+        procedure, public :: get_equation_count => oh_get_count
+        procedure, public :: get_eqns_defined => oh_is_fcn_defined
+        procedure, public :: get_jac_defined => oh_is_jac_defined
+    end type
+
+    interface
+        module subroutine oh_init(this, neqn, fcn, jac)
+            class(ode_helper), intent(inout) :: this
+            integer(int32), intent(in) :: neqn
+            procedure(ode_fcn), pointer, intent(in) :: fcn
+            procedure(ode_jacobian), pointer, intent(in), optional :: jac
+        end subroutine
+
+        pure module function oh_get_count(this) result(x)
+            class(ode_helper), intent(in) :: this
+            integer(int32) :: x
+        end function
+
+        pure module function oh_is_fcn_defined(this) result(x)
+            class(ode_helper), intent(in) :: this
+            logical :: x
+        end function
+
+        pure module function oh_is_jac_defined(this) result(x)
+            class(ode_helper), intent(in) :: this
+            logical :: x
+        end function
+
+        ! TO DO: Define access to both the function and the jacobian routines
+    end interface
+
+! ******************************************************************************
+    type, abstract :: ode_integrator
+        !> @brief The ODE helper object.
+        class(ode_helper), allocatable :: m_ode
+        !> @brief An array of relative error tolerance values for each ODE.
+        real(real64), allocatable, dimension(:) :: m_rtol
+        !> @brief An array of absolute error tolerance values for each ODE.
+        real(real64), allocatable, dimension(:) :: m_atol
+        !> @brief A real-valued workspace array.
+        real(real64), allocatable, dimension(:) :: m_rwork
+        !> @brief An integer-valued workspace array.
+        integer(int32), allocatable, dimension(:) :: m_iwork
+    contains
+    end type
 end module
