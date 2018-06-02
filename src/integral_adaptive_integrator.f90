@@ -203,6 +203,7 @@ contains
         real(real64), intent(in), dimension(:) :: x
         if (allocated(this%m_breakpoints)) deallocate(this%m_breakpoints)
         this%m_breakpoints = x
+        this%set_use_breakpoints(.true.)
     end subroutine
 
 ! ------------------------------------------------------------------------------

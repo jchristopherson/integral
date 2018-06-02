@@ -278,10 +278,55 @@ module integral_core
         !! This routine utilizes the QUADPACK routine QAGS.  For more
         !! information on this routine see http://www.netlib.org/quadpack/.
         procedure, public :: integrate => ai_integrate
-
+        !> @brief Gets a flag determining if user-defined breakpoints should
+        !! be used to inform the integrator of points of difficulty within
+        !! the integration region.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure logical function get_use_breakpoints(class(adaptive_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The adaptive_integrator object.
+        !! @return Returns true if the user-defined breakpoints should be
+        !!  used; else, false.
         procedure, public :: get_use_breakpoints => ai_get_use_brkpnts
+        !> @brief Sets a flag determining if user-defined breakpoints should
+        !! be used to inform the integrator of points of difficulty within
+        !! the integration region.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_use_breakpoints(class(adaptive_integrator) this, logical x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The adaptive_integrator object.
+        !! @param[in] x Set to true if the user-defined breakpoints should be
+        !!  used; else, set to false.
         procedure, public :: set_use_breakpoints => ai_set_use_brkpnts
+        !> @brief Gets an array of user-defined breakpoints.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! real(real64)(:) allocatable function get_breakpoints(class(adaptive_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The adaptive_integrator object.
+        !! @return The array of points.  This array will not be allocated if
+        !!  no points have been defined.
         procedure, public :: get_breakpoints => ai_get_breakpoints
+        !> @brief Sets an array of user-defined breakpoints.  Additionally,
+        !! this array call set_use_breakpoints with an argument of true such
+        !! that the integrator will use the breakpoints defined by this routine.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_breakpoints(class(adaptive_integrator) this, real(real64) x(:))
+        !! @endcode
+        !!
+        !! @param[in,out] this The adaptive_integrator object.
+        !! @param[in] x The array of breakpoints.  Notice, each point must lie
+        !!  within the integration interval.
         procedure, public :: set_breakpoints => ai_set_breakpoints
     end type
 
