@@ -281,6 +281,16 @@ module integral_core
         !!  be encountered are as follows.
         !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available to
         !!      complete this operation.
+        !!  - INT_COUNT_EXCEEDED_ERROR: The maximum number of subdivisions has
+        !!      been reached.
+        !!  - INT_ROUND_OFF_ERROR: The occurence of roundoff error is preventing
+        !!      the integrator from reaching the requested tolerances.
+        !!  - INT_INTEGRAND_BEHAVIOR_ERROR: The integrand appears to be
+        !!      behaving too poorly to proceed.
+        !!  - INT_CONVERGENCE_ERROR: The algorithm could not converge with the
+        !!      given constraints.
+        !!  - INT_DIVERGENT_ERROR: The integral is likely divergent.
+        !!  - INT_INVALID_INPUT_ERROR: An invalid input was supplied.
         !!
         !! @return The value of the integral over the specified range.
         !!
@@ -380,14 +390,79 @@ module integral_core
 ! ******************************************************************************
 ! INTEGRAL_NONADAPTIVE_INTEGRATOR.F90
 ! ------------------------------------------------------------------------------
-    !>
+    !> @brief Defines an integrator that uses a non-adaptive Gauss-Kronrod
+    !! method to compute the integral of a function of one variable over a
+    !! finite interval.
     type, extends(finite_interval_integrator) :: nonadaptive_integrator
     private
         !> @brief The integration rule to use.
         integer(int32) :: m_rule = INT_15_POINT_RULE
     contains
+        !> @brief Performs the actual integration.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! real(real64) function integrate(class(nonadaptive_integrator) this, procedure(integrand) pointer fcn, real(real64) a, real(real64) b, optional type(integration_behavior) info, optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The nonadaptive_integrator object.
+        !! @param[in] fcn The integrand.
+        !! @param[in] a The lower limit of integration.
+        !! @param[in] b The upper limit of integration.
+        !! @param[out] info An optional output providing information regarding
+        !!  behavior of the integrator.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_INVALID_INPUT_ERROR: An invalid input was supplied.
+        !!
+        !! @return The value of the integral over the specified range.
+        !!
+        !! @par Remarks
+        !! This routine utilizes the QUADPACK routine QAGS.  For more
+        !! information on this routine see http://www.netlib.org/quadpack/.
         procedure, public :: integrate => ni_integrate
+        !> @brief Gets the integration rule being utilized.  The default
+        !! integration rule is given by INT_15_POINT_RULE.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure integer(int32) function get_rule(class(nonadaptive_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The nonadaptive_integrator object.
+        !! @return The integration rule identifier.  The available rules are as
+        !!  follows.
+        !!  - INT_15_POINT_RULE
+        !!  - INT_21_POINT_RULE
+        !!  - INT_31_POINT_RULE
+        !!  - INT_41_POINT_RULE
+        !!  - INT_51_POINT_RULE
+        !!  - INT_61_POINT_RULE
         procedure, public :: get_rule => ni_get_rule
+        !> @brief Sets the integration rule being utilized.  The default
+        !! integration rule is given by INT_15_POINT_RULE.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_rule(class(nonadaptive_integrator) this, integer(int32) x, optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The nonadaptive_integrator object.
+        !! @param[in] x The integration rule identifier.  The available rules
+        !!  are as follows.
+        !!  - INT_15_POINT_RULE
+        !!  - INT_21_POINT_RULE
+        !!  - INT_31_POINT_RULE
+        !!  - INT_41_POINT_RULE
+        !!  - INT_51_POINT_RULE
+        !!  - INT_61_POINT_RULE
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_INVALID_INPUT_ERROR: An invalid input was supplied.
         procedure, public :: set_rule => ni_set_rule
     end type
 
