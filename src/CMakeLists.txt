@@ -3,6 +3,7 @@ set(integral_sources
     integral_core.f90
     integral_integrator_base.f90
     integral_adaptive_integrator.f90
+    integral_nonadaptive_integrator.f90
 )
 
 # Define the QUADPACK source files

@@ -12,13 +12,19 @@ module integral_core
     public :: INT_CONVERGENCE_ERROR
     public :: INT_DIVERGENT_ERROR
     public :: INT_INVALID_INPUT_ERROR
+    public :: INT_15_POINT_RULE
+    public :: INT_21_POINT_RULE
+    public :: INT_31_POINT_RULE
+    public :: INT_41_POINT_RULE
+    public :: INT_51_POINT_RULE
+    public :: INT_61_POINT_RULE
     public :: integrand
-    public :: integration_controls
     public :: integration_behavior
     public :: integrator_base
     public :: finite_interval_integrator
     public :: finite_interval_fcn
     public :: adaptive_integrator
+    public :: nonadaptive_integrator
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -38,6 +44,20 @@ module integral_core
     integer(int32), parameter :: INT_INVALID_INPUT_ERROR = 7
 
 ! ------------------------------------------------------------------------------
+    !> @brief Defines a 15-point Gauss-Kronrod integration rule.
+    integer(int32), parameter :: INT_15_POINT_RULE = 15
+    !> @brief Defines a 21-point Gauss-Kronrod integration rule.
+    integer(int32), parameter :: INT_21_POINT_RULE = 21
+    !> @brief Defines a 31-point Gauss-Kronrod integration rule.
+    integer(int32), parameter :: INT_31_POINT_RULE = 31
+    !> @brief Defines a 41-point Gauss-Kronrod integration rule.
+    integer(int32), parameter :: INT_41_POINT_RULE = 41
+    !> @brief Defines a 51-point Gauss-Kronrod integration rule.
+    integer(int32), parameter :: INT_51_POINT_RULE = 51
+    !> @brief Defines a 61-point Gauss-Kronrod integration rule.
+    integer(int32), parameter :: INT_61_POINT_RULE = 61
+
+! ------------------------------------------------------------------------------
     interface
         !> @brief Defines a function of one variable to be integrated.
         !!
@@ -52,16 +72,6 @@ module integral_core
     end interface
 
 ! ------------------------------------------------------------------------------
-    !> @brief Defines control parameters for the integration process.
-    type integration_controls
-        !> @brief The tolerance on absolute error.
-        real(real64) :: absolute_tolerance
-        !> @brief The tolerance on relative error.
-        real(real64) :: relative_tolerance
-        !> @brief The maximum number of subintervals the integrator is allowed.
-        integer(int32) :: max_subinterval_count
-    end type
-
     !> @brief Provides information regarding the behavior of an integrator.
     type integration_behavior
         !> @brief An estimate of the absolute error of the integration process.
@@ -367,4 +377,42 @@ module integral_core
         end subroutine
     end interface
 
+! ******************************************************************************
+! INTEGRAL_NONADAPTIVE_INTEGRATOR.F90
+! ------------------------------------------------------------------------------
+    !>
+    type, extends(finite_interval_integrator) :: nonadaptive_integrator
+    private
+        !> @brief The integration rule to use.
+        integer(int32) :: m_rule = INT_15_POINT_RULE
+    contains
+        procedure, public :: integrate => ni_integrate
+        procedure, public :: get_rule => ni_get_rule
+        procedure, public :: set_rule => ni_set_rule
+    end type
+
+! ------------------------------------------------------------------------------
+    interface
+        module function ni_integrate(this, fcn, a, b, info, err) result(rst)
+            class(nonadaptive_integrator), intent(inout) :: this
+            procedure(integrand), intent(in), pointer :: fcn
+            real(real64), intent(in) :: a, b
+            type(integration_behavior), intent(out), optional :: info
+            class(errors), intent(inout), optional, target :: err
+            real(real64) :: rst
+        end function
+
+        pure module function ni_get_rule(this) result(x)
+            class(nonadaptive_integrator), intent(in) :: this
+            integer(int32) :: x
+        end function
+
+        module subroutine ni_set_rule(this, x, err)
+            class(nonadaptive_integrator), intent(inout) :: this
+            integer(int32), intent(in) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+    end interface
+
+! ******************************************************************************
 end module
