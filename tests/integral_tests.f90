@@ -11,6 +11,9 @@ program tests
     test_result = integral_test_1()
     if (.not.test_result) overall = .false.
 
+    test_result = integral_test_2()
+    if (.not.test_result) overall = .false.
+
     ! Output
     if (overall) then
         print '(A)', "INTEGRAL TEST STATUS: PASS"

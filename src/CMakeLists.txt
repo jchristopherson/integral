@@ -54,6 +54,16 @@ set(quadpack_sources
 # Include the QUADPACK sources
 list(APPEND integral_sources ${quadpack_sources})
 
+# Define the ODEPACK sources
+set(odepack_sources
+    ODEPACK/opkda1.f
+    ODEPACK/opkda2.f
+    ODEPACK/opkdmain.f
+)
+
+# Include the ODEPACK sources
+list(APPEND integral_sources ${odepack_sources})
+
 # Define the library
 add_library(integral ${integral_sources})
 target_link_libraries(integral ${FERROR_LIBRARIES})
