@@ -75,13 +75,13 @@ module integral_core
         end function
 
         !> @brief Defines a routine containing a system of first order
-        !! ODE's.
+        !! ODEs.
         !!
         !! @param[in] x The value of the independent variable at which to
-        !!  evalaute the ODE's.
+        !!  evalaute the ODEs.
         !! @param[in] y An N-element array cotnaining the current estimates
         !!  of the dependent variables as evaluated at @p x.
-        !! @param[out] dydx An N-element array where the values of the ODE's
+        !! @param[out] dydx An N-element array where the values of the ODEs
         !!  as evaluated at @p x are to be written.
         subroutine ode_fcn(x, y, dydx)
             use, intrinsic :: iso_fortran_env, only : real64
@@ -91,7 +91,7 @@ module integral_core
         end subroutine
 
         !> @brief Defines a routine capable of computing the Jacobian matrix
-        !! of a system of N first order ODE's of N variables.
+        !! of a system of N first order ODEs of N variables.
         !!
         !! @param[in] x The value of the independent variable at which the
         !!  Jacobian is to be evaluated.
@@ -527,56 +527,89 @@ module integral_core
 ! ******************************************************************************
 ! INTEGRAL_ODE_HELPER.F90
 ! ------------------------------------------------------------------------------
+    !> @brief Defines a type used to pass information regarding the ODEs to
+    !! the solver.
     type :: ode_helper
     private
-        !> @brief A pointer to the routine containing the ODE's to integrate.
+        !> @brief A pointer to the routine containing the ODEs to integrate.
         procedure(ode_fcn), pointer, nopass :: m_fcn => null()
         !> @brief A pointer to the routine containing the Jacobian.
         procedure(ode_jacobian), pointer, nopass :: m_jac => null()
-        !> @brief The number of first order ODE's to integrate.
+        !> @brief The number of first order ODEs to integrate.
         integer(int32) :: m_count = 0
     contains
-        !> @brief
+        !> @brief Defines the system of ODEs to solve.
         !!
         !! @par Syntax
         !! @code{.f90}
+        !! subroutine define_equations(class(ode_helper) this, integer(int32) neqn, procedure(ode_fcn) pointer fcn, optional procedure(ode_jacobian) pointer jac)
         !! @endcode
         !!
+        !! @param[in,out] this The ode_helper object.
+        !! @param[in] neqn The number of first order ODEs.
+        !! @param[in] fcn A pointer to the routine containing the ODEs.
+        !! @param[in] jac An optional pointer to the routine used to compute
+        !!  the Jacobian of the system of equations given in @p fcn.  If the
+        !!  solver requires a Jacobian, and no routine is provided, the solver
+        !!  will generate a numerical estimate of the Jacobian matrix to use
+        !!  in its place.
         procedure, public :: define_equations => oh_init
-        !> @brief
+        !> @brief Gets the number of ODEs.
         !!
         !! @par Syntax
         !! @code{.f90}
+        !! pure integer(int32) function get_equation_count(class(ode_helper) this)
         !! @endcode
         !!
+        !! @param[in] this The ode_helper object.
+        !! @return The number of ODEs.
         procedure, public :: get_equation_count => oh_get_count
-        !> @brief
+        !> @brief Gets a flag denoting if the user has defined the system
+        !! of equations.
         !!
         !! @par Syntax
         !! @code{.f90}
+        !! pure logical function get_equations_defined(class(ode_helper) this)
         !! @endcode
         !!
+        !! @param[in] this The ode_helper object.
+        !! @return Returns true if the equations have been defined (by calling
+        !!  @p define_equations); else, false if they have not yet been
+        !!  defined.
         procedure, public :: get_equations_defined => oh_is_fcn_defined
-        !> @brief
+        !> @brief Gets a flag denoting if the user has defined the routine
+        !! used to compute the Jacobian matrix.
         !!
         !! @par Syntax
         !! @code{.f90}
+        !! pure logical function get_jacobian_defined(class(ode_helper) this)
         !! @endcode
         !!
+        !! @param[in] this The ode_helper object.
+        !! @return Returns true if the routine for computing the Jacobian
+        !!  has been defined (by calling @p define_equations); else, false if
+        !!  it has not.
         procedure, public :: get_jacobian_defined => oh_is_jac_defined
-        !> @brief
+        !> @brief Gets a pointer to the routine used to compute the value of
+        !!  the ODEs.
         !!
         !! @par Syntax
         !! @code{.f90}
+        !! procedure(ode_fcn) pointer function get_ode_fcn(class(ode_helper) this)
         !! @endcode
         !!
+        !! @param[in] this The ode_helper object.
+        !! @return The pointer to the ODE routine.
         procedure, public :: get_ode_fcn => oh_get_fcn
-        !> @brief
+        !> @brief Gets a pointer to the routine used to compute the Jacobian.
         !!
         !! @par Syntax
         !! @code{.f90}
+        !! procedure(ode_jacobian) pointer function get_jacobian(class(ode_helper) this)
         !! @endcode
         !!
+        !! @param[in] this The ode_helper object.
+        !! @return The pointer to the Jacobian routine.
         procedure, public :: get_jacobian => oh_get_jac
     end type
 
