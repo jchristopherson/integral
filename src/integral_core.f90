@@ -536,10 +536,48 @@ module integral_core
         !> @brief The number of first order ODE's to integrate.
         integer(int32) :: m_count = 0
     contains
+        !> @brief
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! @endcode
+        !!
         procedure, public :: define_equations => oh_init
+        !> @brief
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! @endcode
+        !!
         procedure, public :: get_equation_count => oh_get_count
-        procedure, public :: get_eqns_defined => oh_is_fcn_defined
-        procedure, public :: get_jac_defined => oh_is_jac_defined
+        !> @brief
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! @endcode
+        !!
+        procedure, public :: get_equations_defined => oh_is_fcn_defined
+        !> @brief
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! @endcode
+        !!
+        procedure, public :: get_jacobian_defined => oh_is_jac_defined
+        !> @brief
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! @endcode
+        !!
+        procedure, public :: get_ode_fcn => oh_get_fcn
+        !> @brief
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! @endcode
+        !!
+        procedure, public :: get_jacobian => oh_get_jac
     end type
 
     interface
@@ -565,13 +603,19 @@ module integral_core
             logical :: x
         end function
 
-        ! TO DO: Define access to both the function and the jacobian routines
+        module function oh_get_fcn(this) result(x)
+            class(ode_helper), intent(in) :: this
+            procedure(ode_fcn), pointer :: x
+        end function
+
+        module function oh_get_jac(this) result(x)
+            class(ode_helper), intent(in) :: this
+            procedure(ode_jacobian), pointer :: x
+        end function
     end interface
 
 ! ******************************************************************************
     type, abstract :: ode_integrator
-        !> @brief The ODE helper object.
-        class(ode_helper), allocatable :: m_ode
         !> @brief An array of relative error tolerance values for each ODE.
         real(real64), allocatable, dimension(:) :: m_rtol
         !> @brief An array of absolute error tolerance values for each ODE.

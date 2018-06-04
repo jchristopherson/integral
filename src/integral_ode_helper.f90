@@ -8,24 +8,46 @@ contains
         integer(int32), intent(in) :: neqn
         procedure(ode_fcn), pointer, intent(in) :: fcn
         procedure(ode_jacobian), pointer, intent(in), optional :: jac
+        nullify(this%m_fcn)
+        nullify(this%m_jac)
+        this%m_count = neqn
+        this%m_fcn => fcn
+        this%m_jac => jac
     end subroutine
 
 ! ------------------------------------------------------------------------------
     pure module function oh_get_count(this) result(x)
         class(ode_helper), intent(in) :: this
         integer(int32) :: x
+        x = this%m_count
     end function
 
 ! ------------------------------------------------------------------------------
     pure module function oh_is_fcn_defined(this) result(x)
         class(ode_helper), intent(in) :: this
         logical :: x
+        x = associated(this%m_fcn)
     end function
 
 ! ------------------------------------------------------------------------------
     pure module function oh_is_jac_defined(this) result(x)
         class(ode_helper), intent(in) :: this
         logical :: x
+        x = associated(this%m_jac)
+    end function
+
+! ------------------------------------------------------------------------------
+    module function oh_get_fcn(this) result(x)
+        class(ode_helper), intent(in) :: this
+        procedure(ode_fcn), pointer :: x
+        x => this%m_fcn
+    end function
+
+! ------------------------------------------------------------------------------
+    module function oh_get_jac(this) result(x)
+        class(ode_helper), intent(in) :: this
+        procedure(ode_jacobian), pointer :: x
+        x => this%m_jac
     end function
 
 ! ------------------------------------------------------------------------------
