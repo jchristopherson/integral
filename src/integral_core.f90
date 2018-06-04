@@ -21,6 +21,7 @@ module integral_core
     public :: integrand
     public :: ode_fcn
     public :: ode_jacobian
+    public :: ode_constraint
     public :: integration_behavior
     public :: integrator_base
     public :: finite_interval_integrator
@@ -29,6 +30,7 @@ module integral_core
     public :: nonadaptive_integrator
     public :: ode_helper
     public :: ode_integrator
+    public :: ode_integrator_interface
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -103,6 +105,22 @@ module integral_core
             real(real64), intent(in) :: x
             real(real64), intent(in), dimension(:) :: y
             real(real64), intent(out), dimension(:,:) :: jac
+        end subroutine
+
+        !> @brief Defines a routine capable of describing constraints on a
+        !! system of ODEs of N variables exposed to M constraints.
+        !!
+        !! @param[in] x The value of the independent variable at which the
+        !!  Jacobian is to be evaluated.
+        !! @param[in] y An N-element array containing the values of the
+        !!  dependent variables at @p x.
+        !! @param[out] f An M-element array where the values of the M
+        !!  constraint equations are to be written.
+        subroutine ode_constraint(x, y, f)
+            use, intrinsic :: iso_fortran_env, only : real64
+            real(real64), intent(in) :: x
+            real(real64), intent(in), dimension(:) :: y
+            real(real64), intent(out) :: f
         end subroutine
     end interface
 
@@ -648,15 +666,123 @@ module integral_core
     end interface
 
 ! ******************************************************************************
+! INTEGRAL_ODE_INTEGRATOR.F90
+! ------------------------------------------------------------------------------
     type, abstract :: ode_integrator
         !> @brief An array of relative error tolerance values for each ODE.
         real(real64), allocatable, dimension(:) :: m_rtol
         !> @brief An array of absolute error tolerance values for each ODE.
         real(real64), allocatable, dimension(:) :: m_atol
-        !> @brief A real-valued workspace array.
-        real(real64), allocatable, dimension(:) :: m_rwork
-        !> @brief An integer-valued workspace array.
-        integer(int32), allocatable, dimension(:) :: m_iwork
+        !> @brief Determines if output should be provided wherever the
+        !! integrator computes the solution as well as at user-specified points.
+        logical :: m_allOutput = .true.
+        !> @brief Determines if the integrator is allowed to overshoot a
+        !! critical point and interpolate back to achieve output at
+        !! the correct location.
+        logical :: m_canOvershoot = .true.
+        !> @brief The critical point that cannot be overshot.  This is only
+        !! utilized in the event that m_canOvershoot is set to true.
+        real(real64) :: m_criticalPoint = 0.0d0
+        !> @brief Defines the minimum buffer size
+        integer(int32) :: m_minBufferSize = 500
     contains
+        procedure, public :: integrate => oi_integrate
+        procedure, public :: get_provide_all_output => oi_get_use_all_output
+        procedure, public :: set_provide_all_output => oi_set_use_all_output
+        procedure, public :: get_allow_overshoot => oi_get_allow_overshoot
+        procedure, public :: set_allow_overshoot => oi_set_allow_overshoot
+        procedure, public :: get_integration_limit => oi_get_critical_point
+        procedure, public :: set_integration_limit => oi_set_critical_point
+        procedure, public :: get_min_buffer_size => oi_get_min_buffer_size
+        procedure, public :: set_min_buffer_size => oi_set_min_buffer_size
+        !> @brief Takes a single integration step towards the desired point.
+        procedure(ode_integrator_interface), public, deferred, pass :: step
     end type
+
+    interface
+        !> @brief Defines a routine for computing a single integration step in
+        !! the direction of @p xout.
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in] fcn A pointer to the routine containing the ODEs to
+        !!  integrate.
+        !! @param[in,out] x On input, the value of the independent variable at
+        !!  which to start.  On output, the value of the independent variable at
+        !!  which integration terminated.
+        !! @param[in,out] y On input, the value(s) of the dependent variable(s)
+        !!  at the initial value given in @p x.  On output, the value(s) of the
+        !!  dependent variable(s) as evaluated at the output given in @p x.
+        !! @param[in] xout The value of the independent variable at which the
+        !!  solution is desired.
+        !! @param[in] jac An optional input, that if provided, gives the solver
+        !!  a routine to use for computing the Jacobian matrix.
+        !! @param[in] rts An optional input, that if provided, gives the solver
+        !!  a routine to use for applying constraints to the solver.  If not
+        !!  provided, the integrator will not enforce any constraints.
+        !! @param[in,out] err An optional argument that can be used to control
+        !!  the error handling behavior of the integrator.
+        !! @return Returns true if the integrator requests a stop; else, false,
+        !!  to continue as normal.
+        function ode_integrator_interface(this, fcn, x, y, xout, jac, rts, err) result(brk)
+            use, intrinsic :: iso_fortran_env, only : int32, real64
+            import ode_integrator
+            class(ode_integrator), intent(inout) :: this
+            procedure(ode_fcn), intent(in), pointer :: fcn
+            real(real64), intent(inout) :: x
+            real(real64), intent(inout), dimension(:) :: y
+            real(real64), intent(in) :: xout
+            procedure(ode_jacobian), intent(in), pointer, optional :: jac
+            procedure(ode_constraint), intent(in), pointer, optional :: rts
+            class(errors), intent(inout), optional, target :: err
+            logical :: brk
+        end function
+
+        module function oi_integrate(this, fcnobj, x, y, err) result(rst)
+            class(ode_integrator), intent(inout) :: this
+            class(ode_helper), intent(in) :: fcnobj
+            real(real64), intent(in), dimension(:) :: x, y
+            class(errors), intent(inout), optional, target :: err
+            real(real64), allocatable, dimension(:,:) :: rst
+        end function
+
+        pure module function oi_get_use_all_output(this) result(x)
+            class(ode_integrator), intent(in) :: this
+            logical :: x
+        end function
+
+        module subroutine oi_set_use_all_output(this, x)
+            class(ode_integrator), intent(inout) :: this
+            logical, intent(in) :: x
+        end subroutine
+
+        pure module function oi_get_allow_overshoot(this) result(x)
+            class(ode_integrator), intent(in) :: this
+            logical :: x
+        end function
+
+        module subroutine oi_set_allow_overshoot(this, x)
+            class(ode_integrator), intent(inout) :: this
+            logical, intent(in) :: x
+        end subroutine
+
+        pure module function oi_get_critical_point(this) result(x)
+            class(ode_integrator), intent(in) :: this
+            real(real64) :: x
+        end function
+
+        module subroutine oi_set_critical_point(this, x)
+            class(ode_integrator), intent(inout) :: this
+            real(real64), intent(in) :: x
+        end subroutine
+
+        pure module function oi_get_min_buffer_size(this) result(x)
+            class(ode_integrator), intent(in) :: this
+            integer(int32) :: x
+        end function
+
+        module subroutine oi_set_min_buffer_size(this, x)
+            class(ode_integrator), intent(inout) :: this
+            integer(int32), intent(in) :: x
+        end subroutine
+    end interface
 end module
