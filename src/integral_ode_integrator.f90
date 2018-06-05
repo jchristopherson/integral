@@ -12,11 +12,14 @@ contains
         real(real64), allocatable, dimension(:,:) :: rst
 
         ! Local Variables
-        integer(int32) :: neqn, ncols, flag, i
+        integer(int32) :: neqn, ncols, flag, i, n, nbuffer
         real(real64), allocatable, dimension(:,:) :: buffer
         real(real64), allocatable, dimension(:) :: ytemp
+        real(real64) :: xout, xi
         class(errors), pointer :: errmgr
         type(errors), target :: deferr
+        character(len = 256) :: errmsg
+        logical :: brk, ascending
 
         ! Initialization
         if (present(err)) then
@@ -26,6 +29,12 @@ contains
         end if
         neqn = fcnobj%get_equation_count()
         ncols = neqn + 1
+        n = size(x)
+        if (this%get_provide_all_output()) then
+            nbuffer = n
+        else
+            nbuffer = this%get_min_buffer_size()
+        end if
         allocate(ytemp(neqn), stat = flag)
         if (flag /= 0) then
             call errmgr%report_error("oi_integrate", &
@@ -39,19 +48,39 @@ contains
         ! Input Checking
         if (fcnobj%get_equations_defined()) then
             ! ERROR: Equations undefined
+            call errmgr%report_error("oi_integrate", &
+                "The routine expected to hold the ODEs is undefined.", &
+                INT_LACK_OF_DEFINITION_ERROR)
+            return
         end if
         if (neqn /= size(y)) then
             ! ERROR: # of equations does not match initial condition vector size
+            write(errmsg, '(AI0AI0A)'), "Expected an array of size ", neqn, &
+                ", but found an array of size ", size(y), "."
+            call errmgr%report_error("oi_integrate", trim(errmsg), &
+                INT_ARRAY_SIZE_MISMATCH_ERROR)
+            return
         end if
-        if (size(x) < 2) then
+        if (n < 2) then
             ! ERROR: There must be at least a starting and ending point for the
             ! integration routine
+        end if
+        if (x(n) == x(1)) then
+            ! ERROR: No integration range
+            call errmgr%report_error("oi_integrate", &
+                "The starting and ending integration points are the same.", &
+                INT_INVALID_INPUT_ERROR)
+            return
         end if
 
         ! Ensure tolerances are defined.  If not, utilize defaults
         if (allocated(this%m_rtol)) then
             if (size(this%m_rtol) /= neqn) then
                 ! WARNING: Size mismatch in tolerance array - using defaults
+                call errmgr%report_warning("oi_integrate", &
+                    "The relative tolerance array is not correctly " // &
+                    "sized for the problem.  Using a default tolerance " // &
+                    "instead.", INT_ARRAY_SIZE_MISMATCH_ERROR)
                 deallocate(this%m_rtol)
                 this%m_rtol = alloc_default_rtol(neqn)
             end if
@@ -62,6 +91,10 @@ contains
         if (allocated(this%m_atol)) then
             if (size(this%m_rtol) /= neqn) then
                 ! WARNING: Size mismatch in tolerance array - using defaults
+                call errmgr%report_warning("oi_integrate", &
+                    "The absolute tolerance array is not correctly " // &
+                    "sized for the problem.  Using a default tolerance " // &
+                    "instead.", INT_ARRAY_SIZE_MISMATCH_ERROR)
                 deallocate(this%m_atol)
                 this%m_atol = alloc_default_atol(neqn)
             end if
@@ -69,95 +102,113 @@ contains
             this%m_atol = alloc_default_atol(neqn)
         end if
 
-        !
-        if (this%get_provide_all_output()) then
-            ! The integrator is expected to provide all outputs, regardless if
-            ! the actual output lies on a requested output point
-            allocate(buffer(this%get_min_buffer_size(), ncols), stat = flag)
-            if (flag /= 0) then
-                call errmgr%report_error("oi_integrate", &
-                    "Insufficient memory available.", INT_OUT_OF_MEMORY_ERROR)
-                return
+        ! Additional Initialization
+        allocate(buffer(nbuffer, ncols), stat = flag)
+        if (flag /= 0) then
+            call errmgr%report_error("oi_integrate", &
+                "Insufficient memory available.", INT_OUT_OF_MEMORY_ERROR)
+            return
+        end if
+        ascending = x(n) > x(1)
+
+        ! Store the initial conditions
+        buffer(1,1) = x(1)
+        buffer(1,2:ncols) = y
+
+        ! Integrate
+        i = 1
+        xout = x(n)
+        do
+            ! Copy the previous step's output
+            xi = buffer(i,1)
+            ytemp = buffer(i,2:ncols)
+
+            ! Increment i
+            i = i + 1
+
+            ! Ensure the buffer is sufficiently sized
+            if (i > size(buffer, 1)) then
+                call realloc_buffer(buffer, &
+                    size(buffer, 1) + nbuffer, errmgr)
+                if (errmgr%has_error_occurred()) return
             end if
 
-            ! Store the initial conditions
-            buffer(1,1) = x(1)
-            buffer(1,2:ncols) = y
+            ! Take the next integration step
+            if (.not.this%get_provide_all_output()) xout = x(i)
+            brk = this%step(fcnobj, xi, ytemp, xout, errmgr)
+            if (brk) exit
+            if (errmgr%has_error_occurred()) return
 
-            ! Integrate
-            i = 1
-            do
-                ! Copy the previous step's output
-                ytemp = buffer(i,2:ncols)
+            ! Store the output
+            buffer(i,1) = xi
+            buffer(i,2:ncols) = ytemp
 
-                ! Increment i
-                i = i + 1
-
-                ! Ensure the buffer is sufficiently sized
-                if (i > size(buffer, 1)) then
-                    call realloc_buffer(buffer, &
-                        size(buffer, 1) + this%get_min_buffer_size(), errmgr)
-                    if (errmgr%has_error_occurred()) return
-                end if
-
-                ! Take the next integration step
-
-                ! Store the output
-
-                ! Break if X exceeds XOUT
-            end do
-        else
-        end if
+            ! Break if X exceeds XOUT
+            if (ascending .and. xi >= x(n)) then
+                exit
+            else if (.not.ascending .and. xi <= x(n)) then
+                exit
+            end if
+        end do
 
         ! Resize the buffer to tightly fit the data, if necessary
+        rst = buffer(1:i,:)
     end function
 
 ! ------------------------------------------------------------------------------
     pure module function oi_get_use_all_output(this) result(x)
         class(ode_integrator), intent(in) :: this
         logical :: x
+        x = this%m_allOutput
     end function
 
 ! --------------------
     module subroutine oi_set_use_all_output(this, x)
         class(ode_integrator), intent(inout) :: this
         logical, intent(in) :: x
+        this%m_allOutput = x
     end subroutine
 
 ! ------------------------------------------------------------------------------
     pure module function oi_get_allow_overshoot(this) result(x)
         class(ode_integrator), intent(in) :: this
         logical :: x
+        x = this%m_canOvershoot
     end function
 
 ! --------------------
     module subroutine oi_set_allow_overshoot(this, x)
         class(ode_integrator), intent(inout) :: this
         logical, intent(in) :: x
+        this%m_canOvershoot = x
     end subroutine
 
 ! ------------------------------------------------------------------------------
     pure module function oi_get_critical_point(this) result(x)
         class(ode_integrator), intent(in) :: this
         real(real64) :: x
+        x = this%m_criticalPoint
     end function
 
 ! --------------------
     module subroutine oi_set_critical_point(this, x)
         class(ode_integrator), intent(inout) :: this
         real(real64), intent(in) :: x
+        this%m_criticalPoint = x
     end subroutine
 
 ! ------------------------------------------------------------------------------
     pure module function oi_get_min_buffer_size(this) result(x)
         class(ode_integrator), intent(in) :: this
         integer(int32) :: x
+        x = this%m_minBufferSize
     end function
 
 ! --------------------
     module subroutine oi_set_min_buffer_size(this, x)
         class(ode_integrator), intent(inout) :: this
         integer(int32), intent(in) :: x
+        this%m_minBufferSize = x
     end subroutine
 
 ! ******************************************************************************
@@ -181,12 +232,12 @@ contains
 ! ------------------------------------------------------------------------------
     subroutine realloc_buffer(x, new_row_count, err)
         ! Arguments
-        real(real64), intent(inout), allocatable, dimension(:,:) :: xold
+        real(real64), intent(inout), allocatable, dimension(:,:) :: x
         integer(int32), intent(in) :: new_row_count
         class(errors), intent(inout) :: err
 
         ! Local Variables
-        integer(int32) :: oldm, n
+        integer(int32) :: oldm, n, flag
         real(real64), allocatable, dimension(:,:) :: temp
 
         ! Initialization

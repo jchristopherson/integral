@@ -51,4 +51,34 @@ contains
     end function
 
 ! ------------------------------------------------------------------------------
+    module subroutine oh_define_constraints(this, n, fcn)
+        class(ode_helper), intent(inout) :: this
+        integer(int32), intent(in) :: n
+        procedure(ode_constraint), intent(in), pointer :: fcn
+        this%m_constraints = n
+        this%m_rts => fcn
+    end subroutine
+
+! ------------------------------------------------------------------------------
+    module function oh_get_constraints(this) result(x)
+        class(ode_helper), intent(in) :: this
+        procedure(ode_constraint), pointer :: x
+        x => this%m_rts
+    end function
+
+! ------------------------------------------------------------------------------
+    pure module function oh_get_constraint_count(this) result(x)
+        class(ode_helper), intent(in) :: this
+        integer(int32) :: x
+        x = this%m_constraints
+    end function
+
+! ------------------------------------------------------------------------------
+    pure module function oh_get_constraints_defined(this) result(x)
+        class(ode_helper), intent(in) :: this
+        logical :: x
+        x = associated(this%m_rts)
+    end function
+
+! ------------------------------------------------------------------------------
 end submodule
