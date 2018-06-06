@@ -33,6 +33,7 @@ module integral_core
     public :: ode_helper
     public :: ode_integrator
     public :: ode_integrator_interface
+    public :: ode_auto
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -774,6 +775,7 @@ module integral_core
         procedure(ode_integrator_interface), public, deferred, pass :: step
     end type
 
+! ------------------------------------------------------------------------------
     interface
         !> @brief Defines a routine for computing a single integration step in
         !! the direction of @p xout.
@@ -853,5 +855,27 @@ module integral_core
             class(ode_integrator), intent(inout) :: this
             integer(int32), intent(in) :: x
         end subroutine
+    end interface
+
+! ******************************************************************************
+! INTEGRAL_ODE_AUTO.F90
+! ------------------------------------------------------------------------------
+    type, extends(ode_integrator) :: ode_auto
+        real(real64), allocatable, dimension(:) :: m_rwork
+        integer(int32), allocatable, dimension(:) :: m_iwork
+    contains
+        procedure, public :: step => oa_step
+    end type
+
+    interface
+        module function oa_step(this, fcn, x, y, xout, err) result(brk)
+            class(ode_auto), intent(inout) :: this
+            class(ode_helper), intent(in) :: fcn
+            real(real64), intent(inout) :: x
+            real(real64), intent(inout), dimension(:) :: y
+            real(real64), intent(in) :: xout
+            class(errors), intent(inout), optional, target :: err
+            logical :: brk
+        end function
     end interface
 end module
