@@ -863,6 +863,8 @@ module integral_core
     type, extends(ode_integrator) :: ode_auto
         real(real64), allocatable, dimension(:) :: m_rwork
         integer(int32), allocatable, dimension(:) :: m_iwork
+        !> This flag is used directly by ODEPACK.  Set to 1 for initial call.
+        integer(int32) :: m_istate = 1
     contains
         procedure, public :: step => oa_step
     end type
