@@ -14,11 +14,12 @@ contains
         logical :: brk
 
         ! Local Variables
-        integer(int32) :: neq, itask, iopt, lrw, liw, jt, ncnst, lrn, lrs
+        integer(int32) :: neq, itask, iopt, lrw, liw, jt, ncnst, lrn, lrs, itol
         logical :: useConstraints
         class(errors), pointer :: errmgr
         type(errors), target :: deferr
         procedure(ode_fcn), pointer :: fptr
+        procedure(ode_jacobian), pointer :: jacptr
 
         ! Initialization
         neq = fcn%get_equation_count()
@@ -39,6 +40,7 @@ contains
         end if
         if (fcn%get_jacobian_defined()) then
             jt = 1
+            jacptr => fcn%get_jacobian()
         else
             jt = 2
         end if
@@ -50,12 +52,27 @@ contains
         lrw = max(lrn, lrs)
         liw = 20 + neq
 
+        ! Define workspace arrays
+
+        ! Get tolerance info
+        itol = 2
+        ! RTOL is a scalar, not an array
+
         ! Determine if we are to call DLSODA or DLSODAR
         if (useConstraints .and. ncnst > 0) then
         else
+            !call DLSODA(odepackfcn, neq, y, x, xout, itol, rtol, atol, itask, this%m_istate, iopt, this%m_rwork, lrw, this%m_iwork, liw, odepackjac, jt)
         end if
 
         ! Check output condition
+        select case (this%m_istate)
+        case (-1)
+        case (-2)
+        case (-3)
+        case (-4)
+        case (-5)
+        case (-6)
+        end select
 
     contains
         subroutine odepackfcn(n, x, y, dydx)
@@ -63,6 +80,13 @@ contains
             real(real64), intent(in) :: x, y(n)
             real(real64), intent(out) :: dydx(n)
             call fptr(x, y, dydx)
+        end subroutine
+
+        subroutine odepackjac(n, x, y, ml, mu, pd, nrowpd)
+            integer(int32), intent(in) :: n, ml, mu, nrowpd
+            real(real64), intent(in) :: x, y(n)
+            real(real64), intent(out) :: pd(nrowpd, n)
+            call jacptr(x, y, pd)
         end subroutine
     end function
 end submodule
