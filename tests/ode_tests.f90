@@ -9,10 +9,8 @@ contains
 ! ------------------------------------------------------------------------------
     ! Test Problem #1
     ! x" + 2 * z * wn * x' + wn**2 * x = 0
-    ! x(0) = 1
-    ! x'(0) = 0
     !
-    ! Solution:
+    ! Solution (z < 1):
     ! x(t) = exp(-wn * z * t) * (C1 * cos(a * t) + C2 * sin(a * t))
     ! x'(t) = exp(-wn * z * t) * (a * (C2 * cos(a * t) - C1 * sin(a * t)) - ...
     !   wn * z * (C1 * cos(a * t) + C2 * sin(a * t)))
@@ -158,4 +156,132 @@ contains
                 ans(2), ", but found ", x(2), "."
         end if
     end function
+
+! ------------------------------------------------------------------------------
+    ! Specifiy solution points
+    function ode_test_1() result(rst)
+        ! Local Variables
+        logical :: rst
+
+        ! Parameters
+        real(real64), parameter :: tstart = 0.0d0
+        real(real64), parameter :: tend = 1.0d0
+        integer(int32), parameter :: npts = 100
+        real(real64), parameter :: tol = 1.0d-4
+        real(real64), parameter :: z = 0.2d0
+        real(real64), parameter :: wn = 2.5d2
+
+        ! More Variables
+        integer(int32) :: i
+        type(ode_helper) :: obj
+        type(ode_auto) :: integrator
+        procedure(ode_fcn), pointer :: fcn
+        real(real64) :: ic(2), dt, t(npts), ans(2)
+        real(real64), allocatable, dimension(:,:) :: x
+
+        ! Initialization
+        rst = .true.
+
+        ! Build the time vector
+        dt = (tend - tstart) / (npts - 1.0d0)
+        t(1) = tstart
+        do i = 2, npts
+            t(i) = t(i-1) + dt
+        end do
+
+        ! Set up the integrator
+        fcn => ode_test_fcn_1
+        call obj%define_equations(2, fcn)
+        call integrator%set_provide_all_output(.false.)
+
+        ! Define the initial conditions
+        ic = [1.0d0, 0.0d0]
+
+        ! Compute the solution at each time point
+        x = integrator%integrate(obj, t, ic)
+
+        ! Check the solution
+        do i = 1, size(x, 1)
+            ans = ode_ans1(z, wn, x(i,1))
+
+            if (abs(x(i,2) - ans(1)) > tol) then
+                rst = .false.
+                print '(AEN12.3AEN12.3AEN12.3)', &
+                    "ODE Test 1 Failed.  Time = ", x(i,1), ", Expected: ", &
+                    ans(1), ", Found: ", x(i,2)
+            end if
+
+            if (abs(x(i,3) - ans(2)) > tol) then
+                rst = .false.
+                print '(AEN12.3AEN12.3AEN12.3)', &
+                    "ODE Test 1 Failed (Derivative).  Time = ", x(i,1), &
+                    ", Expected: ", ans(2), ", Found: ", x(i,3)
+            end if
+        end do
+    end function
+
+    ! ------------------------------------------------------------------------------
+        ! Let the integrator choose solution points
+        function ode_test_2() result(rst)
+            ! Local Variables
+            logical :: rst
+
+            ! Parameters
+            real(real64), parameter :: tstart = 0.0d0
+            real(real64), parameter :: tend = 1.0d0
+            integer(int32), parameter :: npts = 100
+            real(real64), parameter :: tol = 1.0d-3
+            real(real64), parameter :: z = 0.2d0
+            real(real64), parameter :: wn = 2.5d2
+
+            ! More Variables
+            integer(int32) :: i
+            type(ode_helper) :: obj
+            type(ode_auto) :: integrator
+            procedure(ode_fcn), pointer :: fcn
+            real(real64) :: ic(2), dt, t(npts), ans(2)
+            real(real64), allocatable, dimension(:,:) :: x
+
+            ! Initialization
+            rst = .true.
+
+            ! Build the time vector
+            dt = (tend - tstart) / (npts - 1.0d0)
+            t(1) = tstart
+            do i = 2, npts
+                t(i) = t(i-1) + dt
+            end do
+
+            ! Set up the integrator
+            fcn => ode_test_fcn_1
+            call obj%define_equations(2, fcn)
+
+            ! Define the initial conditions
+            ic = [1.0d0, 0.0d0]
+
+            ! Compute the solution at each time point
+            x = integrator%integrate(obj, t, ic)
+
+            print *, x(size(x, 1), 1)
+
+            ! Check the solution
+            do i = 1, size(x, 1)
+                ans = ode_ans1(z, wn, x(i,1))
+
+                if (abs(x(i,2) - ans(1)) > tol) then
+                    rst = .false.
+                    print '(AEN12.3AEN12.3AEN12.3)', &
+                        "ODE Test 2 Failed.  Time = ", x(i,1), ", Expected: ", &
+                        ans(1), ", Found: ", x(i,2)
+                end if
+
+                if (abs(x(i,3) - ans(2)) > tol) then
+                    rst = .false.
+                    print '(AEN12.3AEN12.3AEN12.3)', &
+                        "ODE Test 2 Failed (Derivative).  Time = ", x(i,1), &
+                        ", Expected: ", ans(2), ", Found: ", x(i,3)
+                end if
+            end do
+        end function
+
 end module

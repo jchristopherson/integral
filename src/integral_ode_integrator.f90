@@ -46,7 +46,7 @@ contains
         if (neqn <= 0) return
 
         ! Input Checking
-        if (fcnobj%get_equations_defined()) then
+        if (.not.fcnobj%get_equations_defined()) then
             ! ERROR: Equations undefined
             call errmgr%report_error("oi_integrate", &
                 "The routine expected to hold the ODEs is undefined.", &
