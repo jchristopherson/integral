@@ -6,7 +6,7 @@ contains
     module function oi_integrate(this, fcnobj, x, y, err) result(rst)
         ! Arguments
         class(ode_integrator), intent(inout) :: this
-        class(ode_helper), intent(in) :: fcnobj
+        class(ode_helper), intent(inout) :: fcnobj
         real(real64), intent(in), dimension(:) :: x, y
         class(errors), intent(inout), optional, target :: err
         real(real64), allocatable, dimension(:,:) :: rst
@@ -135,7 +135,8 @@ contains
 
             ! Take the next integration step
             if (.not.this%get_provide_all_output()) xout = x(i)
-            brk = this%step(fcnobj, xi, ytemp, xout, errmgr)
+            brk = this%step(fcnobj, xi, ytemp, xout, this%m_rtol, this%m_atol, &
+                errmgr)
             if (brk) exit
             if (errmgr%has_error_occurred()) return
 

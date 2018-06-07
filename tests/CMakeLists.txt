@@ -2,6 +2,7 @@
 set(integral_test_sources
     integral_tests.f90
     finite_interval_tests.f90
+    ode_tests.f90
 )
 
 # Build the executable

@@ -12,7 +12,7 @@ contains
         nullify(this%m_jac)
         this%m_count = neqn
         this%m_fcn => fcn
-        this%m_jac => jac
+        if (present(jac)) this%m_jac => jac
     end subroutine
 
 ! ------------------------------------------------------------------------------
@@ -37,20 +37,6 @@ contains
     end function
 
 ! ------------------------------------------------------------------------------
-    module function oh_get_fcn(this) result(x)
-        class(ode_helper), intent(in) :: this
-        procedure(ode_fcn), pointer :: x
-        x => this%m_fcn
-    end function
-
-! ------------------------------------------------------------------------------
-    module function oh_get_jac(this) result(x)
-        class(ode_helper), intent(in) :: this
-        procedure(ode_jacobian), pointer :: x
-        x => this%m_jac
-    end function
-
-! ------------------------------------------------------------------------------
     module subroutine oh_define_constraints(this, n, fcn)
         class(ode_helper), intent(inout) :: this
         integer(int32), intent(in) :: n
@@ -58,13 +44,6 @@ contains
         this%m_constraints = n
         this%m_rts => fcn
     end subroutine
-
-! ------------------------------------------------------------------------------
-    module function oh_get_constraints(this) result(x)
-        class(ode_helper), intent(in) :: this
-        procedure(ode_constraint), pointer :: x
-        x => this%m_rts
-    end function
 
 ! ------------------------------------------------------------------------------
     pure module function oh_get_constraint_count(this) result(x)
@@ -79,6 +58,33 @@ contains
         logical :: x
         x = associated(this%m_rts)
     end function
+
+! ------------------------------------------------------------------------------
+    module subroutine oh_eval(this, x, y, dydx)
+        class(ode_helper), intent(inout) :: this
+        real(real64), intent(in) :: x
+        real(real64), intent(in), dimension(:) :: y
+        real(real64), intent(out), dimension(:) :: dydx
+        call this%m_fcn(x, y, dydx)
+    end subroutine
+
+! ------------------------------------------------------------------------------
+    module subroutine oh_eval_jac(this, x, y, jac)
+        class(ode_helper), intent(inout) :: this
+        real(real64), intent(in) :: x
+        real(real64), intent(in), dimension(:) :: y
+        real(real64), intent(out), dimension(:,:) :: jac
+        call this%m_jac(x, y, jac)
+    end subroutine
+
+! ------------------------------------------------------------------------------
+    module subroutine oh_eval_constraints(this, x, y, f)
+        class(ode_helper), intent(inout) :: this
+        real(real64), intent(in) :: x
+        real(real64), intent(in), dimension(:) :: y
+        real(real64), intent(out), dimension(:) :: f
+        call this%m_rts(x, y, f)
+    end subroutine
 
 ! ------------------------------------------------------------------------------
 end submodule

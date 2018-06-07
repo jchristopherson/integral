@@ -14,6 +14,9 @@ module integral_core
     public :: INT_INVALID_INPUT_ERROR
     public :: INT_LACK_OF_DEFINITION_ERROR
     public :: INT_ARRAY_SIZE_MISMATCH_ERROR
+    public :: INT_EXCESSIVE_WORK_ERROR
+    public :: INT_IMPRACTICAL_TOLERANCE_ERROR
+    public :: INT_REPEATED_ERROR_TEST_FAILURE
     public :: INT_15_POINT_RULE
     public :: INT_21_POINT_RULE
     public :: INT_31_POINT_RULE
@@ -55,6 +58,9 @@ module integral_core
     integer(int32), parameter :: INT_LACK_OF_DEFINITION_ERROR = 8
     !> @brief An error indicating an inappropriately sized array.
     integer(int32), parameter :: INT_ARRAY_SIZE_MISMATCH_ERROR = 9
+    integer(int32), parameter :: INT_EXCESSIVE_WORK_ERROR = 10
+    integer(int32), parameter :: INT_IMPRACTICAL_TOLERANCE_ERROR = 11
+    integer(int32), parameter :: INT_REPEATED_ERROR_TEST_FAILURE = 12
 
 ! ------------------------------------------------------------------------------
     !> @brief Defines a 15-point Gauss-Kronrod integration rule.
@@ -127,7 +133,7 @@ module integral_core
             use, intrinsic :: iso_fortran_env, only : real64
             real(real64), intent(in) :: x
             real(real64), intent(in), dimension(:) :: y
-            real(real64), intent(out) :: f
+            real(real64), intent(out), dimension(:) :: f
         end subroutine
     end interface
 
@@ -619,27 +625,6 @@ module integral_core
         !!  has been defined (by calling @p define_equations); else, false if
         !!  it has not.
         procedure, public :: get_jacobian_defined => oh_is_jac_defined
-        !> @brief Gets a pointer to the routine used to compute the value of
-        !!  the ODEs.
-        !!
-        !! @par Syntax
-        !! @code{.f90}
-        !! procedure(ode_fcn) pointer function get_ode_fcn(class(ode_helper) this)
-        !! @endcode
-        !!
-        !! @param[in] this The ode_helper object.
-        !! @return The pointer to the ODE routine.
-        procedure, public :: get_ode_fcn => oh_get_fcn
-        !> @brief Gets a pointer to the routine used to compute the Jacobian.
-        !!
-        !! @par Syntax
-        !! @code{.f90}
-        !! procedure(ode_jacobian) pointer function get_jacobian(class(ode_helper) this)
-        !! @endcode
-        !!
-        !! @param[in] this The ode_helper object.
-        !! @return The pointer to the Jacobian routine.
-        procedure, public :: get_jacobian => oh_get_jac
         !> @brief Defines a routine for applying constraints to the ODEs.
         !!
         !! @par Syntax
@@ -652,17 +637,6 @@ module integral_core
         !! @param[in] fcn A pointer to the routine containing the constraint
         !!  equations.
         procedure, public :: define_constraints => oh_define_constraints
-        !> @brief Gets a pointer to the routine containing the constraint
-        !! equations.
-        !!
-        !! @par Syntax
-        !! @code{.f90}
-        !! procedure(ode_constraint) pointer function get_constraints(class(ode_helper) this)
-        !! @endcode
-        !!
-        !! @param[in] this The ode_helper object
-        !! @return A pointer to the routine containing the constraint equations.
-        procedure, public :: get_constraints => oh_get_constraints
         !> @brief Gets the number of constraint equations.
         !!
         !! @par Syntax
@@ -684,6 +658,50 @@ module integral_core
         !! @return True if the constraint equation routine is defined; else,
         !!  false.
         procedure, public :: get_constraints_defined => oh_get_constraints_defined
+        !! @brief Evaluates the routine containing the system of ODEs.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine evaluate_ode(class(ode_helper) this, real(real64) x, real(real64) y(:), real(real64) dydx(:))
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_helper object.
+        !! @param[in] x The value of the independent variable at which to
+        !!  evalaute the ODEs.
+        !! @param[in] y An N-element array cotnaining the current estimates
+        !!  of the dependent variables as evaluated at @p x.
+        !! @param[out] dydx An N-element array where the values of the ODEs
+        !!  as evaluated at @p x are to be written.
+        procedure, public :: evaluate_ode => oh_eval
+        !> @brief Evaluates the Jacobian matrix.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine evalaute_jacobian(class(ode_helper) this, real(real64) x, real(real64) y(:), real(real64) jac(:,:))
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_helper object.
+        !! @param[in] x The value of the independent variable at which the
+        !!  Jacobian is to be evaluated.
+        !! @param[in] y An N-element array containing the values of the
+        !!  dependent variables at @p x.
+        !! @param[out] jac An N-by-N matrix where the Jacobian is to be written.
+        procedure, public :: evaluate_jacobian => oh_eval_jac
+        !> @brief Evaluates the constraint equations.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine evaluate_constraints(class(ode_helper) this, real(real64) x, real(real64) y(:), real(real64) f(:))
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_helper object.
+        !! @param[in] x The value of the independent variable at which the
+        !!  Jacobian is to be evaluated.
+        !! @param[in] y An N-element array containing the values of the
+        !!  dependent variables at @p x where N is the number of ODEs.
+        !! @param[out] f An M-element array where the values of the M
+        !!  constraint equations are to be written.
+        procedure, public :: evaluate_constraints => oh_eval_constraints
     end type
 
     interface
@@ -709,26 +727,11 @@ module integral_core
             logical :: x
         end function
 
-        module function oh_get_fcn(this) result(x)
-            class(ode_helper), intent(in) :: this
-            procedure(ode_fcn), pointer :: x
-        end function
-
-        module function oh_get_jac(this) result(x)
-            class(ode_helper), intent(in) :: this
-            procedure(ode_jacobian), pointer :: x
-        end function
-
         module subroutine oh_define_constraints(this, n, fcn)
             class(ode_helper), intent(inout) :: this
             integer(int32), intent(in) :: n
             procedure(ode_constraint), intent(in), pointer :: fcn
         end subroutine
-
-        module function oh_get_constraints(this) result(x)
-            class(ode_helper), intent(in) :: this
-            procedure(ode_constraint), pointer :: x
-        end function
 
         pure module function oh_get_constraint_count(this) result(x)
             class(ode_helper), intent(in) :: this
@@ -739,6 +742,27 @@ module integral_core
             class(ode_helper), intent(in) :: this
             logical :: x
         end function
+
+        module subroutine oh_eval(this, x, y, dydx)
+            class(ode_helper), intent(inout) :: this
+            real(real64), intent(in) :: x
+            real(real64), intent(in), dimension(:) :: y
+            real(real64), intent(out), dimension(:) :: dydx
+        end subroutine
+
+        module subroutine oh_eval_jac(this, x, y, jac)
+            class(ode_helper), intent(inout) :: this
+            real(real64), intent(in) :: x
+            real(real64), intent(in), dimension(:) :: y
+            real(real64), intent(out), dimension(:,:) :: jac
+        end subroutine
+
+        module subroutine oh_eval_constraints(this, x, y, f)
+            class(ode_helper), intent(inout) :: this
+            real(real64), intent(in) :: x
+            real(real64), intent(in), dimension(:) :: y
+            real(real64), intent(out), dimension(:) :: f
+        end subroutine
     end interface
 
 ! ******************************************************************************
@@ -781,7 +805,8 @@ module integral_core
         !! the direction of @p xout.
         !!
         !! @param[in,out] this The ode_integrator object.
-        !! @param[in] fcn An ode_helper object containing the ODEs to integrate.
+        !! @param[in,out] fcn An ode_helper object containing the ODEs to
+        !!  integrate.
         !! @param[in,out] x On input, the value of the independent variable at
         !!  which to start.  On output, the value of the independent variable at
         !!  which integration terminated.
@@ -790,27 +815,32 @@ module integral_core
         !!  dependent variable(s) as evaluated at the output given in @p x.
         !! @param[in] xout The value of the independent variable at which the
         !!  solution is desired.
+        !! @param[in] rtol An array containing relative tolerance information
+        !!  for each ODE.
+        !! @param[in] atol An array containing absolute tolerance information
+        !!  for each ODE.
         !! @param[in,out] err An optional argument that can be used to control
         !!  the error handling behavior of the integrator.
         !! @return Returns true if the integrator requests a stop; else, false,
         !!  to continue as normal.
-        function ode_integrator_interface(this, fcn, x, y, xout, err) result(brk)
+        function ode_integrator_interface(this, fcn, x, y, xout, rtol, atol, err) result(brk)
             use, intrinsic :: iso_fortran_env, only : int32, real64
             use ferror
             import ode_integrator
             import ode_helper
             class(ode_integrator), intent(inout) :: this
-            class(ode_helper), intent(in) :: fcn
+            class(ode_helper), intent(inout) :: fcn
             real(real64), intent(inout) :: x
             real(real64), intent(inout), dimension(:) :: y
             real(real64), intent(in) :: xout
+            real(real64), intent(in), dimension(:) :: rtol, atol
             class(errors), intent(inout), optional, target :: err
             logical :: brk
         end function
 
         module function oi_integrate(this, fcnobj, x, y, err) result(rst)
             class(ode_integrator), intent(inout) :: this
-            class(ode_helper), intent(in) :: fcnobj
+            class(ode_helper), intent(inout) :: fcnobj
             real(real64), intent(in), dimension(:) :: x, y
             class(errors), intent(inout), optional, target :: err
             real(real64), allocatable, dimension(:,:) :: rst
@@ -863,21 +893,30 @@ module integral_core
     type, extends(ode_integrator) :: ode_auto
         real(real64), allocatable, dimension(:) :: m_rwork
         integer(int32), allocatable, dimension(:) :: m_iwork
+        integer(int32), allocatable, dimension(:) :: m_rststats
         !> This flag is used directly by ODEPACK.  Set to 1 for initial call.
         integer(int32) :: m_istate = 1
     contains
         procedure, public :: step => oa_step
+        procedure, private :: init_workspace => oa_init_workspace
     end type
 
     interface
-        module function oa_step(this, fcn, x, y, xout, err) result(brk)
+        module function oa_step(this, fcn, x, y, xout, rtol, atol, err) result(brk)
             class(ode_auto), intent(inout) :: this
-            class(ode_helper), intent(in) :: fcn
+            class(ode_helper), intent(inout) :: fcn
             real(real64), intent(inout) :: x
             real(real64), intent(inout), dimension(:) :: y
             real(real64), intent(in) :: xout
+            real(real64), intent(in), dimension(:) :: rtol, atol
             class(errors), intent(inout), optional, target :: err
             logical :: brk
         end function
+
+        module subroutine oa_init_workspace(this, liw, lrw, ncnsts, err)
+            class(ode_auto), intent(inout) :: this
+            integer(int32), intent(in) :: liw, lrw, ncnsts
+            class(errors), intent(inout) :: err
+        end subroutine
     end interface
 end module
