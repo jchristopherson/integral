@@ -55,7 +55,7 @@ contains
         end if
         if (neqn /= size(y)) then
             ! ERROR: # of equations does not match initial condition vector size
-            write(errmsg, '(AI0AI0A)'), "Expected an array of size ", neqn, &
+            write(errmsg, '(AI0AI0A)') "Expected an array of size ", neqn, &
                 ", but found an array of size ", size(y), "."
             call errmgr%report_error("oi_integrate", trim(errmsg), &
                 INT_ARRAY_SIZE_MISMATCH_ERROR)

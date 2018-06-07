@@ -31,20 +31,6 @@ contains
         else
             errmgr => deferr
         end if
-        if (this%get_allow_overshoot()) then
-            itask = 1
-            if (this%get_provide_all_output()) itask = 2
-        else
-            itask = 4
-            if (this%get_provide_all_output()) itask = 5
-        end if
-        if (fcn%get_jacobian_defined()) then
-            jt = 1
-            jacptr => fcn%get_jacobian()
-        else
-            jt = 2
-        end if
-        iopt = 0
 
         ! Ensure workspace arrays are sized appropriately
         lrn = 20 + 16 * neq
@@ -54,14 +40,32 @@ contains
 
         ! Define workspace arrays
 
-        ! Get tolerance info
-        itol = 2
-        ! RTOL is a scalar, not an array
+        ! Additional Initialization
+        if (this%get_allow_overshoot()) then
+            itask = 1
+            iopt = 0
+            if (this%get_provide_all_output()) itask = 2
+        else
+            itask = 4
+            iopt = 1
+            this%m_rwork(1) = this%get_integration_limit()
+            if (this%get_provide_all_output()) itask = 5
+        end if
+        if (fcn%get_jacobian_defined()) then
+            jt = 1
+            jacptr => fcn%get_jacobian()
+        else
+            jt = 2
+        end if
+        itol = 4
+
 
         ! Determine if we are to call DLSODA or DLSODAR
         if (useConstraints .and. ncnst > 0) then
         else
-            !call DLSODA(odepackfcn, neq, y, x, xout, itol, rtol, atol, itask, this%m_istate, iopt, this%m_rwork, lrw, this%m_iwork, liw, odepackjac, jt)
+            call DLSODA(odepackfcn, neq, y, x, xout, itol, rtol, atol, itask, &
+                this%m_istate, iopt, this%m_rwork, lrw, this%m_iwork, liw, &
+                odepackjac, jt)
         end if
 
         ! Check output condition
