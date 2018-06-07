@@ -31,9 +31,9 @@ contains
         ncols = neqn + 1
         n = size(x)
         if (this%get_provide_all_output()) then
-            nbuffer = n
-        else
             nbuffer = this%get_min_buffer_size()
+        else
+            nbuffer = n
         end if
         allocate(ytemp(neqn), stat = flag)
         if (flag /= 0) then

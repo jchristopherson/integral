@@ -229,7 +229,6 @@ contains
             ! Parameters
             real(real64), parameter :: tstart = 0.0d0
             real(real64), parameter :: tend = 1.0d0
-            integer(int32), parameter :: npts = 100
             real(real64), parameter :: tol = 1.0d-3
             real(real64), parameter :: z = 0.2d0
             real(real64), parameter :: wn = 2.5d2
@@ -239,18 +238,14 @@ contains
             type(ode_helper) :: obj
             type(ode_auto) :: integrator
             procedure(ode_fcn), pointer :: fcn
-            real(real64) :: ic(2), dt, t(npts), ans(2)
+            real(real64) :: ic(2), t(2), ans(2)
             real(real64), allocatable, dimension(:,:) :: x
 
             ! Initialization
             rst = .true.
 
             ! Build the time vector
-            dt = (tend - tstart) / (npts - 1.0d0)
-            t(1) = tstart
-            do i = 2, npts
-                t(i) = t(i-1) + dt
-            end do
+            t = [tstart, tend]
 
             ! Set up the integrator
             fcn => ode_test_fcn_1
@@ -262,7 +257,10 @@ contains
             ! Compute the solution at each time point
             x = integrator%integrate(obj, t, ic)
 
-            print *, x(size(x, 1), 1)
+            print *, "SIZE(X,1) = ", size(x, 1)
+            do i = 1, size(x, 1)
+                print *, x(i,:)
+            end do
 
             ! Check the solution
             do i = 1, size(x, 1)
