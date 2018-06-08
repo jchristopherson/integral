@@ -1,0 +1,32 @@
+# Link in dependencies necessary to generate plots
+find_package(fplot)
+find_package(ferror 1.3.0)
+find_package(collections 1.1.0)
+
+# Van Der Pol Example
+add_executable(vanderpol vanderpol.f90)
+target_link_libraries(vanderpol integral fplot)
+
+
+
+# ------------------------------------------------------------------------------
+if (WIN32)
+    # Copy shared libraries necessary to generate plots to the runtime directory
+    get_target_property(ferror_LibLocation ferror LOCATION)
+    add_custom_command(TARGET vanderpol POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${ferror_LibLocation} $<TARGET_FILE_DIR:vanderpol>
+    )
+
+    get_target_property(fplot_LibLocation fplot LOCATION)
+    add_custom_command(TARGET vanderpol POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${fplot_LibLocation} $<TARGET_FILE_DIR:vanderpol>
+    )
+
+    get_target_property(collections_LibLocation collections LOCATION)
+    add_custom_command(TARGET vanderpol POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${collections_LibLocation} $<TARGET_FILE_DIR:vanderpol>
+    )
+endif()

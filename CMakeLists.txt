@@ -108,14 +108,14 @@ add_subdirectory(src)
 # ------------------------------------------------------------------------------
 # EXAMPLES
 # ------------------------------------------------------------------------------
-# option(BUILD_INTEGRAL_EXAMPLES "Build INTEGRAL examples?" OFF)
-# if (BUILD_INTEGRAL_EXAMPLES)
-#     # Inform the user we're building the examples
-#     message(STATUS "Building INTEGRAL examples.")
-#
-#     # Build the examples
-#     add_subdirectory(examples)
-# endif()
+option(BUILD_INTEGRAL_EXAMPLES "Build INTEGRAL examples?" OFF)
+if (BUILD_INTEGRAL_EXAMPLES)
+    # Inform the user we're building the examples
+    message(STATUS "Building INTEGRAL examples.")
+
+    # Build the examples
+    add_subdirectory(examples)
+endif()
 
 # ------------------------------------------------------------------------------
 # TESTS
