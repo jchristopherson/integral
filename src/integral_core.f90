@@ -785,6 +785,14 @@ module integral_core
         real(real64) :: m_criticalPoint = 0.0d0
         !> @brief Defines the minimum buffer size
         integer(int32) :: m_minBufferSize = 500
+        !> @brief The maximum allowable step size.  This is only used if
+        !! m_limitStepSize is set to true.
+        real(real64) :: m_maxStepSize = 1.0d0
+        !> @brief Determines if limits should be imposed upon maximum step
+        !! size.
+        logical :: m_limitStepSize = .false.
+        !> @brief Determines the iteration step limit per integration step
+        integer(int32) :: m_maxStepCount = 500
     contains
         procedure, public :: integrate => oi_integrate
         procedure, public :: get_provide_all_output => oi_get_use_all_output
@@ -795,6 +803,12 @@ module integral_core
         procedure, public :: set_integration_limit => oi_set_critical_point
         procedure, public :: get_min_buffer_size => oi_get_min_buffer_size
         procedure, public :: set_min_buffer_size => oi_set_min_buffer_size
+        procedure, public :: get_max_step_size => oi_get_max_step_size
+        procedure, public :: set_max_step_size => oi_set_max_step_size
+        procedure, public :: get_limit_step_size => oi_get_limit_step_size
+        procedure, public :: set_limit_step_size => oi_set_limit_step_size
+        procedure, public :: get_iteration_limit => oi_get_iteration_limit
+        procedure, public :: set_iteration_limit => oi_set_iteration_limit
         !> @brief Takes a single integration step towards the desired point.
         procedure(ode_integrator_interface), public, deferred, pass :: step
     end type
@@ -882,6 +896,36 @@ module integral_core
         end function
 
         module subroutine oi_set_min_buffer_size(this, x)
+            class(ode_integrator), intent(inout) :: this
+            integer(int32), intent(in) :: x
+        end subroutine
+
+        pure module function oi_get_max_step_size(this) result(x)
+            class(ode_integrator), intent(in) :: this
+            real(real64) :: x
+        end function
+
+        module subroutine oi_set_max_step_size(this, x)
+            class(ode_integrator), intent(inout) :: this
+            real(real64), intent(in) :: x
+        end subroutine
+
+        pure module function oi_get_limit_step_size(this) result(x)
+            class(ode_integrator), intent(in) :: this
+            logical :: x
+        end function
+
+        module subroutine oi_set_limit_step_size(this, x)
+            class(ode_integrator), intent(inout) :: this
+            logical, intent(in) :: x
+        end subroutine
+
+        pure module function oi_get_iteration_limit(this) result(x)
+            class(ode_integrator), intent(in) :: this
+            integer(int32) :: x
+        end function
+
+        module subroutine oi_set_iteration_limit(this, x)
             class(ode_integrator), intent(inout) :: this
             integer(int32), intent(in) :: x
         end subroutine

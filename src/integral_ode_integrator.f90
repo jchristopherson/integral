@@ -216,6 +216,48 @@ contains
         this%m_minBufferSize = x
     end subroutine
 
+! ------------------------------------------------------------------------------
+    pure module function oi_get_max_step_size(this) result(x)
+        class(ode_integrator), intent(in) :: this
+        real(real64) :: x
+        x = this%m_maxStepSize
+    end function
+
+! --------------------
+    module subroutine oi_set_max_step_size(this, x)
+        class(ode_integrator), intent(inout) :: this
+        real(real64), intent(in) :: x
+        this%m_maxStepSize = x
+    end subroutine
+
+! ------------------------------------------------------------------------------
+    pure module function oi_get_limit_step_size(this) result(x)
+        class(ode_integrator), intent(in) :: this
+        logical :: x
+        x = this%m_limitStepSize
+    end function
+
+! --------------------
+    module subroutine oi_set_limit_step_size(this, x)
+        class(ode_integrator), intent(inout) :: this
+        logical, intent(in) :: x
+        this%m_limitStepSize = x
+    end subroutine
+
+! ------------------------------------------------------------------------------
+    pure module function oi_get_iteration_limit(this) result(x)
+        class(ode_integrator), intent(in) :: this
+        integer(int32) :: x
+        x = this%m_maxStepCount
+    end function
+
+! --------------------
+    module subroutine oi_set_iteration_limit(this, x)
+        class(ode_integrator), intent(inout) :: this
+        integer(int32), intent(in) :: x
+        this%m_maxStepCount = x
+    end subroutine
+
 ! ******************************************************************************
 ! PRIVATE SUBMODULE ROUTINES
 ! ------------------------------------------------------------------------------

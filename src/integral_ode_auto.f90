@@ -59,6 +59,16 @@ contains
         end if
         itol = 4
 
+        if (this%get_limit_step_size()) then
+            iopt = 1
+            this%m_rwork(6) = this%get_max_step_size()
+        end if
+
+        if (this%get_iteration_limit() /= 500) then
+            iopt = 1
+            this%m_iwork(6) = this%get_iteration_limit()
+        end if
+
         ! Determine if we are to call DLSODA or DLSODAR
         if (useConstraints .and. ncnst > 0) then
             call DLSODAR(odepackfcn, neq, y, x, xout, itol, rtol, atol, itask, &
