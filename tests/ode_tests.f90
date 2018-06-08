@@ -257,11 +257,6 @@ contains
             ! Compute the solution at each time point
             x = integrator%integrate(obj, t, ic)
 
-            print *, "SIZE(X,1) = ", size(x, 1)
-            do i = 1, size(x, 1)
-                print *, x(i,:)
-            end do
-
             ! Check the solution
             do i = 1, size(x, 1)
                 ans = ode_ans1(z, wn, x(i,1))

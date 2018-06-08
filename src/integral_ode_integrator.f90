@@ -117,7 +117,11 @@ contains
 
         ! Integrate
         i = 1
-        xout = x(n)
+        if (this%get_provide_all_output()) then
+            xout = x(n)
+            call this%set_integration_limit(x(n))
+            call this%set_allow_overshoot(.false.)
+        end if
         do
             ! Copy the previous step's output
             xi = buffer(i,1)
