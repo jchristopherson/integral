@@ -11,6 +11,10 @@ target_link_libraries(vanderpol integral fplot)
 add_executable(lorenz lorenz.f90)
 target_link_libraries(lorenz integral fplot)
 
+# Bouncing Ball Example
+add_executable(bouncing_ball bouncing_ball.f90)
+target_link_libraries(bouncing_ball integral fplot)
+
 
 # ------------------------------------------------------------------------------
 if (WIN32)

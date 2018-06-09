@@ -167,6 +167,12 @@ contains
     end function
 
 ! ------------------------------------------------------------------------------
+    module subroutine oa_reset_integrator(this)
+        class(ode_auto), intent(inout) :: this
+        this%m_istate = 1
+    end subroutine
+
+! ------------------------------------------------------------------------------
     module subroutine oa_init_workspace(this, liw, lrw, ncnsts, err)
         ! Arguments
         class(ode_auto), intent(inout) :: this

@@ -141,7 +141,12 @@ contains
             if (.not.this%get_provide_all_output()) xout = x(i)
             brk = this%step(fcnobj, xi, ytemp, xout, this%m_rtol, this%m_atol, &
                 errmgr)
-            if (brk) exit
+            if (brk) then
+                ! Store the output, and then exit
+                buffer(i,1) = xi
+                buffer(i,2:ncols) = ytemp
+                exit
+            end if
             if (errmgr%has_error_occurred()) return
 
             ! Store the output
