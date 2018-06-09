@@ -51,6 +51,7 @@ program example
 
 contains
     ! Van Der Pol Equation
+    ! x" + x - mu * (1 - x**2) * x' = 0
     subroutine vdp(t, x, dxdt)
         real(real64), intent(in) :: t
         real(real64), intent(in), dimension(:) :: x

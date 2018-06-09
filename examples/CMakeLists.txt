@@ -7,6 +7,9 @@ find_package(collections 1.1.0)
 add_executable(vanderpol vanderpol.f90)
 target_link_libraries(vanderpol integral fplot)
 
+# Lorenz Example
+add_executable(lorenz lorenz.f90)
+target_link_libraries(lorenz integral fplot)
 
 
 # ------------------------------------------------------------------------------
