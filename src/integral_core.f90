@@ -1416,8 +1416,14 @@ module integral_core
     !! The above program produces the following output.
     !! @image html vanderpol_example.png
     type, extends(ode_integrator) :: ode_auto
+        !> A workspace array.
         real(real64), allocatable, dimension(:) :: m_rwork
+        !> An integer workspace array.
         integer(int32), allocatable, dimension(:) :: m_iwork
+        !> An array used to contain information regarding constraint status.
+        !! A value of 1 indicates the constraint was satisfied; else, a value
+        !! of 0 indicates the constraint wasn't satisfied.  There is one entry
+        !! in the array for each constraint.
         integer(int32), allocatable, dimension(:) :: m_rststats
         !> This flag is used directly by ODEPACK.  Set to 1 for initial call.
         integer(int32) :: m_istate = 1
@@ -1472,6 +1478,18 @@ module integral_core
         !!
         !! @param[in,out] this The ode_auto object.
         procedure, public :: reset => oa_reset_integrator
+        !> @brief Gets the status of each constraint equation.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical(:) function get_constraint_status(class(ode_auto) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_auto object.
+        !! @return An array containing the status of each constraint equation.
+        !!  A value of true indicates that the constraint was satisfied; else,
+        !!  a value of false indicates the constraint was not satisfied.
+        procedure, public :: get_constraint_status => oa_get_constraint_info
 
         procedure, private :: init_workspace => oa_init_workspace
     end type
@@ -1497,5 +1515,10 @@ module integral_core
         module subroutine oa_reset_integrator(this)
             class(ode_auto), intent(inout) :: this
         end subroutine
+
+        module function oa_get_constraint_info(this) result(x)
+            class(ode_auto), intent(in) :: this
+            logical, allocatable, dimension(:) :: x
+        end function
     end interface
 end module

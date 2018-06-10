@@ -224,4 +224,22 @@ contains
     end subroutine
 
 ! ------------------------------------------------------------------------------
+    module function oa_get_constraint_info(this) result(x)
+        ! Arguments
+        class(ode_auto), intent(in) :: this
+        logical, allocatable, dimension(:) :: x
+
+        ! Local Variables
+        integer(int32) :: i, n
+
+        ! Process
+        if (.not.allocated(this%m_rststats)) return
+        n = size(this%m_rststats)
+        allocate(x(n))
+        do i = 1, n
+            x(i) = this%m_rststats(i) == 1
+        end do
+    end function
+
+! ------------------------------------------------------------------------------
 end submodule

@@ -4,6 +4,7 @@ var searchData=
   ['get_5fallow_5fovershoot',['get_allow_overshoot',['../structintegral__core_1_1ode__integrator.html#a48d09b899dc980e978e5790245a28edc',1,'integral_core::ode_integrator']]],
   ['get_5fbreakpoints',['get_breakpoints',['../structintegral__core_1_1adaptive__integrator.html#ac4aa3a9dc5daa0f26669e03342d81df4',1,'integral_core::adaptive_integrator']]],
   ['get_5fconstraint_5fcount',['get_constraint_count',['../structintegral__core_1_1ode__helper.html#ad9e04786738b509dae8152bd8c96a54c',1,'integral_core::ode_helper']]],
+  ['get_5fconstraint_5fstatus',['get_constraint_status',['../structintegral__core_1_1ode__auto.html#a1398b5464a33536ccfea7ca999625c7f',1,'integral_core::ode_auto']]],
   ['get_5fconstraints_5fdefined',['get_constraints_defined',['../structintegral__core_1_1ode__helper.html#aeb42e00de7863a056160c6cdbb95e6ac',1,'integral_core::ode_helper']]],
   ['get_5fequation_5fcount',['get_equation_count',['../structintegral__core_1_1ode__helper.html#a1c37d793d4a3f7cd69bb893a2b4db281',1,'integral_core::ode_helper']]],
   ['get_5fequations_5fdefined',['get_equations_defined',['../structintegral__core_1_1ode__helper.html#a419faf9fe26d1c51acc0d03dce88a06c',1,'integral_core::ode_helper']]],

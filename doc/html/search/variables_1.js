@@ -10,7 +10,7 @@ var searchData=
   ['m_5fcriticalpoint',['m_criticalpoint',['../structintegral__core_1_1ode__integrator.html#a951b86dab49209492d2906a9ef3a16e3',1,'integral_core::ode_integrator']]],
   ['m_5ffcn',['m_fcn',['../structintegral__core_1_1ode__helper.html#aa2466912c0bc7ff13a704073357f0a58',1,'integral_core::ode_helper']]],
   ['m_5fistate',['m_istate',['../structintegral__core_1_1ode__auto.html#a57af60d28a09024a16287e13c77330f8',1,'integral_core::ode_auto']]],
-  ['m_5fiwork',['m_iwork',['../structintegral__core_1_1adaptive__integrator.html#ab436b7c59e3e7a6def496e6db3e76663',1,'integral_core::adaptive_integrator']]],
+  ['m_5fiwork',['m_iwork',['../structintegral__core_1_1adaptive__integrator.html#ab436b7c59e3e7a6def496e6db3e76663',1,'integral_core::adaptive_integrator::m_iwork()'],['../structintegral__core_1_1ode__auto.html#af672d690a71a7658f25d7bf066fcea98',1,'integral_core::ode_auto::m_iwork()']]],
   ['m_5fjac',['m_jac',['../structintegral__core_1_1ode__helper.html#a7c0bf3bde15337a0e22268ad58491a2f',1,'integral_core::ode_helper']]],
   ['m_5flimitstepsize',['m_limitstepsize',['../structintegral__core_1_1ode__integrator.html#a17eb7e73feff89f1f42d7eacdfeca28a',1,'integral_core::ode_integrator']]],
   ['m_5fmaxint',['m_maxint',['../structintegral__core_1_1integrator__base.html#aa1ada1422094ffc89d915d9f1752c1fc',1,'integral_core::integrator_base']]],
@@ -18,9 +18,11 @@ var searchData=
   ['m_5fmaxstepsize',['m_maxstepsize',['../structintegral__core_1_1ode__integrator.html#abe1441664da8e16de001b24bedba5265',1,'integral_core::ode_integrator']]],
   ['m_5fminbuffersize',['m_minbuffersize',['../structintegral__core_1_1ode__integrator.html#adc71c097e606811693bd4a60d99481ca',1,'integral_core::ode_integrator']]],
   ['m_5freltol',['m_reltol',['../structintegral__core_1_1integrator__base.html#a6d69a7f8d189666acb444667064dd557',1,'integral_core::integrator_base']]],
+  ['m_5frststats',['m_rststats',['../structintegral__core_1_1ode__auto.html#a27a6078feaf046439a3678844c37788d',1,'integral_core::ode_auto']]],
   ['m_5frtol',['m_rtol',['../structintegral__core_1_1ode__integrator.html#a92d76347951a3539e19dffaccd6dafe7',1,'integral_core::ode_integrator']]],
   ['m_5frts',['m_rts',['../structintegral__core_1_1ode__helper.html#a93817c5d4853f613234fac19ecf0d541',1,'integral_core::ode_helper']]],
   ['m_5frule',['m_rule',['../structintegral__core_1_1nonadaptive__integrator.html#af11385657d8704d06d0dd0fb84ab6f2c',1,'integral_core::nonadaptive_integrator']]],
+  ['m_5frwork',['m_rwork',['../structintegral__core_1_1ode__auto.html#acf053c0ab90c954fbea452537ede1933',1,'integral_core::ode_auto']]],
   ['m_5fuserdefinedbreaks',['m_userdefinedbreaks',['../structintegral__core_1_1adaptive__integrator.html#a92559ae1322790490c8aba2cf130e767',1,'integral_core::adaptive_integrator']]],
   ['m_5fwork',['m_work',['../structintegral__core_1_1adaptive__integrator.html#a9c8a5e4f3af01645a788520805c5caae',1,'integral_core::adaptive_integrator']]]
 ];
