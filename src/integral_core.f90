@@ -992,22 +992,229 @@ module integral_core
         !> @brief Determines the iteration step limit per integration step
         integer(int32) :: m_maxStepCount = 500
     contains
+        !> @brief Performs the integration.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical function integrate(class(ode_integrator) this, class(ode_helper) fcnobj, real(real64) x(:), real(real64) y(:), optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in,out] fcnobj The ode_helper object containing the equations
+        !!  to integrate.
+        !! @param[in] x An array containing the values of the independent
+        !!  variable at which the solution is desired.  There must be at least
+        !!  two values in this array.
+        !! @param[in] y An N-element array containing the initial conditions for
+        !!  each of the N ODEs.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_INVALID_INPUT_ERROR: An invalid input was supplied.
+        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available.
+        !!  - INT_LACK_OF_DEFINITION_ERROR: Occurs if no equations have been
+        !!      defined.
+        !!  - INT_ARRAY_SIZE_MISMATCH_ERROR: Occurs if @p y is not sized to
+        !!      match the problem as defined in @p fcnobj, or if the tolerance
+        !!      arrays are not sized to match the problem as defined in
+        !!      @p fcnobj.
+        !!  Notice, specific integrators may have additional errors.  See the
+        !!  @p step routine of the appropriate integrator for more information.
+        !!
+        !! @return Returns the solution in a matrix of N+1 columns.  The
+        !!  first column contains the values of the independent variable at
+        !!  which the solution was computed.  The remaining columns contain the
+        !!  solution points for each ODE.
         procedure, public :: integrate => oi_integrate
+        !> @brief Gets a value determining if all integrator output should be
+        !! reported.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure logical function get_provide_all_output(class(ode_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_integrator object.
+        !! @return Returns true if all integrator output should be reported;
+        !!  else, returns false.
         procedure, public :: get_provide_all_output => oi_get_use_all_output
+        !> @brief Sets a value determining if all integrator output should be
+        !! reported.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_provide_all_output(class(ode_integrator) this, logical x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in] x Set to true if all integrator output should be
+        !!  reported; else, set to false to only allow output at user-defined
+        !!  points.
         procedure, public :: set_provide_all_output => oi_set_use_all_output
+        !> @brief Gets a value determining if the integrator can overshoot the
+        !! integration limits and interpolate back to achieve the desired
+        !! solution point.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure logical function get_allow_overshoot(class(ode_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_integrator object.
+        !! @return Returns true if the integrator can overshoot; else, false.
         procedure, public :: get_allow_overshoot => oi_get_allow_overshoot
+        !> @brief Sets a value determining if the integrator can overshoot the
+        !! integration limits and interpolate back to achieve the desired
+        !! solution point.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_allow_overshoot(class(ode_integrator) this, logical x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in] x Set to true to allow the integrator to overshoot the
+        !!  integration limits; else, false to prevent overshoot.
         procedure, public :: set_allow_overshoot => oi_set_allow_overshoot
+        !> @brief Gets a critical integration limit that the integrator is not
+        !! allowed to step beyond.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure real(real64) function get_integration_limit(class(ode_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_integrator object.
+        !! @return The integration limit.
         procedure, public :: get_integration_limit => oi_get_critical_point
+        !> @brief Sets a critical integration limit that the integrator is not
+        !! allowed to step beyond.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_integration_limit(class(ode_integrator) this, real(real64) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in] x The integration limit.
         procedure, public :: set_integration_limit => oi_set_critical_point
+        !> @brief Gets the minimum internal storage buffer size.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure integer(int32) get_min_buffer_size(class(ode_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_integrator object.
+        !! @return The minimum buffer size.
         procedure, public :: get_min_buffer_size => oi_get_min_buffer_size
+        !> @brief Sets the minimum internal storage buffer size.  Properly
+        !! sizing the buffer has the potential of improving the performance of
+        !! the integrator.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_min_buffer_size(class(ode_integrator) this, integer(int32) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in] x The minimum buffer size.
         procedure, public :: set_min_buffer_size => oi_set_min_buffer_size
+        !> @brief Gets the maximum allowed step size.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure real(real64) function get_max_step_size(class(ode_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_integrator object.
+        !! @return The maximum step size.
         procedure, public :: get_max_step_size => oi_get_max_step_size
+        !> @brief Sets the maximum allowed step size.  This value is only
+        !! honored if @p get_limit_step_size is set to true.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_max_step_size(class(ode_integrator) this, real(real64) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in] x The maximum step size.
         procedure, public :: set_max_step_size => oi_set_max_step_size
+        !> @brief Gets a value determining if the step size should be limited.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure logical get_limit_step_size(class(ode_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_integrator object.
+        !! @return Returns true if the integrator's step size should be limited;
+        !!  else, false.
         procedure, public :: get_limit_step_size => oi_get_limit_step_size
+        !> @brief Sets a value determining if the step size should be limited.
+        !! This value must be set to true to use the value defined by
+        !! @p set_max_step_size.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_limit_step_size(class(ode_integrator) this, logical x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in] x Set to true if the integrator's step size should be
+        !!  limited; else, set to false.
         procedure, public :: set_limit_step_size => oi_set_limit_step_size
+        !> @brief Gets the limit on the number of iterations allowed per
+        !! integration step.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure integer(int32) function get_iteration_limit(class(ode_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_integrator object.
+        !! @return The iteration limit.
         procedure, public :: get_iteration_limit => oi_get_iteration_limit
+        !> @brief Sets the limit on the number of iterations allowed per
+        !! integration step.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_iteration_limit(class(ode_integrator) this, integer(int32) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in] x The iteration limit.
         procedure, public :: set_iteration_limit => oi_set_iteration_limit
         !> @brief Takes a single integration step towards the desired point.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical function step(class(ode_integrator) this, class(ode_helper) fcn, real(real64) x, real(real64) y(:), real(real64) xout, real(real64) rtol(:), real(real64) atol(:), optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        !! @param[in,out] fcn An ode_helper object containing the ODEs to
+        !!  integrate.
+        !! @param[in,out] x On input, the value of the independent variable at
+        !!  which to start.  On output, the value of the independent variable at
+        !!  which integration terminated.
+        !! @param[in,out] y On input, the value(s) of the dependent variable(s)
+        !!  at the initial value given in @p x.  On output, the value(s) of the
+        !!  dependent variable(s) as evaluated at the output given in @p x.
+        !! @param[in] xout The value of the independent variable at which the
+        !!  solution is desired.
+        !! @param[in] rtol An array containing relative tolerance information
+        !!  for each ODE.
+        !! @param[in] atol An array containing absolute tolerance information
+        !!  for each ODE.
+        !! @param[in,out] err An optional argument that can be used to control
+        !!  the error handling behavior of the integrator.
+        !! @return Returns true if the integrator requests a stop; else, false,
+        !!  to continue as normal.  A possible sitaution resulting in a true
+        !!  value is in the event a constraint has been satisfied.
         procedure(ode_integrator_interface), public, deferred, pass :: step
     end type
 
@@ -1215,8 +1422,57 @@ module integral_core
         !> This flag is used directly by ODEPACK.  Set to 1 for initial call.
         integer(int32) :: m_istate = 1
     contains
+        !> @brief Takes a single integration step towards the desired point.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical function step(class(ode_auto) this, class(ode_helper) fcn, real(real64) x, real(real64) y(:), real(real64) xout, real(real64) rtol(:), real(real64) atol(:), optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_auto object.
+        !! @param[in,out] fcn An ode_helper object containing the ODEs to
+        !!  integrate.
+        !! @param[in,out] x On input, the value of the independent variable at
+        !!  which to start.  On output, the value of the independent variable at
+        !!  which integration terminated.
+        !! @param[in,out] y On input, the value(s) of the dependent variable(s)
+        !!  at the initial value given in @p x.  On output, the value(s) of the
+        !!  dependent variable(s) as evaluated at the output given in @p x.
+        !! @param[in] xout The value of the independent variable at which the
+        !!  solution is desired.
+        !! @param[in] rtol An array containing relative tolerance information
+        !!  for each ODE.
+        !! @param[in] atol An array containing absolute tolerance information
+        !!  for each ODE.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_EXCESSIVE_WORK_ERROR: Occurs if excessive work has been done.
+        !!  - INT_IMPRACTICAL_TOLERANCE_ERROR: Occurs if the user-defined
+        !!      tolerances are not practically achievable.
+        !!  - INT_INVALID_INPUT_ERROR: Occurs if an invalid input was supplied.
+        !!  - INT_REPEATED_ERROR_TEST_FAILURE: Occurs if error testing
+        !!      repeatadly fails.
+        !!  - INT_CONVERGENCE_ERROR: Occurs if the iteration process cannot
+        !!      converge.
+        !!  - INT_INTEGRAND_BEHAVIOR_ERROR: Occurs if a component of the
+        !!      solution appears to vanish.
+        !!
+        !! @return Returns true if the integrator requests a stop; else, false,
+        !!  to continue as normal.  A possible sitaution resulting in a true
+        !!  value is in the event a constraint has been satisfied.
         procedure, public :: step => oa_step
+        !> @brief Resets the state of the integrator.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine reset(class(ode_auto) this)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_auto object.
         procedure, public :: reset => oa_reset_integrator
+
         procedure, private :: init_workspace => oa_init_workspace
     end type
 
