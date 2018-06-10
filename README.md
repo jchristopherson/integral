@@ -5,6 +5,46 @@ The integration routines are provided by [QUADPACK](http://www.netlib.org/quadpa
 
 ## Example 1
 The following example illustrates the use of an adaptive integrator to compute the integral of an equation over a finite interval.
+```fortran
+program example
+    use iso_fortran_env
+    use integral_core
+    implicit none
+
+    ! Variables
+    real(real64) :: ans, y, pi, a, b
+    procedure(integrand), pointer :: fcn
+    type(adaptive_integrator) :: integrator
+
+    ! Define the integration limibs
+    pi = 2.0d0 * acos(0.0d0)
+    a = pi / 6.0d0
+    b = pi / 4.0d0
+
+    ! Evaluate the integral
+    fcn => int_fcn
+    y = integrator%integrate(fcn, a, b)
+
+    ! Display the results
+    ans = 5.0d0 * pi / 12.0d0 - 2.0d0 * sqrt(2.0d0) + 4.0d0 / sqrt(3.0d0)
+    print '(AEN13.5AEN13.5A)', "The solution is: ", ans, &
+        ", the integrator computed: ", y, "."
+
+contains
+    ! This example is from http://tutorial.math.lamar.edu/Classes/CalcI/ComputingDefiniteIntegrals.aspx#Int_CompDef_Ex3a
+    ! The integrand is: f(x) = 5 - 2 sec(x) tan(x).
+    ! If the integral is considered over the range [pi/6, pi/4], the solution
+    ! is 5 pi / 12 - 2 sqrt(2) + 4 / sqrt(3).
+    function int_fcn(x) result(f)
+        real(real64), intent(in) :: x
+        real(real64) :: f
+        f = 5.0d0 - 2.0d0 * tan(x) / cos(x) ! Remember, sec(x) = 1 / cos(x)
+    end function
+end program
+```
+```text
+The solution is: 789.97089E-03, the integrator computed: 789.97089E-03.
+```
 
 ## Example 2
 The following example illustrates how to compute the solution to a system of ODEs modeling the bouncing of a ball.  The example also utilizes the [FPLOT](https://github.com/jchristopherson/fplot) library in order to plot the solution.
