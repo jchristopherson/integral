@@ -1,6 +1,8 @@
 # integral
 The INTEGRAL library provides routines for the integration of functions of various types.  Additionally, the INTEGRAL library provides routines for the integration of systems of ordinary differential equations (ODEs).
 
+The integration routines are provided by [QUADPACK](http://www.netlib.org/quadpack/), and the ODE routines are provided by [ODEPACK](http://www.netlib.org/odepack/).
+
 ## Example 1
 The following example illustrates the use of an adaptive integrator to compute the integral of an equation over a finite interval.
 
@@ -105,7 +107,7 @@ contains
     ! A bouncing ball can be described by the following equation:
     ! x" = -g
     !
-    ! Where g = gravitational acceleration, and v = velocity
+    ! Where g = gravitational acceleration
     subroutine ball(t, x, dxdt)
         real(real64), intent(in) :: t
         real(real64), intent(in), dimension(:) :: x

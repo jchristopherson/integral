@@ -98,7 +98,7 @@ contains
     ! A bouncing ball can be described by the following equation:
     ! x" = -g
     !
-    ! Where g = gravitational acceleration, and v = velocity
+    ! Where g = gravitational acceleration
     subroutine ball(t, x, dxdt)
         real(real64), intent(in) :: t
         real(real64), intent(in), dimension(:) :: x
