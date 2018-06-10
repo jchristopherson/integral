@@ -1,6 +1,7 @@
 var searchData=
 [
   ['get_5fabs_5ftol',['get_abs_tol',['../structintegral__core_1_1integrator__base.html#a3419ecad11f4f24e9c23c9e840c0fe1f',1,'integral_core::integrator_base']]],
+  ['get_5fabsolute_5ftolerances',['get_absolute_tolerances',['../structintegral__core_1_1ode__integrator.html#aa25b79e8d03f0a9e36ba7e01db873755',1,'integral_core::ode_integrator']]],
   ['get_5fallow_5fovershoot',['get_allow_overshoot',['../structintegral__core_1_1ode__integrator.html#a48d09b899dc980e978e5790245a28edc',1,'integral_core::ode_integrator']]],
   ['get_5fbreakpoints',['get_breakpoints',['../structintegral__core_1_1adaptive__integrator.html#ac4aa3a9dc5daa0f26669e03342d81df4',1,'integral_core::adaptive_integrator']]],
   ['get_5fconstraint_5fcount',['get_constraint_count',['../structintegral__core_1_1ode__helper.html#ad9e04786738b509dae8152bd8c96a54c',1,'integral_core::ode_helper']]],
@@ -17,6 +18,7 @@ var searchData=
   ['get_5fmin_5fbuffer_5fsize',['get_min_buffer_size',['../structintegral__core_1_1ode__integrator.html#af9643c32f7e7f86315515ac0907d7187',1,'integral_core::ode_integrator']]],
   ['get_5fprovide_5fall_5foutput',['get_provide_all_output',['../structintegral__core_1_1ode__integrator.html#a5e1fc2ece794339bc5a0b7fca9639680',1,'integral_core::ode_integrator']]],
   ['get_5frel_5ftol',['get_rel_tol',['../structintegral__core_1_1integrator__base.html#a0cf80dc169fd5ce32ab82f2aac598125',1,'integral_core::integrator_base']]],
+  ['get_5frelative_5ftolerances',['get_relative_tolerances',['../structintegral__core_1_1ode__integrator.html#a3941696b3ba4def453621f42666e23ce',1,'integral_core::ode_integrator']]],
   ['get_5frule',['get_rule',['../structintegral__core_1_1nonadaptive__integrator.html#ac0d8941cd7db6d381a749f58cfb8ec3c',1,'integral_core::nonadaptive_integrator']]],
   ['get_5fuse_5fbreakpoints',['get_use_breakpoints',['../structintegral__core_1_1adaptive__integrator.html#af870c19ade670c0721cec39cb5a3409f',1,'integral_core::adaptive_integrator']]]
 ];

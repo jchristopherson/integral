@@ -263,6 +263,34 @@ contains
         this%m_maxStepCount = x
     end subroutine
 
+! ------------------------------------------------------------------------------
+    module function oi_get_rtol(this) result(x)
+        class(ode_integrator), intent(in) :: this
+        real(real64), allocatable, dimension(:) :: x
+        x = this%m_rtol
+    end function
+
+! --------------------
+    module subroutine oi_set_rtol(this, x)
+        class(ode_integrator), intent(inout) :: this
+        real(real64), intent(in), dimension(:) :: x
+        this%m_rtol = x
+    end subroutine
+
+! ------------------------------------------------------------------------------
+    module function oi_get_atol(this) result(x)
+        class(ode_integrator), intent(in) :: this
+        real(real64), allocatable, dimension(:) :: x
+        x = this%m_atol
+    end function
+
+! --------------------
+    module subroutine oi_set_atol(this, x)
+        class(ode_integrator), intent(inout) :: this
+        real(real64), intent(in), dimension(:) :: x
+        this%m_atol = x
+    end subroutine
+
 ! ******************************************************************************
 ! PRIVATE SUBMODULE ROUTINES
 ! ------------------------------------------------------------------------------
