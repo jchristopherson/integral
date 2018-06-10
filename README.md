@@ -16,7 +16,7 @@ program example
     procedure(integrand), pointer :: fcn
     type(adaptive_integrator) :: integrator
 
-    ! Define the integration limibs
+    ! Define the integration limits
     pi = 2.0d0 * acos(0.0d0)
     a = pi / 6.0d0
     b = pi / 4.0d0
