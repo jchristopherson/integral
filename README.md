@@ -137,4 +137,8 @@ This library utilizes [CMake](https://cmake.org/) to facilitate its build.  Usin
 - make
 - make install
 
+## Dependencies
+This library depends upon the following libraries.
+- [FERROR](https://github.com/jchristopherson/ferror)
+
 See [Running CMake](https://cmake.org/runningcmake/) for more details on the use of CMake.
