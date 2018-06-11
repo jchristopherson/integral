@@ -1,0 +1,6 @@
+{
+    "name": "integral-jchristopherson",
+    "description": "The INTEGRAL library provides routines for the integration of functions of various types. Additionally, the INTEGRAL library provides routines for the integration of systems of ordinary differential equations (ODEs).",
+    "author": "Jason Christopherson",
+    "version": "1.0.0"
+}
