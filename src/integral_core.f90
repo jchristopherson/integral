@@ -1,5 +1,20 @@
 ! integral_core.f90
 
+!> @mainpage
+!!
+!! @section intro_sec Introduction
+!! INTEGRAL is a Fortran library providing an easy-to-use, object-oriented
+!! interface to several integration routines.  Integration of functions of one
+!! variable are provided by the QUADPACK library.  Integration of systems of
+!! ordinary differential equations are provided by the ODEPACK library.
+!!
+!! @image html double_pendulum_example_short_time_no_legend.png
+
+!> @brief \b integral_core
+!!
+!! @par Purpose
+!! Provides types and routines allowing for the integration of functions and
+!! systems of ordinary differential equations.
 module integral_core
     use, intrinsic :: iso_fortran_env, only : int32, real64
     use ferror
@@ -59,8 +74,14 @@ module integral_core
     integer(int32), parameter :: INT_LACK_OF_DEFINITION_ERROR = 8
     !> @brief An error indicating an inappropriately sized array.
     integer(int32), parameter :: INT_ARRAY_SIZE_MISMATCH_ERROR = 9
+    !> @brief An error indicating the too many iterations have been performed
+    !! suggesting that excessive amounts of work are required to continue the
+    !! solution process.
     integer(int32), parameter :: INT_EXCESSIVE_WORK_ERROR = 10
+    !> @brief An error indicating that the user-defined tolerances are too
+    !! stringent to be practical for the problem at hand.
     integer(int32), parameter :: INT_IMPRACTICAL_TOLERANCE_ERROR = 11
+    !> @brief An error that occurs if integrator error tests fail repeatadly.
     integer(int32), parameter :: INT_REPEATED_ERROR_TEST_FAILURE = 12
 
 ! ------------------------------------------------------------------------------

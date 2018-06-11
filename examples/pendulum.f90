@@ -13,6 +13,7 @@ program example
     type(plot_2d) :: plt
     type(plot_data_2d) :: d1, d2
     class(plot_axis), pointer :: xAxis, yAxis
+    type(legend), pointer :: lgnd
     real(real64) :: t(2), ic(4)
     real(real64), allocatable, dimension(:,:) :: s
     real(real64), allocatable, dimension(:) :: x1, y1, x2, y2
@@ -29,7 +30,7 @@ program example
     call fcn%define_equations(4, ptr)
 
     ! Compute the solution
-    t = [0.0d0, 60.0d0]
+    t = [0.0d0, 40.0d0]
     ic = [0.2d0, 0.0d0, 0.8d0, 0.0d0]
     s = integrator%integrate(fcn, t, ic)
 
@@ -43,6 +44,10 @@ program example
     ! Plot the solution
     call plt%initialize()
     call plt%set_font_size(14)
+
+    lgnd => plt%get_legend()
+    call lgnd%set_horizontal_position(LEGEND_LEFT)
+    call lgnd%set_vertical_position(LEGEND_BOTTOM)
 
     xAxis => plt%get_x_axis()
     call xAxis%set_title("t")
@@ -64,6 +69,10 @@ program example
 
     ! ----------
     call plt%clear_all()
+    call lgnd%set_horizontal_position(LEGEND_RIGHT)
+    call lgnd%set_vertical_position(LEGEND_TOP)
+    call lgnd%set_draw_inside_axes(.false.)
+    call lgnd%set_draw_border(.false.)
     call xAxis%set_title("")
     call yAxis%set_title("")
 
