@@ -169,8 +169,9 @@ real(real64), dimension(:), allocatable&#160;</td><td class="memItemRight" valig
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines an integrator that uses an adaptive Gauss-Kronrod method to compute the integral of a function of one variable over a finite interval. </p>
+<dl class="section user"><dt>Example</dt><dd>The following example illustrates how to use the <a class="el" href="structintegral__core_1_1adaptive__integrator.html" title="Defines an integrator that uses an adaptive Gauss-Kronrod method to compute the integral of a functio...">adaptive_integrator</a> to compute the integral of a function over a finite interval. <div class="fragment"><div class="line"><span class="keyword">program</span> example</div><div class="line">    <span class="keywordtype">use </span>iso_fortran_env</div><div class="line">    <span class="keywordtype">use </span>integral_core</div><div class="line">    <span class="keywordtype">implicit none</span></div><div class="line"></div><div class="line">    <span class="comment">! Variables</span></div><div class="line">    <span class="keywordtype">real(real64)</span> :: ans, y, pi, a, b</div><div class="line">    <span class="keywordtype">procedure</span>(<a class="code" href="interfaceintegral__core_1_1integrand.html">integrand</a>), <span class="keywordtype">pointer</span> :: fcn</div><div class="line">    <span class="keywordtype">type</span>(<a class="code" href="structintegral__core_1_1adaptive__integrator.html">adaptive_integrator</a>) :: integrator</div><div class="line"></div><div class="line">    <span class="comment">! Define the integration limits</span></div><div class="line">    pi = 2.0d0 * acos(0.0d0)</div><div class="line">    a = pi / 6.0d0</div><div class="line">    b = pi / 4.0d0</div><div class="line"></div><div class="line">    <span class="comment">! Evaluate the integral</span></div><div class="line">    fcn =&gt; int_fcn</div><div class="line">    y = integrator%integrate(fcn, a, b)</div><div class="line"></div><div class="line">    <span class="comment">! Display the results</span></div><div class="line">    ans = 5.0d0 * pi / 12.0d0 - 2.0d0 * sqrt(2.0d0) + 4.0d0 / sqrt(3.0d0)</div><div class="line">    print <span class="stringliteral">&#39;(AEN13.5AEN13.5A)&#39;</span>, <span class="stringliteral">&quot;The solution is: &quot;</span>, ans, &amp;</div><div class="line">        <span class="stringliteral">&quot;, the integrator computed: &quot;</span>, y, <span class="stringliteral">&quot;.&quot;</span></div><div class="line"></div><div class="line"><span class="keyword">contains</span></div><div class="line">    <span class="comment">! This example is from http://tutorial.math.lamar.edu/Classes/CalcI/ComputingDefiniteIntegrals.aspx#Int_CompDef_Ex3a</span></div><div class="line">    <span class="comment">! The integrand is: f(x) = 5 - 2 sec(x) tan(x).</span></div><div class="line">    <span class="comment">! If the integral is considered over the range [pi/6, pi/4], the solution</span></div><div class="line">    <span class="comment">! is 5 pi / 12 - 2 sqrt(2) + 4 / sqrt(3).</span></div><div class="line"><span class="keyword">    function </span>int_fcn(x) <span class="keyword">result</span>(f)</div><div class="line">        <span class="keywordtype">real(real64)</span>, <span class="keywordtype">intent(in)</span> :: x</div><div class="line">        <span class="keywordtype">real(real64)</span> :: f</div><div class="line">        f = 5.0d0 - 2.0d0 * tan(x) / cos(x) <span class="comment">! Remember, sec(x) = 1 / cos(x)</span></div><div class="line"><span class="keyword">    end function</span></div><div class="line"><span class="keyword">end program</span></div></div><!-- fragment --> The above program produces the following output. <div class="fragment"><div class="line">The solution is: 789.97089E-03, the integrator computed: 789.97089E-03.</div></div><!-- fragment --> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00305">305</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00351">351</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
 <a id="ac4aa3a9dc5daa0f26669e03342d81df4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac4aa3a9dc5daa0f26669e03342d81df4">&#9670;&nbsp;</a></span>get_breakpoints()</h2>
@@ -197,7 +198,7 @@ real(real64), dimension(:), allocatable&#160;</td><td class="memItemRight" valig
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The array of points. This array will not be allocated if no points have been defined. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00403">403</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00449">449</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -226,7 +227,7 @@ real(real64), dimension(:), allocatable&#160;</td><td class="memItemRight" valig
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns true if the user-defined breakpoints should be used; else, false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00379">379</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00425">425</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -258,7 +259,7 @@ real(real64), dimension(:), allocatable&#160;</td><td class="memItemRight" valig
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00330">330</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00376">376</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -302,7 +303,7 @@ real(real64), dimension(:), allocatable&#160;</td><td class="memItemRight" valig
 <dl class="section return"><dt>Returns</dt><dd>The value of the integral over the specified range.</dd></dl>
 <dl class="section user"><dt>Remarks</dt><dd>This routine utilizes the QUADPACK routine QAGS. For more information on this routine see <a href="http://www.netlib.org/quadpack/">http://www.netlib.org/quadpack/</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00366">366</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00412">412</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -331,7 +332,7 @@ real(real64), dimension(:), allocatable&#160;</td><td class="memItemRight" valig
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00416">416</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00462">462</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -360,7 +361,7 @@ real(real64), dimension(:), allocatable&#160;</td><td class="memItemRight" valig
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00392">392</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00438">438</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>

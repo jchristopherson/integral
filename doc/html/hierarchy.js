@@ -16,5 +16,6 @@ var hierarchy =
       [ "integral_core::ode_auto", "structintegral__core_1_1ode__auto.html", null ]
     ] ],
     [ "integral_core::ode_integrator_interface", "interfaceintegral__core_1_1ode__integrator__interface.html", null ],
+    [ "integral_core::ode_integrator_reset", "interfaceintegral__core_1_1ode__integrator__reset.html", null ],
     [ "integral_core::ode_jacobian", "interfaceintegral__core_1_1ode__jacobian.html", null ]
 ];

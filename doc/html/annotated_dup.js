@@ -14,6 +14,7 @@ var annotated_dup =
       [ "ode_helper", "structintegral__core_1_1ode__helper.html", "structintegral__core_1_1ode__helper" ],
       [ "ode_integrator", "structintegral__core_1_1ode__integrator.html", "structintegral__core_1_1ode__integrator" ],
       [ "ode_integrator_interface", "interfaceintegral__core_1_1ode__integrator__interface.html", "interfaceintegral__core_1_1ode__integrator__interface" ],
+      [ "ode_integrator_reset", "interfaceintegral__core_1_1ode__integrator__reset.html", "interfaceintegral__core_1_1ode__integrator__reset" ],
       [ "ode_jacobian", "interfaceintegral__core_1_1ode__jacobian.html", "interfaceintegral__core_1_1ode__jacobian" ]
     ] ]
 ];

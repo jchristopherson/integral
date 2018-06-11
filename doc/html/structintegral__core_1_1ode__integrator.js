@@ -10,6 +10,7 @@ var structintegral__core_1_1ode__integrator =
     [ "get_provide_all_output", "structintegral__core_1_1ode__integrator.html#a5e1fc2ece794339bc5a0b7fca9639680", null ],
     [ "get_relative_tolerances", "structintegral__core_1_1ode__integrator.html#a3941696b3ba4def453621f42666e23ce", null ],
     [ "integrate", "structintegral__core_1_1ode__integrator.html#aa29c0067d3b5a56f084b1f5425356faa", null ],
+    [ "reset", "structintegral__core_1_1ode__integrator.html#a0d54424dbe1176b8811e7ec66ac597ce", null ],
     [ "set_absolute_tolerances", "structintegral__core_1_1ode__integrator.html#a1247861c7b4178b1503f2b2eec911539", null ],
     [ "set_allow_overshoot", "structintegral__core_1_1ode__integrator.html#aa4a8f62a1f90be2d3a1dce8411db381f", null ],
     [ "set_integration_limit", "structintegral__core_1_1ode__integrator.html#ac3102e4b9fc399e0e95ebd089c1cb589", null ],

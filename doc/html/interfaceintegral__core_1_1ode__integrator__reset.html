@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>integral: integral_core::ode_integrator_interface Interface Reference</title>
+<title>integral: integral_core::ode_integrator_reset Interface Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('interfaceintegral__core_1_1ode__integrator__interface.html','');});
+$(document).ready(function(){initNavTree('interfaceintegral__core_1_1ode__integrator__reset.html','');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -83,39 +83,31 @@ $(document).ready(function(){initNavTree('interfaceintegral__core_1_1ode__integr
 <div class="header">
   <div class="summary">
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="interfaceintegral__core_1_1ode__integrator__interface-members.html">List of all members</a>  </div>
+<a href="interfaceintegral__core_1_1ode__integrator__reset-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">integral_core::ode_integrator_interface Interface Reference</div>  </div>
+<div class="title">integral_core::ode_integrator_reset Interface Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Defines a routine for computing a single integration step in the direction of <code>xout</code>.  
- <a href="interfaceintegral__core_1_1ode__integrator__interface.html#details">More...</a></p>
+<p>Resets the state of the integrator.  
+ <a href="interfaceintegral__core_1_1ode__integrator__reset.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a3cd92506a91a276fafa1a6d905f2c351"><td class="memItemLeft" align="right" valign="top"><a id="a3cd92506a91a276fafa1a6d905f2c351"></a>
-logical function&#160;</td><td class="memItemRight" valign="bottom"><b>ode_integrator_interface</b> (this, fcn, x, y, xout, rtol, atol, err)</td></tr>
-<tr class="separator:a3cd92506a91a276fafa1a6d905f2c351"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2f0e6d597eab817e686a4d75441531b"><td class="memItemLeft" align="right" valign="top"><a id="ac2f0e6d597eab817e686a4d75441531b"></a>
+subroutine&#160;</td><td class="memItemRight" valign="bottom"><b>ode_integrator_reset</b> (this)</td></tr>
+<tr class="separator:ac2f0e6d597eab817e686a4d75441531b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Defines a routine for computing a single integration step in the direction of <code>xout</code>. </p>
+<div class="textblock"><p>Resets the state of the integrator. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>The <a class="el" href="structintegral__core_1_1ode__integrator.html">ode_integrator</a> object. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">fcn</td><td>An <a class="el" href="structintegral__core_1_1ode__helper.html" title="Defines a type used to pass information regarding the ODEs to the solver. ">ode_helper</a> object containing the ODEs to integrate. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">x</td><td>On input, the value of the independent variable at which to start. On output, the value of the independent variable at which integration terminated. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">y</td><td>On input, the value(s) of the dependent variable(s) at the initial value given in <code>x</code>. On output, the value(s) of the dependent variable(s) as evaluated at the output given in <code>x</code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">xout</td><td>The value of the independent variable at which the solution is desired. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">rtol</td><td>An array containing relative tolerance information for each ODE. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">atol</td><td>An array containing absolute tolerance information for each ODE. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">err</td><td>An optional argument that can be used to control the error handling behavior of the integrator. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns true if the integrator requests a stop; else, false, to continue as normal. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01340">1340</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01358">1358</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 </div><hr/>The documentation for this interface was generated from the following file:<ul>
 <li>/home/jason/github/integral/src/<a class="el" href="integral__core_8f90_source.html">integral_core.f90</a></li>
 </ul>
@@ -124,7 +116,7 @@ logical function&#160;</td><td class="memItemRight" valign="bottom"><b>ode_integ
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>integral_core</b></li><li class="navelem"><a class="el" href="interfaceintegral__core_1_1ode__integrator__interface.html">ode_integrator_interface</a></li>
+    <li class="navelem"><b>integral_core</b></li><li class="navelem"><a class="el" href="interfaceintegral__core_1_1ode__integrator__reset.html">ode_integrator_reset</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
