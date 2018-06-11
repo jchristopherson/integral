@@ -3,6 +3,9 @@ The INTEGRAL library provides routines for the integration of functions of vario
 
 The integration routines are provided by [QUADPACK](http://www.netlib.org/quadpack/), and the ODE routines are provided by [ODEPACK](http://www.netlib.org/odepack/).
 
+## Status
+![Build Status](https://travis-ci.org/jchristopherson/integral.svg?branch=master)
+
 ## Example 1
 The following example illustrates the use of an adaptive integrator to compute the integral of an equation over a finite interval.
 ```fortran
