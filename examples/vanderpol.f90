@@ -49,6 +49,14 @@ program example
     call plt%push(d1)
     call plt%draw()
 
+    call plt%clear_all()
+
+    call d1%define_data(x(:,2), x(:,3))
+    call xAxis%set_title("x(t)")
+    call yAxis%set_title("dx/dt")
+    call plt%push(d1)
+    call plt%draw()
+
 contains
     ! Van Der Pol Equation
     ! x" + x - mu * (1 - x**2) * x' = 0
