@@ -36,6 +36,7 @@ module integral_core
     public :: ode_helper
     public :: ode_integrator
     public :: ode_integrator_interface
+    public :: ode_integrator_reset
     public :: ode_auto
 
 ! ------------------------------------------------------------------------------
@@ -1256,6 +1257,15 @@ module integral_core
         !!  to continue as normal.  A possible sitaution resulting in a true
         !!  value is in the event a constraint has been satisfied.
         procedure(ode_integrator_interface), public, deferred, pass :: step
+        !> @brief Resets the state of the integrator.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine reset(class(ode_integrator) this)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        procedure(ode_integrator_reset), public, deferred, pass :: reset
     end type
 
 ! ------------------------------------------------------------------------------
@@ -1296,6 +1306,14 @@ module integral_core
             class(errors), intent(inout), optional, target :: err
             logical :: brk
         end function
+
+        !> @brief Resets the state of the integrator.
+        !!
+        !! @param[in,out] this The ode_integrator object.
+        subroutine ode_integrator_reset(this)
+            import ode_integrator
+            class(ode_integrator), intent(inout) :: this
+        end subroutine
 
         module function oi_integrate(this, fcnobj, x, y, err) result(rst)
             class(ode_integrator), intent(inout) :: this
