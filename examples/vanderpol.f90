@@ -15,7 +15,6 @@ program example
     type(plot_2d) :: plt
     type(plot_data_2d) :: d1
     class(plot_axis), pointer :: xAxis, yAxis
-    class(legend), pointer :: lgnd
 
     ! Set up the integrator
     ptr => vdp
@@ -31,9 +30,6 @@ program example
     ! Plot the solution
     call plt%initialize()
     call plt%set_font_size(14)
-
-    lgnd => plt%get_legend()
-    call lgnd%set_is_visible(.false.)
 
     xAxis => plt%get_x_axis()
     call xAxis%set_title("t")
