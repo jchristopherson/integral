@@ -4,7 +4,7 @@ project(integral C CXX Fortran)
 
 # Define version information
 set(INTEGRAL_MAJOR_VERSION 1)
-set(INTEGRAL_MINOR_VERSION 0)
+set(INTEGRAL_MINOR_VERSION 1)
 set(INTEGRAL_PATCH_VERSION 0)
 set(INTEGRAL_VERSION ${INTEGRAL_MAJOR_VERSION}.${INTEGRAL_MINOR_VERSION}.${INTEGRAL_PATCH_VERSION})
 
@@ -34,8 +34,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
 endif()
 
-# By default, shared library
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 # Export all symbols on Windows when building shared libraries
 SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
