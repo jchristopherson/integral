@@ -325,6 +325,8 @@ module integral_core
 ! ******************************************************************************
 ! INTEGRAL_INFINITE_INTEGRATOR.F90
 ! ------------------------------------------------------------------------------
+    !> @brief A type that defines an integrator meant to operate on integrands
+    !! that extend to an infinite region.
     type, extends(integrator_base) :: infinite_interval_integrator
     private
         !> @brief A workspace array.
@@ -332,7 +334,61 @@ module integral_core
         !> @brief A workspace array.
         integer(int32), allocatable, dimension(:) :: m_iwork
     contains
+        !> @brief Initializes the infinite_interval_integrator object.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine initialize(class(infinite_interval_integrator) this, optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in] this The infinite_interval_integrator object.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available to
+        !!      complete this operation.
         procedure, public :: initialize => iii_initialize
+        !> @brief Performs the integration.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! real(real64) function integrate(class(infinite_interval_integrator) this, procedure(integrand) pointer fcn, optional real(real64) bound, optional logical upper, optional type(integration_behavior) info, optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The infinite_interval_integrator object.
+        !! @param[in] fcn The integrand.
+        !! @param[in] bound An optional input that allows either the upper or 
+        !!  lower limit of integration to be a finite value.  If both limits are
+        !!  infinite, then this parameter is ommitted.
+        !! @param[in] upper An optional parameter that must be supplied if
+        !!  @p bound is supplied.  If @p bound is supplied this controls whether
+        !!  the supplied bound is the upper limit (.true.) or the lower limit
+        !!  (.false.).
+        !! @param[out] info An optional output providing information regarding
+        !!  behavior of the integrator.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available to
+        !!      complete this operation.
+        !!  - INT_COUNT_EXCEEDED_ERROR: The maximum number of subdivisions has
+        !!      been reached.
+        !!  - INT_ROUND_OFF_ERROR: The occurence of roundoff error is preventing
+        !!      the integrator from reaching the requested tolerances.
+        !!  - INT_INTEGRAND_BEHAVIOR_ERROR: The integrand appears to be
+        !!      behaving too poorly to proceed.
+        !!  - INT_CONVERGENCE_ERROR: The algorithm could not converge with the
+        !!      given constraints.
+        !!  - INT_DIVERGENT_ERROR: The integral is likely divergent.
+        !!  - INT_INVALID_INPUT_ERROR: An invalid input was supplied.
+        !!
+        !! @return The value of the integral over the specified range.
+        !!
+        !! @par Remarks
+        !! This routine utilizes the QUADPACK routine QAGI.  For more
+        !! information on this routine see http://www.netlib.org/quadpack/.
         procedure, public :: integrate => iii_integrate
     end type
 
@@ -464,7 +520,7 @@ module integral_core
         !! @return The value of the integral over the specified range.
         !!
         !! @par Remarks
-        !! This routine utilizes the QUADPACK routine QAGS.  For more
+        !! This routine utilizes the QUADPACK routine QAGS or QAGP.  For more
         !! information on this routine see http://www.netlib.org/quadpack/.
         procedure, public :: integrate => ai_integrate
         !> @brief Gets a flag determining if user-defined breakpoints should
