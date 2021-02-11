@@ -32,6 +32,7 @@ module integral_core
     public :: INT_EXCESSIVE_WORK_ERROR
     public :: INT_IMPRACTICAL_TOLERANCE_ERROR
     public :: INT_REPEATED_ERROR_TEST_FAILURE
+    public :: INT_INVALID_OPERATION_ERROR
     public :: INT_15_POINT_RULE
     public :: INT_21_POINT_RULE
     public :: INT_31_POINT_RULE
@@ -46,6 +47,7 @@ module integral_core
     public :: integrator_base
     public :: finite_interval_integrator
     public :: finite_interval_fcn
+    public :: infinite_interval_integrator
     public :: adaptive_integrator
     public :: nonadaptive_integrator
     public :: ode_helper
@@ -83,6 +85,8 @@ module integral_core
     integer(int32), parameter :: INT_IMPRACTICAL_TOLERANCE_ERROR = 11
     !> @brief An error that occurs if integrator error tests fail repeatadly.
     integer(int32), parameter :: INT_REPEATED_ERROR_TEST_FAILURE = 12
+    !> @brief An error the occurs if an invalid operation is requested.
+    integer(int32), parameter :: INT_INVALID_OPERATION_ERROR = 13
 
 ! ------------------------------------------------------------------------------
     !> @brief Defines a 15-point Gauss-Kronrod integration rule.
@@ -312,6 +316,38 @@ module integral_core
             class(finite_interval_integrator), intent(inout) :: this
             procedure(integrand), intent(in), pointer :: fcn
             real(real64), intent(in) :: a, b
+            type(integration_behavior), intent(out), optional :: info
+            class(errors), intent(inout), optional, target :: err
+            real(real64) :: rst
+        end function
+    end interface
+
+! ******************************************************************************
+! INTEGRAL_INFINITE_INTEGRATOR.F90
+! ------------------------------------------------------------------------------
+    type, extends(integrator_base) :: infinite_interval_integrator
+    private
+        !> @brief A workspace array.
+        real(real64), allocatable, dimension(:) :: m_work
+        !> @brief A workspace array.
+        integer(int32), allocatable, dimension(:) :: m_iwork
+    contains
+        procedure, public :: initialize => iii_initialize
+        procedure, public :: integrate => iii_integrate
+    end type
+
+    interface
+        module subroutine iii_initialize(this, err)
+            class(infinite_interval_integrator), intent(inout) :: this
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        module function iii_integrate(this, fcn, bound, upper, info, err) &
+                result(rst)
+            class(infinite_interval_integrator), intent(inout) :: this
+            procedure(integrand), intent(in), pointer :: fcn
+            real(real64), intent(in), optional :: bound
+            logical, intent(in), optional :: upper
             type(integration_behavior), intent(out), optional :: info
             class(errors), intent(inout), optional, target :: err
             real(real64) :: rst
