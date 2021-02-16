@@ -327,6 +327,44 @@ module integral_core
 ! ------------------------------------------------------------------------------
     !> @brief A type that defines an integrator meant to operate on integrands
     !! that extend to an infinite region.
+    !!
+    !! @par Example
+    !! The following example illustrates the integration of a function using
+    !! infinite limits: \f$  \int_{-\infty}^{\infty} \frac{1}{1+x^2} \,dx \f$.
+    !! @code{.f90}
+    !! program main
+    !!     use iso_fortran_env
+    !!     use integral_core
+    !!     implicit none
+    !!
+    !!     ! Variables
+    !!     real(real64), parameter :: pi = 2.0d0 * acos(0.0d0)
+    !!     type(infinite_interval_integrator) :: integrator
+    !!     procedure(integrand), pointer :: fptr
+    !!     real(real64) :: y
+    !!
+    !!     ! Define the function to integrate
+    !!     fptr => fcn
+    !!
+    !!     ! Compute the integral using the limits (-infinity, infinity)
+    !!     y = integrator%integrate(fptr)
+    !!     print '(AF0.6AF0.6)', "Result: ", y, ", Expected: ", pi
+    !!
+    !! contains
+    !!     ! The function to integrate:
+    !!     ! f(x) = 1 / (1 + x**2)
+    !!     function fcn(x) result(rst)
+    !!         real(real64), intent(in) :: x
+    !!         real(real64) :: rst
+    !!
+    !!         rst = 1.0d0 / (1.0d0 + x**2)
+    !!     end function
+    !! end program
+    !! @endcode
+    !! The above program produces the following results.
+    !! @code{.txt}
+    !! Result: 3.141593, Expected: 3.141593
+    !! @endcode
     type, extends(integrator_base) :: infinite_interval_integrator
     private
         !> @brief A workspace array.

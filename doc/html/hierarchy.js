@@ -7,7 +7,8 @@ var hierarchy =
       [ "integral_core::finite_interval_integrator", "structintegral__core_1_1finite__interval__integrator.html", [
         [ "integral_core::adaptive_integrator", "structintegral__core_1_1adaptive__integrator.html", null ],
         [ "integral_core::nonadaptive_integrator", "structintegral__core_1_1nonadaptive__integrator.html", null ]
-      ] ]
+      ] ],
+      [ "integral_core::infinite_interval_integrator", "structintegral__core_1_1infinite__interval__integrator.html", null ]
     ] ],
     [ "integral_core::ode_constraint", "interfaceintegral__core_1_1ode__constraint.html", null ],
     [ "integral_core::ode_fcn", "interfaceintegral__core_1_1ode__fcn.html", null ],

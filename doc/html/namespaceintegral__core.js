@@ -3,6 +3,7 @@ var namespaceintegral__core =
     [ "adaptive_integrator", "structintegral__core_1_1adaptive__integrator.html", "structintegral__core_1_1adaptive__integrator" ],
     [ "finite_interval_fcn", "interfaceintegral__core_1_1finite__interval__fcn.html", "interfaceintegral__core_1_1finite__interval__fcn" ],
     [ "finite_interval_integrator", "structintegral__core_1_1finite__interval__integrator.html", "structintegral__core_1_1finite__interval__integrator" ],
+    [ "infinite_interval_integrator", "structintegral__core_1_1infinite__interval__integrator.html", "structintegral__core_1_1infinite__interval__integrator" ],
     [ "integrand", "interfaceintegral__core_1_1integrand.html", "interfaceintegral__core_1_1integrand" ],
     [ "integration_behavior", "structintegral__core_1_1integration__behavior.html", "structintegral__core_1_1integration__behavior" ],
     [ "integrator_base", "structintegral__core_1_1integrator__base.html", "structintegral__core_1_1integrator__base" ],
