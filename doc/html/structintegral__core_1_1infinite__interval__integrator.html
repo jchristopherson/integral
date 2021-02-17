@@ -155,7 +155,7 @@ integer(int32), dimension(:), allocatable&#160;</td><td class="memItemRight" val
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A type that defines an integrator meant to operate on integrands that extend to an infinite region. </p>
-<dl class="section user"><dt>Example</dt><dd>The following example illustrates the integration of a function using infinite limits: \( \int_{-\infty}^{\infty} \frac{1}{1+x^2} \,dx \). <div class="fragment"><div class="line"><span class="keyword">program</span> main</div>
+<dl class="section user"><dt>Example 1</dt><dd>The following example illustrates the integration of a function using infinite limits: \( \int_{-\infty}^{\infty} \frac{1}{1+x^2} \,dx \). <div class="fragment"><div class="line"><span class="keyword">program</span> main</div>
 <div class="line">    <span class="keywordtype">use </span>iso_fortran_env</div>
 <div class="line">    <span class="keywordtype">use </span><a class="code" href="namespaceintegral__core.html">integral_core</a></div>
 <div class="line">    <span class="keywordtype">implicit none</span></div>
@@ -184,9 +184,43 @@ integer(int32), dimension(:), allocatable&#160;</td><td class="memItemRight" val
 <div class="line">    <span class="keyword">end function</span></div>
 <div class="line"><span class="keyword">end program</span></div>
 </div><!-- fragment --> The above program produces the following results. <div class="fragment"><div class="line">Result: 3.141593, Expected: 3.141593</div>
+</div><!-- fragment --></dd></dl>
+<dl class="section user"><dt>Example 2</dt><dd>This example highlights how this integrator may also be used for integrals where only one limit is infinite, such as \( \int_{1}^{\infty} \frac{1}{x^2} \,dx \). <div class="fragment"><div class="line"><span class="keyword">program</span> main</div>
+<div class="line">    <span class="keywordtype">use </span>iso_fortran_env</div>
+<div class="line">    <span class="keywordtype">use </span><a class="code" href="namespaceintegral__core.html">integral_core</a></div>
+<div class="line">    <span class="keywordtype">implicit none</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Variables</span></div>
+<div class="line">    <span class="keywordtype">type</span>(infinite_interval_integrator) :: integrator</div>
+<div class="line">    <span class="keywordtype">procedure</span>(integrand), <span class="keywordtype">pointer</span> :: fptr</div>
+<div class="line"><span class="keywordtype">    real</span>(real64) :: bounds, y</div>
+<div class="line">    <span class="keywordtype">logical</span> :: isUpperLimit</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Define the function to integrate</span></div>
+<div class="line">    fptr =&gt; fcn</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Define the non-infinite integration limit</span></div>
+<div class="line">    bounds = 1.0d0</div>
+<div class="line">    isupperlimit = .false.</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Compute the integral using the limits [1, infinity)</span></div>
+<div class="line">    y = integrator%integrate(fptr, bounds, isupperlimit)</div>
+<div class="line">    print <span class="stringliteral">&#39;(AF0.1A)&#39;</span>, <span class="stringliteral">&quot;Result: &quot;</span>, y, <span class="stringliteral">&quot;, Expected: 1.0&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">contains</span></div>
+<div class="line">    <span class="comment">! The function to integrate:</span></div>
+<div class="line">    <span class="comment">! f(x) = 1 / x**2</span></div>
+<div class="line">    <span class="keyword">function </span>fcn(x) <span class="keyword">result</span>(rst)</div>
+<div class="line"><span class="keywordtype">        real</span>(real64), <span class="keywordtype">intent(in)</span> :: x</div>
+<div class="line"><span class="keywordtype">        real</span>(real64) :: rst</div>
+<div class="line"> </div>
+<div class="line">        rst = 1.0d0 / x**2</div>
+<div class="line">    <span class="keyword">end function</span></div>
+<div class="line"><span class="keyword">end program</span></div>
+</div><!-- fragment --> The above program produces the following results. <div class="fragment"><div class="line">Result: 1.0, Expected: 1.0</div>
 </div><!-- fragment --> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00368">368</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00411">411</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
 <a id="a403a3d287e70e63f2a70f2d7f7cdd7cd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a403a3d287e70e63f2a70f2d7f7cdd7cd">&#9670;&nbsp;</a></span>initialize()</h2>
@@ -217,7 +251,7 @@ integer(int32), dimension(:), allocatable&#160;</td><td class="memItemRight" val
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00389">389</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00432">432</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -262,7 +296,7 @@ integer(int32), dimension(:), allocatable&#160;</td><td class="memItemRight" val
 <dl class="section return"><dt>Returns</dt><dd>The value of the integral over the specified range.</dd></dl>
 <dl class="section user"><dt>Remarks</dt><dd>This routine utilizes the QUADPACK routine QAGI. For more information on this routine see <a href="http://www.netlib.org/quadpack/">http://www.netlib.org/quadpack/</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00430">430</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00473">473</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
