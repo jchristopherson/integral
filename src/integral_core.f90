@@ -328,7 +328,7 @@ module integral_core
     !> @brief A type that defines an integrator meant to operate on integrands
     !! that extend to an infinite region.
     !!
-    !! @par Example
+    !! @par Example 1
     !! The following example illustrates the integration of a function using
     !! infinite limits: \f$  \int_{-\infty}^{\infty} \frac{1}{1+x^2} \,dx \f$.
     !! @code{.f90}
@@ -364,6 +364,49 @@ module integral_core
     !! The above program produces the following results.
     !! @code{.txt}
     !! Result: 3.141593, Expected: 3.141593
+    !! @endcode
+    !!
+    !! @par Example 2
+    !! This example highlights how this integrator may also be used for 
+    !! integrals where only one limit is infinite, such as \f$ 
+    !! \int_{1}^{\infty} \frac{1}{x^2} \,dx \f$.
+    !! @code{.f90}
+    !! program main
+    !!     use iso_fortran_env
+    !!     use integral_core
+    !!     implicit none
+    !!
+    !!     ! Variables
+    !!     type(infinite_interval_integrator) :: integrator
+    !!     procedure(integrand), pointer :: fptr
+    !!     real(real64) :: bounds, y
+    !!     logical :: isUpperLimit
+    !!
+    !!     ! Define the function to integrate
+    !!     fptr => fcn
+    !!
+    !!     ! Define the non-infinite integration limit
+    !!     bounds = 1.0d0
+    !!     isUpperLimit = .false.
+    !!
+    !!     ! Compute the integral using the limits [1, infinity)
+    !!     y = integrator%integrate(fptr, bounds, isUpperLimit)
+    !!     print '(AF0.1A)', "Result: ", y, ", Expected: 1.0"
+    !!
+    !! contains
+    !!     ! The function to integrate:
+    !!     ! f(x) = 1 / x**2
+    !!     function fcn(x) result(rst)
+    !!         real(real64), intent(in) :: x
+    !!         real(real64) :: rst
+    !!
+    !!         rst = 1.0d0 / x**2
+    !!     end function
+    !! end program
+    !! @endcode
+    !! The above program produces the following results.
+    !! @code{.txt}
+    !! Result: 1.0, Expected: 1.0
     !! @endcode
     type, extends(integrator_base) :: infinite_interval_integrator
     private
