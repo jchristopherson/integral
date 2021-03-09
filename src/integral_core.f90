@@ -2135,22 +2135,118 @@ module integral_core
         !! @param[in,out] this The ode_irk object
         !! @param[in] x The number of iterations.
         procedure, public :: set_newton_iteration_count => oirk_set_newton_iter_count
-
+        !> @brief Gets the dimension of the index 1 variables in the event of
+        !! a DAE system.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) function get_index_1_dimension(class(ode_irk) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_irk object.
+        !! @return The dimension value.
         procedure, public :: get_index_1_dimension => oirk_get_index1
+        !> @brief Sets the dimension of the index 1 variables in the event of
+        !! a DAE system.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_index_1_dimension(class(ode_irk) this, integer(int32) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object.
+        !! @param[in] x The dimension value.  This value must be greater than 0.
         procedure, public :: set_index_1_dimension => oirk_set_index1
-
+        !> @brief Gets the dimension of the index 2 variables in the event of
+        !! a DAE system.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) function get_index_2_dimension(class(ode_irk) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_irk object.
+        !! @return The dimension value.
         procedure, public :: get_index_2_dimension => oirk_get_index2
+        !> @brief Sets the dimension of the index 2 variables in the event of
+        !! a DAE system.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_index_2_dimension(class(ode_irk) this, integer(int32) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object.
+        !! @param[in] x The dimension value.  The default for this parameter
+        !!  is 0.
         procedure, public :: set_index_2_dimension => oirk_set_index2
-
+        !> @brief Gets the dimension of the index 3 variables in the event of
+        !! a DAE system.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) function get_index_3_dimension(class(ode_irk) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_irk object.
+        !! @return The dimension value.
         procedure, public :: get_index_3_dimension => oirk_get_index3
+        !> @brief Sets the dimension of the index 3 variables in the event of
+        !! a DAE system.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_index_3_dimension(class(ode_irk) this, integer(int32) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object.
+        !! @param[in] x The dimension value.
         procedure, public :: set_index_3_dimension => oirk_set_index3
-
+        !> @brief Gets the step-size controller utilized by the integrator.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) function get_controller(class(ode_irk) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_irk object.
+        !! @return The controller.  Either INT_PREDICTIVE_STEP_SIZE_CONTROLLER 
+        !!  or INT_CLASSICAL_STEP_SIZE_CONTROLLER.
         procedure, public :: get_controller => oirk_get_controller
+        !> @brief Sets the step-size controller utilized by the integrator.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_controller(class(ode_irk) this, integer(int32) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object.
+        !! @param[in] x The controller.  Either 
+        !!  INT_PREDICTIVE_STEP_SIZE_CONTROLLER or 
+        !!  INT_CLASSICAL_STEP_SIZE_CONTROLLER.
         procedure, public :: set_controller => oirk_set_controller
-
+        !> @brief Gets the tolerance to use for convergence checking the Newton
+        !!  iteration process.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! real(real64) function get_newton_iteration_tolerance(class(ode_irk) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_irk object.
+        !! @return The tolerance value.
         procedure, public :: get_newton_iteration_tolerance => oirk_get_newton_tol
+        !> @brief Sets the tolerance to use for convergence checking the Newton
+        !!  iteration process.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine set_newton_iteration_tolerance(class(ode_irk) this, real(real64) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object.
+        !! @param[in] x The tolerance value.
         procedure, public :: set_newton_iteration_tolerance => oirk_set_newton_tol
-
         !> @brief Performs the integration.
         !!
         !! @par Syntax
