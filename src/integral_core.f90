@@ -33,16 +33,21 @@ module integral_core
     public :: INT_IMPRACTICAL_TOLERANCE_ERROR
     public :: INT_REPEATED_ERROR_TEST_FAILURE
     public :: INT_INVALID_OPERATION_ERROR
+    public :: INT_STEP_SIZE_TOO_SMALL_ERROR
+    public :: INT_SINGULAR_MATRIX_ERROR
     public :: INT_15_POINT_RULE
     public :: INT_21_POINT_RULE
     public :: INT_31_POINT_RULE
     public :: INT_41_POINT_RULE
     public :: INT_51_POINT_RULE
     public :: INT_61_POINT_RULE
+    public :: INT_PREDICTIVE_STEP_SIZE_CONTROLLER
+    public :: INT_CLASSICAL_STEP_SIZE_CONTROLLER
     public :: integrand
     public :: ode_fcn
     public :: ode_jacobian
     public :: ode_constraint
+    public :: ode_mass
     public :: integration_behavior
     public :: integrator_base
     public :: finite_interval_integrator
@@ -55,6 +60,7 @@ module integral_core
     public :: ode_integrator_interface
     public :: ode_integrator_reset
     public :: ode_auto
+    public :: ode_irk
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -87,6 +93,10 @@ module integral_core
     integer(int32), parameter :: INT_REPEATED_ERROR_TEST_FAILURE = 12
     !> @brief An error the occurs if an invalid operation is requested.
     integer(int32), parameter :: INT_INVALID_OPERATION_ERROR = 13
+    !> @brief An error flag indicating the step size has become too small.
+    integer(int32), parameter :: INT_STEP_SIZE_TOO_SMALL_ERROR = 14
+    !> @brief An error flag indicating a singular matrix error.
+    integer(int32), parameter :: INT_SINGULAR_MATRIX_ERROR = 15
 
 ! ------------------------------------------------------------------------------
     !> @brief Defines a 15-point Gauss-Kronrod integration rule.
@@ -101,6 +111,12 @@ module integral_core
     integer(int32), parameter :: INT_51_POINT_RULE = 51
     !> @brief Defines a 61-point Gauss-Kronrod integration rule.
     integer(int32), parameter :: INT_61_POINT_RULE = 61
+
+! ------------------------------------------------------------------------------
+    !> @brief Defines a predictive step-size controller.
+    integer(int32), parameter :: INT_PREDICTIVE_STEP_SIZE_CONTROLLER = 1
+    !> @brief Defines a classical step-size controller.
+    integer(int32), parameter :: INT_CLASSICAL_STEP_SIZE_CONTROLLER = 2
 
 ! ------------------------------------------------------------------------------
     interface
@@ -160,6 +176,28 @@ module integral_core
             real(real64), intent(in) :: x
             real(real64), intent(in), dimension(:) :: y
             real(real64), intent(out), dimension(:) :: f
+        end subroutine
+
+        !> @brief Defines a routine capable of computing the mass matrix of
+        !! a system of ODE's expressed as M * Y' = F(X, Y) where M is the
+        !! mass matrix.
+        !!
+        !! @param[out] m The N-by-N mass matrix.
+        subroutine ode_mass(m)
+            use, intrinsic :: iso_fortran_env, only : real64
+            real(real64), intent(out), dimension(:,:) :: m
+        end subroutine
+
+        !> @brief This is an internal routine used by some of the ODE solvers to
+        !! collect output.
+        !!
+        !! @param[in] x The current value of the independent variable.
+        !! @param[in] y An array of the current values of the dependent 
+        !!  variables.
+        subroutine ode_collect_results(x, y)
+            use, intrinsic :: iso_fortran_env, only : real64
+            real(real64), intent(in) :: x
+            real(real64), intent(in), dimension(:) :: y
         end subroutine
     end interface
 
@@ -804,7 +842,7 @@ module integral_core
     private
         !> @brief A pointer to the routine containing the ODEs to integrate.
         procedure(ode_fcn), pointer, nopass :: m_fcn => null()
-        !> @brief A pointer to the routine containing the Jacobian.
+        !> @brief A pointer to the routine for computing the Jacobian.
         procedure(ode_jacobian), pointer, nopass :: m_jac => null()
         !> @brief A pointer to a routine containing any constraint equations.
         procedure(ode_constraint), pointer, nopass :: m_rts => null()
@@ -812,6 +850,8 @@ module integral_core
         integer(int32) :: m_count = 0
         !> @brief The number of constraint equations.
         integer(int32) :: m_constraints = 0
+        !> @brief A pointer to the routine for computing the mass matrix.
+        procedure(ode_mass), pointer, nopass :: m_mass => null()
     contains
         !> @brief Defines the system of ODEs to solve.
         !!
@@ -1140,6 +1180,30 @@ module integral_core
         !! @param[out] f An M-element array where the values of the M
         !!  constraint equations are to be written.
         procedure, public :: evaluate_constraints => oh_eval_constraints
+
+        !> @brief Gets a flag denoting if the user has defined the routine
+        !! used to compute the mass matrix.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! pure logical function get_mass_matrix_defined(class(ode_helper) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_helper object.
+        !! @return Returns true if the routine for computing the mass matrix
+        !!  has been defined (by calling @p define_equations); else, false if
+        !!  it has not.
+        procedure, public :: get_mass_matrix_defined => oh_is_mass_defined
+        !> @brief Evaluates the mass matrix.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine evalaute_mass_matrix(class(ode_helper) this, real(real64) m(:,:))
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_helper object.
+        !! @param[out] m An N-by-N matrix where the mass matrix is to be written.
+        procedure, public :: evaluate_mass_matrix => oh_eval_mass
     end type
 
     interface
@@ -1201,6 +1265,16 @@ module integral_core
             real(real64), intent(in), dimension(:) :: y
             real(real64), intent(out), dimension(:) :: f
         end subroutine
+
+        pure module function oh_is_mass_defined(this) result(rst)
+            class(ode_helper), intent(in) :: this
+            logical :: rst
+        end function
+
+        module subroutine oh_eval_mass(this, m)
+            class(ode_helper), intent(inout) :: this
+            real(real64), intent(out), dimension(:,:) :: m
+        end subroutine
     end interface
 
 ! ******************************************************************************
@@ -1230,7 +1304,7 @@ module integral_core
         !! size.
         logical :: m_limitStepSize = .false.
         !> @brief Determines the iteration step limit per integration step
-        integer(int32) :: m_maxStepCount = 500
+        integer(int32) :: m_maxStepCount = 50000
     contains
         !> @brief Performs the integration.
         !!
@@ -1505,6 +1579,8 @@ module integral_core
         !!
         !! @param[in,out] this The ode_integrator object.
         procedure(ode_integrator_reset), public, deferred, pass :: reset
+
+        procedure, private :: initialize_integrator => oi_init_integrator
     end type
 
 ! ------------------------------------------------------------------------------
@@ -1651,6 +1727,13 @@ module integral_core
             class(ode_integrator), intent(inout) :: this
             real(real64), intent(in), dimension(:) :: x
         end subroutine
+
+        module subroutine oi_init_integrator(this, fcnobj, x, y, errmgr)
+            class(ode_integrator), intent(inout) :: this
+            class(ode_helper), intent(in) :: fcnobj
+            real(real64), intent(in), dimension(:) :: x, y
+            class(errors), intent(inout) :: errmgr
+        end subroutine
     end interface
 
 ! ******************************************************************************
@@ -1660,6 +1743,15 @@ module integral_core
     !! capable of switching between an Adams method and a BDF method
     !! automatically.  This integrator is able to handle both stiff and
     !! non-stiff systems of equations.
+    !!
+    !! @par Remarks
+    !! This integrator is able to handle both stiff and non-stiff equations with
+    !! ease by automatically switching between a BDF method and an Adams method
+    !! dependent upon the nature of the problem terrain.  With that said, this
+    !! integrator is only capable of solving the system of equations 
+    !! Y' = F(X, Y); however, this integrator is capable of handling constraints
+    !! on the solution.  If your problem requires solution of M * Y' = F(X, Y),
+    !! then it is recommended to utilize an integrator like @p ode_irk.
     !!
     !! @par Example
     !! The following example illustrates the use of this integrator to solve
@@ -1838,4 +1930,353 @@ module integral_core
             logical, allocatable, dimension(:) :: x
         end function
     end interface
+
+! ******************************************************************************
+! INTEGRAL_ODE_AUTO.F90
+! ------------------------------------------------------------------------------
+    !> @brief Defines an integrator for systems of first order ODEs that is 
+    !! capable of solving the system of equations M * Y' = F(X, Y).  This
+    !! system can be linearly implicit, or explicit.  The method utilized is an
+    !! implicit Runge-Kutta method of order 5.  
+    !!
+    !! @par Remarks
+    !! The integrator utilizes the RADAU5 code to solve the system of equations.
+    !! Notice, while this system can solve the system of equations 
+    !! M * Y' = F(X, Y), it cannot handle constraints on the solution.  If 
+    !! constraints are necessary, and M is an identity matrix, then @p ode_auto
+    !! is recommended.
+    !!
+    !! @par Example
+    !! The following example illustrates the use of @p ode_irk and compares with
+    !! @p ode_auto to determine the solution to the Van Der Pol equation.
+    !! @code{.f90}
+    !! @endcode
+    !! The above program produces the following output.
+    !! @code{.f90}
+    !! program example
+    !!     use iso_fortran_env
+    !!     use integral_core
+    !!     use fplot_core
+    !!     implicit none
+    !!
+    !!     ! Local Variables
+    !!     type(ode_helper) :: fcn
+    !!     type(ode_irk) :: integrator1
+    !!     type(ode_auto) :: integrator2
+    !!     procedure(ode_fcn), pointer :: ptr
+    !!     real(real64) :: ic(2), t(2)
+    !!     real(real64), allocatable, dimension(:,:) :: x1, x2
+    !!     type(plot_2d) :: plt
+    !!     type(plot_data_2d) :: d1, d2
+    !!     class(plot_axis), pointer :: xAxis, yAxis
+    !!     class(legend), pointer :: lgnd
+    !!
+    !!     ! Set up the integrator
+    !!     ptr => vdp
+    !!     call fcn%define_equations(2, ptr)
+    !!
+    !!     ! Define the initial conditions
+    !!     t = [0.0d0, 8.0d1]
+    !!     ic = [2.0d0, 0.0d0]
+    !!
+    !!     ! Compute the solution
+    !!     x1 = integrator1%integrate(fcn, t, ic)
+    !!     x2 = integrator2%integrate(fcn, t, ic)
+    !!
+    !!     ! Display the number of solution points in each
+    !!     print '(AI0)', "ODE_IRK Solution Point Count: ", size(x1, 1)
+    !!     print '(AI0)', "ODE_AUTO Solution Point Count: ", size(x2, 1)
+    !!
+    !!     ! Plot the solution
+    !!     call plt%initialize()
+    !!     call plt%set_font_size(14)
+    !!
+    !!     xAxis => plt%get_x_axis()
+    !!     call xAxis%set_title("t")
+    !!
+    !!     yAxis => plt%get_y_axis()
+    !!     call yAxis%set_title("x(t)")
+    !!
+    !!     lgnd => plt%get_legend()
+    !!     call lgnd%set_is_visible(.true.)
+    !!     call lgnd%set_draw_border(.false.)
+    !!     call lgnd%set_draw_inside_axes(.false.)
+    !!
+    !!     call d1%set_name("IRK")
+    !!     call d1%set_draw_line(.false.)
+    !!     call d1%set_draw_markers(.true.)
+    !!     call d1%set_marker_style(MARKER_FILLED_TRIANGLE)
+    !!     call d1%set_marker_scaling(1.5)
+    !!     call d1%define_data(x1(:,1), x1(:,2))
+    !!     call plt%push(d1)
+    !!
+    !!     call d2%set_name("AUTO")
+    !!     call d2%set_draw_line(.false.)
+    !!     call d2%set_draw_markers(.true.)
+    !!     call d2%set_marker_style(MARKER_EMPTY_CIRCLE)
+    !!     call d2%set_line_color(CLR_RED)
+    !!     call d2%set_line_style(LINE_DASHED)
+    !!     call d2%define_data(x2(:,1), x2(:,2))
+    !!     call plt%push(d2)
+    !!
+    !!     call plt%draw()
+    !!
+    !!     call plt%clear_all()
+    !!
+    !!     call d1%define_data(x1(:,2), x1(:,3))
+    !!     call d2%define_data(x2(:,2), x2(:,3))
+    !!     call xAxis%set_title("x(t)")
+    !!     call yAxis%set_title("dx/dt")
+    !!     call plt%push(d1)
+    !!     call plt%push(d2)
+    !!     call plt%draw()
+    !!
+    !! contains
+    !!     ! Van Der Pol Equation
+    !!     ! x" + x - mu * (1 - x**2) * x' = 0
+    !!     subroutine vdp(t, x, dxdt)
+    !!         real(real64), intent(in) :: t
+    !!         real(real64), intent(in), dimension(:) :: x
+    !!         real(real64), intent(out), dimension(:) :: dxdt
+    !!
+    !!         real(real64), parameter :: mu = 20.0d0
+    !!
+    !!         dxdt(1) = x(2)
+    !!         dxdt(2) = mu * (1.0d0 - x(1)**2) * x(2) - x(1)
+    !!     end subroutine
+    !! end program
+    !! @endcode
+    !! @image html vanderpol_compare_example.png
+    !! @image html vanderpol_compare_example_diff.png
+    type, extends(ode_integrator) :: ode_irk
+    private
+        !> A workspace array.
+        real(real64), allocatable, dimension(:) :: m_rwork
+        !> An integer workspace array.
+        integer(int32), allocatable, dimension(:) :: m_iwork
+        !> The number of Newton iterations allowed for solution of the implicit
+        !! problem per iteration.
+        integer(int32) :: m_newtonIter = 7
+        !> For DAE's, the dimension of the index 1 variables.  Set to zero to
+        !! use the default; else, this value must be > 0.
+        integer(int32) :: m_index1 = 0
+        !> For DAE's, the dimension of the index 2 variables.
+        integer(int32) :: m_index2 = 0
+        !> For DAE's, the dimension of the index 3 variables.
+        integer(int32) :: m_index3 = 0
+        !> The step-size controller to use.
+        integer(int32) :: m_controller = INT_PREDICTIVE_STEP_SIZE_CONTROLLER
+        !> The convergence tolerance for the Newton iterations.
+        real(real64) :: m_newtonTol = 3.0d-2
+        !> Step size tracking variable.
+        real(real64) :: m_stepSize = 0.0d0
+        !> A pointer to the routine used to collect the solution from the
+        !! RADAU5 integrator.
+        procedure(ode_collect_results), pointer, nopass :: m_collector => null()
+    contains
+        !> @brief Takes a single integration step towards the desired point.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical function step(class(ode_irk) this, class(ode_helper) fcn, real(real64) x, real(real64) y(:), real(real64) xout, real(real64) rtol(:), real(real64) atol(:), optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object.
+        !! @param[in,out] fcn An ode_helper object containing the ODEs to
+        !!  integrate.
+        !! @param[in,out] x On input, the value of the independent variable at
+        !!  which to start.  On output, the value of the independent variable at
+        !!  which integration terminated.
+        !! @param[in,out] y On input, the value(s) of the dependent variable(s)
+        !!  at the initial value given in @p x.  On output, the value(s) of the
+        !!  dependent variable(s) as evaluated at the output given in @p x.
+        !! @param[in] xout The value of the independent variable at which the
+        !!  solution is desired.
+        !! @param[in] rtol An array containing relative tolerance information
+        !!  for each ODE.
+        !! @param[in] atol An array containing absolute tolerance information
+        !!  for each ODE.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!
+        !! @return Returns true if the integrator requests a stop; else, false,
+        !!  to continue as normal.
+        procedure, public :: step => oirk_step
+        !> @brief Resets the state of the integrator.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine reset(class(ode_irk) this)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object.
+        procedure, public :: reset => oirk_reset_integrator
+        !> @brief Gets the number of Newton iterations allowed per step.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) function get_newton_iteration_count(class(ode_irk) this)
+        !! @endcode
+        !!
+        !! @param[in] this The ode_irk object
+        !! @return The number of iterations.
+        procedure, public :: get_newton_iteration_count => oirk_get_newton_iter_count
+        !> @brief Sets the number of Newton iterations allowed per step.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine get_newton_iteration_count(class(ode_irk) this, integer(int32) x)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object
+        !! @param[in] x The number of iterations.
+        procedure, public :: set_newton_iteration_count => oirk_set_newton_iter_count
+
+        procedure, public :: get_index_1_dimension => oirk_get_index1
+        procedure, public :: set_index_1_dimension => oirk_set_index1
+
+        procedure, public :: get_index_2_dimension => oirk_get_index2
+        procedure, public :: set_index_2_dimension => oirk_set_index2
+
+        procedure, public :: get_index_3_dimension => oirk_get_index3
+        procedure, public :: set_index_3_dimension => oirk_set_index3
+
+        procedure, public :: get_controller => oirk_get_controller
+        procedure, public :: set_controller => oirk_set_controller
+
+        procedure, public :: get_newton_iteration_tolerance => oirk_get_newton_tol
+        procedure, public :: set_newton_iteration_tolerance => oirk_set_newton_tol
+
+        !> @brief Performs the integration.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical function integrate(class(ode_irk) this, class(ode_helper) fcnobj, real(real64) x(:), real(real64) y(:), optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_irk object.
+        !! @param[in,out] fcnobj The ode_helper object containing the equations
+        !!  to integrate.
+        !! @param[in] x An array containing the values of the independent
+        !!  variable at which the solution is desired.  There must be at least
+        !!  two values in this array.
+        !! @param[in] y An N-element array containing the initial conditions for
+        !!  each of the N ODEs.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_INVALID_INPUT_ERROR: An invalid input was supplied.
+        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available.
+        !!  - INT_LACK_OF_DEFINITION_ERROR: Occurs if no equations have been
+        !!      defined.
+        !!  - INT_ARRAY_SIZE_MISMATCH_ERROR: Occurs if @p y is not sized to
+        !!      match the problem as defined in @p fcnobj, or if the tolerance
+        !!      arrays are not sized to match the problem as defined in
+        !!      @p fcnobj.
+        !!  Notice, specific integrators may have additional errors.  See the
+        !!  @p step routine of the appropriate integrator for more information.
+        !!
+        !! @return Returns the solution in a matrix of N+1 columns.  The
+        !!  first column contains the values of the independent variable at
+        !!  which the solution was computed.  The remaining columns contain the
+        !!  solution points for each ODE.
+        procedure, public :: integrate => oirk_integrate
+
+        procedure, private :: init_workspace => oirk_init_workspace
+    end type
+
+    interface
+        module function oirk_step(this, fcn, x, y, xout, rtol, atol, err) result(brk)
+            class(ode_irk), intent(inout) :: this
+            class(ode_helper), intent(inout) :: fcn
+            real(real64), intent(inout) :: x
+            real(real64), intent(inout), dimension(:) :: y
+            real(real64), intent(in) :: xout
+            real(real64), intent(in), dimension(:) :: rtol, atol
+            class(errors), intent(inout), optional, target :: err
+            logical :: brk
+        end function
+
+        module subroutine oirk_reset_integrator(this)
+            class(ode_irk), intent(inout) :: this
+        end subroutine
+
+        module subroutine oirk_init_workspace(this, liw, lrw, err)
+            class(ode_irk), intent(inout) :: this
+            integer(int32), intent(in) :: liw, lrw
+            class(errors), intent(inout) :: err
+        end subroutine
+
+        pure module function oirk_get_newton_iter_count(this) result(rst)
+            class(ode_irk), intent(in) :: this
+            integer(int32) :: rst
+        end function
+
+        module subroutine oirk_set_newton_iter_count(this, x)
+            class(ode_irk), intent(inout) :: this
+            integer(int32), intent(in) :: x
+        end subroutine
+
+        pure module function oirk_get_index1(this) result(rst)
+            class(ode_irk), intent(in) :: this
+            integer(int32) :: rst
+        end function
+
+        module subroutine oirk_set_index1(this, x)
+            class(ode_irk), intent(inout) :: this
+            integer(int32), intent(in) :: x
+        end subroutine
+
+        pure module function oirk_get_index2(this) result(rst)
+            class(ode_irk), intent(in) :: this
+            integer(int32) :: rst
+        end function
+
+        module subroutine oirk_set_index2(this, x)
+            class(ode_irk), intent(inout) :: this
+            integer(int32), intent(in) :: x
+        end subroutine
+
+        pure module function oirk_get_index3(this) result(rst)
+            class(ode_irk), intent(in) :: this
+            integer(int32) :: rst
+        end function
+
+        module subroutine oirk_set_index3(this, x)
+            class(ode_irk), intent(inout) :: this
+            integer(int32), intent(in) :: x
+        end subroutine
+
+        pure module function oirk_get_controller(this) result(rst)
+            class(ode_irk), intent(in) :: this
+            integer(int32) :: rst
+        end function
+
+        module subroutine oirk_set_controller(this, x)
+            class(ode_irk), intent(inout) :: this
+            integer(int32), intent(in) :: x
+        end subroutine
+
+        pure module function oirk_get_newton_tol(this) result(rst)
+            class(ode_irk), intent(in) :: this
+            real(real64) :: rst
+        end function
+
+        module subroutine oirk_set_newton_tol(this, x)
+            class(ode_irk), intent(inout) :: this
+            real(real64), intent(in) :: x
+        end subroutine
+
+        module function oirk_integrate(this, fcnobj, x, y, err) result(rst)
+            class(ode_irk), intent(inout) :: this
+            class(ode_helper), intent(inout) :: fcnobj
+            real(real64), intent(in), dimension(:) :: x, y
+            class(errors), intent(inout), optional, target :: err
+            real(real64), allocatable, dimension(:,:) :: rst
+        end function
+    end interface
+
 end module

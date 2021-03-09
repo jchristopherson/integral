@@ -18,7 +18,6 @@ contains
         real(real64) :: xout, xi
         class(errors), pointer :: errmgr
         type(errors), target :: deferr
-        character(len = 256) :: errmsg
         logical :: brk, ascending
 
         ! Initialization
@@ -45,62 +44,9 @@ contains
         ! Quick Return
         if (neqn <= 0) return
 
-        ! Input Checking
-        if (.not.fcnobj%get_equations_defined()) then
-            ! ERROR: Equations undefined
-            call errmgr%report_error("oi_integrate", &
-                "The routine expected to hold the ODEs is undefined.", &
-                INT_LACK_OF_DEFINITION_ERROR)
-            return
-        end if
-        if (neqn /= size(y)) then
-            ! ERROR: # of equations does not match initial condition vector size
-            write(errmsg, '(AI0AI0A)') "Expected an array of size ", neqn, &
-                ", but found an array of size ", size(y), "."
-            call errmgr%report_error("oi_integrate", trim(errmsg), &
-                INT_ARRAY_SIZE_MISMATCH_ERROR)
-            return
-        end if
-        if (n < 2) then
-            ! ERROR: There must be at least a starting and ending point for the
-            ! integration routine
-        end if
-        if (x(n) == x(1)) then
-            ! ERROR: No integration range
-            call errmgr%report_error("oi_integrate", &
-                "The starting and ending integration points are the same.", &
-                INT_INVALID_INPUT_ERROR)
-            return
-        end if
-
-        ! Ensure tolerances are defined.  If not, utilize defaults
-        if (allocated(this%m_rtol)) then
-            if (size(this%m_rtol) /= neqn) then
-                ! WARNING: Size mismatch in tolerance array - using defaults
-                call errmgr%report_warning("oi_integrate", &
-                    "The relative tolerance array is not correctly " // &
-                    "sized for the problem.  Using a default tolerance " // &
-                    "instead.", INT_ARRAY_SIZE_MISMATCH_ERROR)
-                deallocate(this%m_rtol)
-                this%m_rtol = alloc_default_rtol(neqn)
-            end if
-        else
-            this%m_rtol = alloc_default_rtol(neqn)
-        end if
-
-        if (allocated(this%m_atol)) then
-            if (size(this%m_rtol) /= neqn) then
-                ! WARNING: Size mismatch in tolerance array - using defaults
-                call errmgr%report_warning("oi_integrate", &
-                    "The absolute tolerance array is not correctly " // &
-                    "sized for the problem.  Using a default tolerance " // &
-                    "instead.", INT_ARRAY_SIZE_MISMATCH_ERROR)
-                deallocate(this%m_atol)
-                this%m_atol = alloc_default_atol(neqn)
-            end if
-        else
-            this%m_atol = alloc_default_atol(neqn)
-        end if
+        ! Initialize the integrator
+        call this%initialize_integrator(fcnobj, x, y, errmgr)
+        if (errmgr%has_error_occurred()) return
 
         ! Additional Initialization
         allocate(buffer(nbuffer, ncols), stat = flag)
@@ -351,6 +297,82 @@ contains
         else
             x = temp(1:new_row_count,:)
         end if
+    end subroutine
+
+! ------------------------------------------------------------------------------
+    module subroutine oi_init_integrator(this, fcnobj, x, y, errmgr)
+        ! Arguments
+        class(ode_integrator), intent(inout) :: this
+        class(ode_helper), intent(in) :: fcnobj
+        real(real64), intent(in), dimension(:) :: x, y
+        class(errors), intent(inout) :: errmgr
+
+        ! Local Variables
+        integer(int32) :: neqn, n
+        character(len = 256) :: errmsg
+
+        ! Initialization
+        neqn = fcnobj%get_equation_count()
+        n = size(x)
+
+        ! Input Checking
+        if (.not.fcnobj%get_equations_defined()) then
+            ! ERROR: Equations undefined
+            call errmgr%report_error("oi_init_integrator", &
+                "The routine expected to hold the ODEs is undefined.", &
+                INT_LACK_OF_DEFINITION_ERROR)
+            return
+        end if
+        if (neqn /= size(y)) then
+            ! ERROR: # of equations does not match initial condition vector size
+            write(errmsg, '(AI0AI0A)') "Expected an array of size ", neqn, &
+                ", but found an array of size ", size(y), "."
+            call errmgr%report_error("oi_init_integrator", trim(errmsg), &
+                INT_ARRAY_SIZE_MISMATCH_ERROR)
+            return
+        end if
+        if (n < 2) then
+            ! ERROR: There must be at least a starting and ending point for the
+            ! integration routine
+        end if
+        if (x(n) == x(1)) then
+            ! ERROR: No integration range
+            call errmgr%report_error("oi_init_integrator", &
+                "The starting and ending integration points are the same.", &
+                INT_INVALID_INPUT_ERROR)
+            return
+        end if
+
+        ! Ensure tolerances are defined.  If not, utilize defaults
+        if (allocated(this%m_rtol)) then
+            if (size(this%m_rtol) /= neqn) then
+                ! WARNING: Size mismatch in tolerance array - using defaults
+                call errmgr%report_warning("oi_init_integrator", &
+                    "The relative tolerance array is not correctly " // &
+                    "sized for the problem.  Using a default tolerance " // &
+                    "instead.", INT_ARRAY_SIZE_MISMATCH_ERROR)
+                deallocate(this%m_rtol)
+                this%m_rtol = alloc_default_rtol(neqn)
+            end if
+        else
+            this%m_rtol = alloc_default_rtol(neqn)
+        end if
+
+        if (allocated(this%m_atol)) then
+            if (size(this%m_rtol) /= neqn) then
+                ! WARNING: Size mismatch in tolerance array - using defaults
+                call errmgr%report_warning("oi_init_integrator", &
+                    "The absolute tolerance array is not correctly " // &
+                    "sized for the problem.  Using a default tolerance " // &
+                    "instead.", INT_ARRAY_SIZE_MISMATCH_ERROR)
+                deallocate(this%m_atol)
+                this%m_atol = alloc_default_atol(neqn)
+            end if
+        else
+            this%m_atol = alloc_default_atol(neqn)
+        end if
+
+        !
     end subroutine
 
 ! ------------------------------------------------------------------------------

@@ -8,6 +8,7 @@ set(integral_sources
     integral_ode_integrator.f90
     integral_ode_auto.f90
     integral_infinite_integrator.f90
+    integral_ode_irk.f90
 )
 
 # Define the QUADPACK source files
@@ -68,6 +69,14 @@ set(odepack_sources
 
 # Include the ODEPACK sources
 list(APPEND integral_sources ${odepack_sources})
+
+# Include RADAU5 sources
+set(radau5_sources
+    RADAU5/radau5.f
+    RADAU5/dc_decsol.f
+    RADAU5/decsol.f
+)
+list(APPEND integral_sources ${radau5_sources})
 
 # Define the library
 add_library(integral ${integral_sources})
