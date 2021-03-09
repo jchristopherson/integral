@@ -1950,9 +1950,6 @@ module integral_core
     !! The following example illustrates the use of @p ode_irk and compares with
     !! @p ode_auto to determine the solution to the Van Der Pol equation.
     !! @code{.f90}
-    !! @endcode
-    !! The above program produces the following output.
-    !! @code{.f90}
     !! program example
     !!     use iso_fortran_env
     !!     use integral_core
@@ -2045,6 +2042,11 @@ module integral_core
     !!         dxdt(2) = mu * (1.0d0 - x(1)**2) * x(2) - x(1)
     !!     end subroutine
     !! end program
+    !! @endcode
+    !! The above program produces the following output.
+    !! @code{.txt}
+    !! ODE_IRK Solution Point Count: 544
+    !! ODE_AUTO Solution Point Count: 1283
     !! @endcode
     !! @image html vanderpol_compare_example.png
     !! @image html vanderpol_compare_example_diff.png

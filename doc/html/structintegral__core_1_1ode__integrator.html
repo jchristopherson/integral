@@ -95,6 +95,7 @@ $(document).ready(function(){initNavTree('structintegral__core_1_1ode__integrato
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="structintegral__core_1_1ode__integrator-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -108,6 +109,7 @@ Inheritance diagram for integral_core::ode_integrator:</div>
   <img src="structintegral__core_1_1ode__integrator.png" usemap="#integral_5Fcore::ode_5Fintegrator_map" alt=""/>
   <map id="integral_5Fcore::ode_5Fintegrator_map" name="integral_5Fcore::ode_5Fintegrator_map">
 <area href="structintegral__core_1_1ode__auto.html" title="Defines an integrator for systems of first order ODEs that is capable of switching between an Adams m..." alt="integral_core::ode_auto" shape="rect" coords="0,56,175,80"/>
+<area href="structintegral__core_1_1ode__irk.html" title="Defines an integrator for systems of first order ODEs that is capable of solving the system of equati..." alt="integral_core::ode_irk" shape="rect" coords="185,56,360,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -177,6 +179,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0d54424dbe1176b8811e7ec66ac597ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the state of the integrator.  <a href="structintegral__core_1_1ode__integrator.html#a0d54424dbe1176b8811e7ec66ac597ce">More...</a><br /></td></tr>
 <tr class="separator:a0d54424dbe1176b8811e7ec66ac597ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a88f870e35c3a9fe596908b2d3dedfc9c"><td class="memItemLeft" align="right" valign="top"><a id="a88f870e35c3a9fe596908b2d3dedfc9c"></a>
+procedure, private&#160;</td><td class="memItemRight" valign="bottom"><b>initialize_integrator</b> =&gt; oi_init_integrator</td></tr>
+<tr class="separator:a88f870e35c3a9fe596908b2d3dedfc9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a92d76347951a3539e19dffaccd6dafe7"><td class="memItemLeft" align="right" valign="top"><a id="a92d76347951a3539e19dffaccd6dafe7"></a>
@@ -212,13 +220,13 @@ logical&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s
 <tr class="memdesc:a17eb7e73feff89f1f42d7eacdfeca28a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if limits should be imposed upon maximum step size. <br /></td></tr>
 <tr class="separator:a17eb7e73feff89f1f42d7eacdfeca28a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33ed8f41b14f6730d8cd5d1a81504ba8"><td class="memItemLeft" align="right" valign="top"><a id="a33ed8f41b14f6730d8cd5d1a81504ba8"></a>
-integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__integrator.html#a33ed8f41b14f6730d8cd5d1a81504ba8">m_maxstepcount</a> = 500</td></tr>
+integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__integrator.html#a33ed8f41b14f6730d8cd5d1a81504ba8">m_maxstepcount</a> = 50000</td></tr>
 <tr class="memdesc:a33ed8f41b14f6730d8cd5d1a81504ba8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the iteration step limit per integration step. <br /></td></tr>
 <tr class="separator:a33ed8f41b14f6730d8cd5d1a81504ba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01209">1209</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01283">1283</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
 <a id="aa25b79e8d03f0a9e36ba7e01db873755"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa25b79e8d03f0a9e36ba7e01db873755">&#9670;&nbsp;</a></span>get_absolute_tolerances()</h2>
@@ -246,7 +254,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array containing the tolerance value for each ODE. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01460">1460</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01534">1534</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -276,7 +284,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns true if the integrator can overshoot; else, false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01306">1306</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01380">1380</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -306,7 +314,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The integration limit. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01330">1330</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01404">1404</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -336,7 +344,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The iteration limit. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01419">1419</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01493">1493</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -366,7 +374,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns true if the integrator's step size should be limited; else, false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01395">1395</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01469">1469</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -396,7 +404,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The maximum step size. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01373">1373</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01447">1447</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -426,7 +434,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The minimum buffer size. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01351">1351</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01425">1425</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -456,7 +464,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns true if all integrator output should be reported; else, returns false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01281">1281</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01355">1355</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -486,7 +494,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array containing the tolerance value for each ODE. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01440">1440</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01514">1514</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -526,7 +534,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns the solution in a matrix of N+1 columns. The first column contains the values of the independent variable at which the solution was computed. The remaining columns contain the solution points for each ODE. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01269">1269</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01343">1343</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -555,7 +563,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01507">1507</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01581">1581</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -585,7 +593,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01470">1470</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01544">1544</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -615,7 +623,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01319">1319</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01393">1393</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -645,7 +653,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01341">1341</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01415">1415</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -675,7 +683,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01430">1430</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01504">1504</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -705,7 +713,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01408">1408</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01482">1482</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -735,7 +743,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01384">1384</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01458">1458</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -765,7 +773,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01363">1363</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01437">1437</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -795,7 +803,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01294">1294</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01368">1368</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -825,7 +833,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01450">1450</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01524">1524</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -862,7 +870,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns true if the integrator requests a stop; else, false, to continue as normal. A possible sitaution resulting in a true value is in the event a constraint has been satisfied. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01498">1498</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01572">1572</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>

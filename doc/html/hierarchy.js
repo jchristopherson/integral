@@ -10,13 +10,16 @@ var hierarchy =
       ] ],
       [ "integral_core::infinite_interval_integrator", "structintegral__core_1_1infinite__interval__integrator.html", null ]
     ] ],
+    [ "integral_core::ode_collect_results", "interfaceintegral__core_1_1ode__collect__results.html", null ],
     [ "integral_core::ode_constraint", "interfaceintegral__core_1_1ode__constraint.html", null ],
     [ "integral_core::ode_fcn", "interfaceintegral__core_1_1ode__fcn.html", null ],
     [ "integral_core::ode_helper", "structintegral__core_1_1ode__helper.html", null ],
     [ "integral_core::ode_integrator", "structintegral__core_1_1ode__integrator.html", [
-      [ "integral_core::ode_auto", "structintegral__core_1_1ode__auto.html", null ]
+      [ "integral_core::ode_auto", "structintegral__core_1_1ode__auto.html", null ],
+      [ "integral_core::ode_irk", "structintegral__core_1_1ode__irk.html", null ]
     ] ],
     [ "integral_core::ode_integrator_interface", "interfaceintegral__core_1_1ode__integrator__interface.html", null ],
     [ "integral_core::ode_integrator_reset", "interfaceintegral__core_1_1ode__integrator__reset.html", null ],
-    [ "integral_core::ode_jacobian", "interfaceintegral__core_1_1ode__jacobian.html", null ]
+    [ "integral_core::ode_jacobian", "interfaceintegral__core_1_1ode__jacobian.html", null ],
+    [ "integral_core::ode_mass", "interfaceintegral__core_1_1ode__mass.html", null ]
 ];

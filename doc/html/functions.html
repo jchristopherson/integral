@@ -115,6 +115,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>evaluate_jacobian()
 : <a class="el" href="structintegral__core_1_1ode__helper.html#a71b0e8ba6a0c8791e3383952033eeba4">integral_core::ode_helper</a>
 </li>
+<li>evaluate_mass_matrix()
+: <a class="el" href="structintegral__core_1_1ode__helper.html#a338ba0ed922e0fbc16cd1c4ef52d308e">integral_core::ode_helper</a>
+</li>
 <li>evaluation_count
 : <a class="el" href="structintegral__core_1_1integration__behavior.html#a10316b0602cfe5f50af486c2bc018f0d">integral_core::integration_behavior</a>
 </li>
@@ -161,6 +164,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>get_limit_step_size()
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#aae58166a369e161e8cbf40bcd9bb1892">integral_core::ode_integrator</a>
 </li>
+<li>get_mass_matrix_defined()
+: <a class="el" href="structintegral__core_1_1ode__helper.html#af808f4b8f01e4f25706a8ff365ae44d1">integral_core::ode_helper</a>
+</li>
 <li>get_max_step_size()
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#afe2790f64751dac4479870a417734591">integral_core::ode_integrator</a>
 </li>
@@ -169,6 +175,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>get_min_buffer_size()
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#af9643c32f7e7f86315515ac0907d7187">integral_core::ode_integrator</a>
+</li>
+<li>get_newton_iteration_count()
+: <a class="el" href="structintegral__core_1_1ode__irk.html#a1fd12a34e4db783ab2af9a401696181c">integral_core::ode_irk</a>
 </li>
 <li>get_provide_all_output()
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#a5e1fc2ece794339bc5a0b7fca9639680">integral_core::ode_integrator</a>
@@ -202,6 +211,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 , <a class="el" href="structintegral__core_1_1infinite__interval__integrator.html#a33dfb2444c253c449e18c4c17976d19a">integral_core::infinite_interval_integrator</a>
 , <a class="el" href="structintegral__core_1_1nonadaptive__integrator.html#a85fb400ce19f7ed619f9f150dbc0aab8">integral_core::nonadaptive_integrator</a>
 , <a class="el" href="structintegral__core_1_1ode__integrator.html#aa29c0067d3b5a56f084b1f5425356faa">integral_core::ode_integrator</a>
+, <a class="el" href="structintegral__core_1_1ode__irk.html#a6972dadf9608af911520067d7d644ea3">integral_core::ode_irk</a>
 </li>
 </ul>
 
@@ -222,8 +232,14 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>m_canovershoot
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#af8b1acccaac658b793db41f332a391d3">integral_core::ode_integrator</a>
 </li>
+<li>m_collector
+: <a class="el" href="structintegral__core_1_1ode__irk.html#a4d48d2e9fade695832c6eaddf6173cdf">integral_core::ode_irk</a>
+</li>
 <li>m_constraints
 : <a class="el" href="structintegral__core_1_1ode__helper.html#a5f0785936c8edb94beb039537ace0114">integral_core::ode_helper</a>
+</li>
+<li>m_controller
+: <a class="el" href="structintegral__core_1_1ode__irk.html#ac06045e6c9ffe0bb4e135d990bd6e21c">integral_core::ode_irk</a>
 </li>
 <li>m_count
 : <a class="el" href="structintegral__core_1_1ode__helper.html#af7f666093f4952fd165bd6e634f715f5">integral_core::ode_helper</a>
@@ -234,6 +250,15 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>m_fcn
 : <a class="el" href="structintegral__core_1_1ode__helper.html#aa2466912c0bc7ff13a704073357f0a58">integral_core::ode_helper</a>
 </li>
+<li>m_index1
+: <a class="el" href="structintegral__core_1_1ode__irk.html#a26a34313ba84bb511f7f69f9bde563c0">integral_core::ode_irk</a>
+</li>
+<li>m_index2
+: <a class="el" href="structintegral__core_1_1ode__irk.html#abc9f2f9d3635b119cc8e03bc012bee2b">integral_core::ode_irk</a>
+</li>
+<li>m_index3
+: <a class="el" href="structintegral__core_1_1ode__irk.html#a45958f4a46a8b1606a47ff055b98b500">integral_core::ode_irk</a>
+</li>
 <li>m_istate
 : <a class="el" href="structintegral__core_1_1ode__auto.html#a57af60d28a09024a16287e13c77330f8">integral_core::ode_auto</a>
 </li>
@@ -241,12 +266,16 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="structintegral__core_1_1adaptive__integrator.html#ab436b7c59e3e7a6def496e6db3e76663">integral_core::adaptive_integrator</a>
 , <a class="el" href="structintegral__core_1_1infinite__interval__integrator.html#ab00fdc491ed96db506b37285a0305814">integral_core::infinite_interval_integrator</a>
 , <a class="el" href="structintegral__core_1_1ode__auto.html#af672d690a71a7658f25d7bf066fcea98">integral_core::ode_auto</a>
+, <a class="el" href="structintegral__core_1_1ode__irk.html#a38ec82ae227d91e9fa45250eefdee62e">integral_core::ode_irk</a>
 </li>
 <li>m_jac
 : <a class="el" href="structintegral__core_1_1ode__helper.html#a7c0bf3bde15337a0e22268ad58491a2f">integral_core::ode_helper</a>
 </li>
 <li>m_limitstepsize
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#a17eb7e73feff89f1f42d7eacdfeca28a">integral_core::ode_integrator</a>
+</li>
+<li>m_mass
+: <a class="el" href="structintegral__core_1_1ode__helper.html#a61c21dd25260089423ff0d95c1649508">integral_core::ode_helper</a>
 </li>
 <li>m_maxint
 : <a class="el" href="structintegral__core_1_1integrator__base.html#aa1ada1422094ffc89d915d9f1752c1fc">integral_core::integrator_base</a>
@@ -259,6 +288,12 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>m_minbuffersize
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#adc71c097e606811693bd4a60d99481ca">integral_core::ode_integrator</a>
+</li>
+<li>m_newtoniter
+: <a class="el" href="structintegral__core_1_1ode__irk.html#a4d82d3e95695dcd97390a0cc748bf21d">integral_core::ode_irk</a>
+</li>
+<li>m_newtontol
+: <a class="el" href="structintegral__core_1_1ode__irk.html#a002b588934d5444dca15d8e8cfcb54b7">integral_core::ode_irk</a>
 </li>
 <li>m_reltol
 : <a class="el" href="structintegral__core_1_1integrator__base.html#a6d69a7f8d189666acb444667064dd557">integral_core::integrator_base</a>
@@ -277,6 +312,10 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>m_rwork
 : <a class="el" href="structintegral__core_1_1ode__auto.html#acf053c0ab90c954fbea452537ede1933">integral_core::ode_auto</a>
+, <a class="el" href="structintegral__core_1_1ode__irk.html#aa6349c1f69322430844c47953d02faa9">integral_core::ode_irk</a>
+</li>
+<li>m_stepsize
+: <a class="el" href="structintegral__core_1_1ode__irk.html#ab11ccf8db110c88de535362c393472cb">integral_core::ode_irk</a>
 </li>
 <li>m_userdefinedbreaks
 : <a class="el" href="structintegral__core_1_1adaptive__integrator.html#a92559ae1322790490c8aba2cf130e767">integral_core::adaptive_integrator</a>
@@ -292,6 +331,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>reset()
 : <a class="el" href="structintegral__core_1_1ode__auto.html#ac36e4a651771f34246340c806504434b">integral_core::ode_auto</a>
 , <a class="el" href="structintegral__core_1_1ode__integrator.html#a0d54424dbe1176b8811e7ec66ac597ce">integral_core::ode_integrator</a>
+, <a class="el" href="structintegral__core_1_1ode__irk.html#a2327f3af6a6af421d5a8db722e7cf626">integral_core::ode_irk</a>
 </li>
 </ul>
 
@@ -324,6 +364,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>set_min_buffer_size()
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#ac6888b75837856d105d684ea61097e44">integral_core::ode_integrator</a>
 </li>
+<li>set_newton_iteration_count()
+: <a class="el" href="structintegral__core_1_1ode__irk.html#a29b7f08c28d83716437328347791efd6">integral_core::ode_irk</a>
+</li>
 <li>set_provide_all_output()
 : <a class="el" href="structintegral__core_1_1ode__integrator.html#a3cd912e8076dc7dbe94297a5bf6d7c87">integral_core::ode_integrator</a>
 </li>
@@ -342,6 +385,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>step()
 : <a class="el" href="structintegral__core_1_1ode__auto.html#aa750d26ae0ae31b5e7c1d45a11a4a5f0">integral_core::ode_auto</a>
 , <a class="el" href="structintegral__core_1_1ode__integrator.html#a806e215e8938b37ceabdd1a0e605c15c">integral_core::ode_integrator</a>
+, <a class="el" href="structintegral__core_1_1ode__irk.html#a8329e322e7d44650f7d5ba61e5db1a5e">integral_core::ode_irk</a>
 </li>
 <li>subinterval_count
 : <a class="el" href="structintegral__core_1_1integration__behavior.html#af119d968518a0f9d11c5ce1b6a30b31f">integral_core::integration_behavior</a>

@@ -133,6 +133,9 @@ Data Types</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">type &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__auto.html">ode_auto</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines an integrator for systems of first order ODEs that is capable of switching between an Adams method and a BDF method automatically. This integrator is able to handle both stiff and non-stiff systems of equations.  <a href="structintegral__core_1_1ode__auto.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceintegral__core_1_1ode__collect__results.html">ode_collect_results</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an internal routine used by some of the ODE solvers to collect output.  <a href="interfaceintegral__core_1_1ode__collect__results.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceintegral__core_1_1ode__constraint.html">ode_constraint</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a routine capable of describing constraints on a system of ODEs of N variables exposed to M constraints.  <a href="interfaceintegral__core_1_1ode__constraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,8 +153,15 @@ Data Types</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceintegral__core_1_1ode__integrator__reset.html">ode_integrator_reset</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the state of the integrator.  <a href="interfaceintegral__core_1_1ode__integrator__reset.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">type &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__irk.html">ode_irk</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines an integrator for systems of first order ODEs that is capable of solving the system of equations M * Y' = F(X, Y). This system can be linearly implicit, or explicit. The method utilized is an implicit Runge-Kutta method of order 5. <br  />
+  <a href="structintegral__core_1_1ode__irk.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceintegral__core_1_1ode__jacobian.html">ode_jacobian</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a routine capable of computing the Jacobian matrix of a system of N first order ODEs of N variables.  <a href="interfaceintegral__core_1_1ode__jacobian.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceintegral__core_1_1ode__mass.html">ode_mass</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a routine capable of computing the mass matrix of a system of ODE's expressed as M * Y' = F(X, Y) where M is the mass matrix.  <a href="interfaceintegral__core_1_1ode__mass.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -208,6 +218,14 @@ integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bot
 integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#ac9bae034a795054bebc72b1bd0fee0ba">int_invalid_operation_error</a> = 13</td></tr>
 <tr class="memdesc:ac9bae034a795054bebc72b1bd0fee0ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">An error the occurs if an invalid operation is requested. <br /></td></tr>
 <tr class="separator:ac9bae034a795054bebc72b1bd0fee0ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae64dcba0c0871bdb9ac91a7f3755928d"><td class="memItemLeft" align="right" valign="top"><a id="ae64dcba0c0871bdb9ac91a7f3755928d"></a>
+integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#ae64dcba0c0871bdb9ac91a7f3755928d">int_step_size_too_small_error</a> = 14</td></tr>
+<tr class="memdesc:ae64dcba0c0871bdb9ac91a7f3755928d"><td class="mdescLeft">&#160;</td><td class="mdescRight">An error flag indicating the step size has become too small. <br /></td></tr>
+<tr class="separator:ae64dcba0c0871bdb9ac91a7f3755928d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae27aad46cf7d333e09087d140a354b37"><td class="memItemLeft" align="right" valign="top"><a id="ae27aad46cf7d333e09087d140a354b37"></a>
+integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#ae27aad46cf7d333e09087d140a354b37">int_singular_matrix_error</a> = 15</td></tr>
+<tr class="memdesc:ae27aad46cf7d333e09087d140a354b37"><td class="mdescLeft">&#160;</td><td class="mdescRight">An error flag indicating a singular matrix error. <br /></td></tr>
+<tr class="separator:ae27aad46cf7d333e09087d140a354b37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d7872c112bce9111b36213fc38134d9"><td class="memItemLeft" align="right" valign="top"><a id="a7d7872c112bce9111b36213fc38134d9"></a>
 integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#a7d7872c112bce9111b36213fc38134d9">int_15_point_rule</a> = 15</td></tr>
 <tr class="memdesc:a7d7872c112bce9111b36213fc38134d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a 15-point Gauss-Kronrod integration rule. <br /></td></tr>
@@ -232,6 +250,14 @@ integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bot
 integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#a276f6e1263695298509c7a918461d154">int_61_point_rule</a> = 61</td></tr>
 <tr class="memdesc:a276f6e1263695298509c7a918461d154"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a 61-point Gauss-Kronrod integration rule. <br /></td></tr>
 <tr class="separator:a276f6e1263695298509c7a918461d154"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade1bac76eb42f3ca4f8e96519ce80ba9"><td class="memItemLeft" align="right" valign="top"><a id="ade1bac76eb42f3ca4f8e96519ce80ba9"></a>
+integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#ade1bac76eb42f3ca4f8e96519ce80ba9">int_predictive_step_size_controller</a> = 1</td></tr>
+<tr class="memdesc:ade1bac76eb42f3ca4f8e96519ce80ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a predictive step-size controller. <br /></td></tr>
+<tr class="separator:ade1bac76eb42f3ca4f8e96519ce80ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a710accd4dae134b5d54da9f376ad7738"><td class="memItemLeft" align="right" valign="top"><a id="a710accd4dae134b5d54da9f376ad7738"></a>
+integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#a710accd4dae134b5d54da9f376ad7738">int_classical_step_size_controller</a> = 2</td></tr>
+<tr class="memdesc:a710accd4dae134b5d54da9f376ad7738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a classical step-size controller. <br /></td></tr>
+<tr class="separator:a710accd4dae134b5d54da9f376ad7738"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><b><a class="el" href="namespaceintegral__core.html" title="integral_core">integral_core</a></b> </p>

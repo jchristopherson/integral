@@ -137,6 +137,12 @@ procedure, public&#160;</td><td class="memItemRight" valign="bottom"><b>evaluate
 <tr class="memitem:a46027b2f5e0ff388190756e7e50f53df"><td class="memItemLeft" align="right" valign="top">procedure, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__helper.html#a46027b2f5e0ff388190756e7e50f53df">evaluate_constraints</a> =&gt; oh_eval_constraints</td></tr>
 <tr class="memdesc:a46027b2f5e0ff388190756e7e50f53df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the constraint equations.  <a href="structintegral__core_1_1ode__helper.html#a46027b2f5e0ff388190756e7e50f53df">More...</a><br /></td></tr>
 <tr class="separator:a46027b2f5e0ff388190756e7e50f53df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af808f4b8f01e4f25706a8ff365ae44d1"><td class="memItemLeft" align="right" valign="top">procedure, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__helper.html#af808f4b8f01e4f25706a8ff365ae44d1">get_mass_matrix_defined</a> =&gt; oh_is_mass_defined</td></tr>
+<tr class="memdesc:af808f4b8f01e4f25706a8ff365ae44d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a flag denoting if the user has defined the routine used to compute the mass matrix.  <a href="structintegral__core_1_1ode__helper.html#af808f4b8f01e4f25706a8ff365ae44d1">More...</a><br /></td></tr>
+<tr class="separator:af808f4b8f01e4f25706a8ff365ae44d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a338ba0ed922e0fbc16cd1c4ef52d308e"><td class="memItemLeft" align="right" valign="top">procedure, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__helper.html#a338ba0ed922e0fbc16cd1c4ef52d308e">evaluate_mass_matrix</a> =&gt; oh_eval_mass</td></tr>
+<tr class="memdesc:a338ba0ed922e0fbc16cd1c4ef52d308e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the mass matrix.  <a href="structintegral__core_1_1ode__helper.html#a338ba0ed922e0fbc16cd1c4ef52d308e">More...</a><br /></td></tr>
+<tr class="separator:a338ba0ed922e0fbc16cd1c4ef52d308e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -146,7 +152,7 @@ procedure(<a class="el" href="interfaceintegral__core_1_1ode__fcn.html">ode_fcn<
 <tr class="separator:aa2466912c0bc7ff13a704073357f0a58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c0bf3bde15337a0e22268ad58491a2f"><td class="memItemLeft" align="right" valign="top"><a id="a7c0bf3bde15337a0e22268ad58491a2f"></a>
 procedure(<a class="el" href="interfaceintegral__core_1_1ode__jacobian.html">ode_jacobian</a>), pointer, nopass&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__helper.html#a7c0bf3bde15337a0e22268ad58491a2f">m_jac</a> =&gt; null()</td></tr>
-<tr class="memdesc:a7c0bf3bde15337a0e22268ad58491a2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pointer to the routine containing the Jacobian. <br /></td></tr>
+<tr class="memdesc:a7c0bf3bde15337a0e22268ad58491a2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pointer to the routine for computing the Jacobian. <br /></td></tr>
 <tr class="separator:a7c0bf3bde15337a0e22268ad58491a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93817c5d4853f613234fac19ecf0d541"><td class="memItemLeft" align="right" valign="top"><a id="a93817c5d4853f613234fac19ecf0d541"></a>
 procedure(<a class="el" href="interfaceintegral__core_1_1ode__constraint.html">ode_constraint</a>), pointer, nopass&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__helper.html#a93817c5d4853f613234fac19ecf0d541">m_rts</a> =&gt; null()</td></tr>
@@ -160,11 +166,15 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__helper.html#a5f0785936c8edb94beb039537ace0114">m_constraints</a> = 0</td></tr>
 <tr class="memdesc:a5f0785936c8edb94beb039537ace0114"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of constraint equations. <br /></td></tr>
 <tr class="separator:a5f0785936c8edb94beb039537ace0114"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61c21dd25260089423ff0d95c1649508"><td class="memItemLeft" align="right" valign="top"><a id="a61c21dd25260089423ff0d95c1649508"></a>
+procedure(<a class="el" href="interfaceintegral__core_1_1ode__mass.html">ode_mass</a>), pointer, nopass&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__helper.html#a61c21dd25260089423ff0d95c1649508">m_mass</a> =&gt; null()</td></tr>
+<tr class="memdesc:a61c21dd25260089423ff0d95c1649508"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pointer to the routine for computing the mass matrix. <br /></td></tr>
+<tr class="separator:a61c21dd25260089423ff0d95c1649508"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines a type used to pass information regarding the ODEs to the solver. </p>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00803">803</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00841">841</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
 <a id="aa163a6e0231a59ff2cd93124b899047e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa163a6e0231a59ff2cd93124b899047e">&#9670;&nbsp;</a></span>define_constraints()</h2>
@@ -312,7 +322,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </div>
  </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01077">1077</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01117">1117</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -415,7 +425,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </div>
  </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00906">906</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00946">946</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -447,7 +457,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01142">1142</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01182">1182</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -479,7 +489,37 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01127">1127</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01167">1167</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+
+</div>
+</div>
+<a id="a338ba0ed922e0fbc16cd1c4ef52d308e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a338ba0ed922e0fbc16cd1c4ef52d308e">&#9670;&nbsp;</a></span>evaluate_mass_matrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">procedure, public integral_core::ode_helper::evaluate_mass_matrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Evaluates the mass matrix. </p>
+<dl class="section user"><dt>Syntax</dt><dd><div class="fragment"><div class="line"><span class="keyword">subroutine </span>evalaute_mass_matrix(class(ode_helper) this, real(real64) m(:,:))</div>
+</div><!-- fragment --></dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>The <a class="el" href="structintegral__core_1_1ode__helper.html" title="Defines a type used to pass information regarding the ODEs to the solver.">ode_helper</a> object. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">m</td><td>An N-by-N matrix where the mass matrix is to be written. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01206">1206</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -509,7 +549,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of constraint equations. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01087">1087</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01127">1127</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -539,7 +579,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the constraint equation routine is defined; else, false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01098">1098</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01138">1138</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -569,7 +609,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of ODEs. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00916">916</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00956">956</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -599,7 +639,7 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns true if the equations have been defined (by calling <code>define_equations</code>); else, false if they have not yet been defined. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00929">929</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00969">969</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -629,7 +669,37 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns true if the routine for computing the Jacobian has been defined (by calling <code>define_equations</code>); else, false if it has not. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00942">942</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l00982">982</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+
+</div>
+</div>
+<a id="af808f4b8f01e4f25706a8ff365ae44d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af808f4b8f01e4f25706a8ff365ae44d1">&#9670;&nbsp;</a></span>get_mass_matrix_defined()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">procedure, public integral_core::ode_helper::get_mass_matrix_defined </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a flag denoting if the user has defined the routine used to compute the mass matrix. </p>
+<dl class="section user"><dt>Syntax</dt><dd><div class="fragment"><div class="line"><span class="keywordtype">pure</span> <span class="keyword">logical </span><span class="keyword">function </span>get_mass_matrix_defined(class(ode_helper) this)</div>
+</div><!-- fragment --></dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>The <a class="el" href="structintegral__core_1_1ode__helper.html" title="Defines a type used to pass information regarding the ODEs to the solver.">ode_helper</a> object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns true if the routine for computing the mass matrix has been defined (by calling <code>define_equations</code>); else, false if it has not. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01196">1196</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
