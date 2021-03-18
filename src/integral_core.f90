@@ -35,6 +35,7 @@ module integral_core
     public :: INT_INVALID_OPERATION_ERROR
     public :: INT_STEP_SIZE_TOO_SMALL_ERROR
     public :: INT_SINGULAR_MATRIX_ERROR
+    public :: INT_IMPROPER_INTEGRATOR_ERROR
     public :: INT_15_POINT_RULE
     public :: INT_21_POINT_RULE
     public :: INT_31_POINT_RULE
@@ -61,6 +62,7 @@ module integral_core
     public :: ode_integrator_reset
     public :: ode_auto
     public :: ode_irk
+    public :: ode_rk45
 
 ! ------------------------------------------------------------------------------
     !> @brief An error flag indicating insufficient memory.
@@ -97,6 +99,9 @@ module integral_core
     integer(int32), parameter :: INT_STEP_SIZE_TOO_SMALL_ERROR = 14
     !> @brief An error flag indicating a singular matrix error.
     integer(int32), parameter :: INT_SINGULAR_MATRIX_ERROR = 15
+    !> @brief An error flag indicating the integrator is not well suited to the
+    !! problem.
+    integer(int32), parameter :: INT_IMPROPER_INTEGRATOR_ERROR = 16
 
 ! ------------------------------------------------------------------------------
     !> @brief Defines a 15-point Gauss-Kronrod integration rule.
@@ -1932,6 +1937,66 @@ module integral_core
     end interface
 
 ! ******************************************************************************
+! INTEGRAL_ODE_INTEGRATOR2.F90
+! ------------------------------------------------------------------------------
+    !> @brief This class is an extension of the ode_integrator type, but 
+    !! tailored to support the Fortran libraries that require subroutine
+    !! support to collect output from the integrator 
+    !! (e.g. RADAU5, DOPRI5, etc.).
+    type, abstract, extends(ode_integrator) :: ode_integrator2
+    private
+        !> A pointer to the routine used to collect the solution from the
+        !! integrator.
+        procedure(ode_collect_results), pointer, nopass :: m_collector => null()
+    contains
+        !> @brief Performs the integration.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical function integrate(class(ode_integrator2) this, class(ode_helper) fcnobj, real(real64) x(:), real(real64) y(:), optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_integrator2 object.
+        !! @param[in,out] fcnobj The ode_helper object containing the equations
+        !!  to integrate.
+        !! @param[in] x An array containing the values of the independent
+        !!  variable at which the solution is desired.  There must be at least
+        !!  two values in this array.
+        !! @param[in] y An N-element array containing the initial conditions for
+        !!  each of the N ODEs.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!  - INT_INVALID_INPUT_ERROR: An invalid input was supplied.
+        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available.
+        !!  - INT_LACK_OF_DEFINITION_ERROR: Occurs if no equations have been
+        !!      defined.
+        !!  - INT_ARRAY_SIZE_MISMATCH_ERROR: Occurs if @p y is not sized to
+        !!      match the problem as defined in @p fcnobj, or if the tolerance
+        !!      arrays are not sized to match the problem as defined in
+        !!      @p fcnobj.
+        !!  Notice, specific integrators may have additional errors.  See the
+        !!  @p step routine of the appropriate integrator for more information.
+        !!
+        !! @return Returns the solution in a matrix of N+1 columns.  The
+        !!  first column contains the values of the independent variable at
+        !!  which the solution was computed.  The remaining columns contain the
+        !!  solution points for each ODE.
+        procedure, public :: integrate => oi2_integrate
+    end type
+
+    interface
+        module function oi2_integrate(this, fcnobj, x, y, err) result(rst)
+            class(ode_integrator2), intent(inout) :: this
+            class(ode_helper), intent(inout) :: fcnobj
+            real(real64), intent(in), dimension(:) :: x, y
+            class(errors), intent(inout), optional, target :: err
+            real(real64), allocatable, dimension(:,:) :: rst
+        end function
+    end interface
+
+! ******************************************************************************
 ! INTEGRAL_ODE_AUTO.F90
 ! ------------------------------------------------------------------------------
     !> @brief Defines an integrator for systems of first order ODEs that is 
@@ -2050,7 +2115,7 @@ module integral_core
     !! @endcode
     !! @image html vanderpol_compare_example.png
     !! @image html vanderpol_compare_example_diff.png
-    type, extends(ode_integrator) :: ode_irk
+    type, extends(ode_integrator2) :: ode_irk
     private
         !> A workspace array.
         real(real64), allocatable, dimension(:) :: m_rwork
@@ -2072,9 +2137,6 @@ module integral_core
         real(real64) :: m_newtonTol = 3.0d-2
         !> Step size tracking variable.
         real(real64) :: m_stepSize = 0.0d0
-        !> A pointer to the routine used to collect the solution from the
-        !! RADAU5 integrator.
-        procedure(ode_collect_results), pointer, nopass :: m_collector => null()
     contains
         !> @brief Takes a single integration step towards the desired point.
         !!
@@ -2247,41 +2309,6 @@ module integral_core
         !! @param[in,out] this The ode_irk object.
         !! @param[in] x The tolerance value.
         procedure, public :: set_newton_iteration_tolerance => oirk_set_newton_tol
-        !> @brief Performs the integration.
-        !!
-        !! @par Syntax
-        !! @code{.f90}
-        !! logical function integrate(class(ode_irk) this, class(ode_helper) fcnobj, real(real64) x(:), real(real64) y(:), optional class(errors) err)
-        !! @endcode
-        !!
-        !! @param[in,out] this The ode_irk object.
-        !! @param[in,out] fcnobj The ode_helper object containing the equations
-        !!  to integrate.
-        !! @param[in] x An array containing the values of the independent
-        !!  variable at which the solution is desired.  There must be at least
-        !!  two values in this array.
-        !! @param[in] y An N-element array containing the initial conditions for
-        !!  each of the N ODEs.
-        !! @param[in,out] err An optional output that can be used to provide
-        !!  an error handling mechanism.  If not provided, a default error
-        !!  handling mechanism will be utilized.  Possible errors that may
-        !!  be encountered are as follows.
-        !!  - INT_INVALID_INPUT_ERROR: An invalid input was supplied.
-        !!  - INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available.
-        !!  - INT_LACK_OF_DEFINITION_ERROR: Occurs if no equations have been
-        !!      defined.
-        !!  - INT_ARRAY_SIZE_MISMATCH_ERROR: Occurs if @p y is not sized to
-        !!      match the problem as defined in @p fcnobj, or if the tolerance
-        !!      arrays are not sized to match the problem as defined in
-        !!      @p fcnobj.
-        !!  Notice, specific integrators may have additional errors.  See the
-        !!  @p step routine of the appropriate integrator for more information.
-        !!
-        !! @return Returns the solution in a matrix of N+1 columns.  The
-        !!  first column contains the values of the independent variable at
-        !!  which the solution was computed.  The remaining columns contain the
-        !!  solution points for each ODE.
-        procedure, public :: integrate => oirk_integrate
 
         procedure, private :: init_workspace => oirk_init_workspace
     end type
@@ -2367,14 +2394,186 @@ module integral_core
             class(ode_irk), intent(inout) :: this
             real(real64), intent(in) :: x
         end subroutine
-
-        module function oirk_integrate(this, fcnobj, x, y, err) result(rst)
-            class(ode_irk), intent(inout) :: this
-            class(ode_helper), intent(inout) :: fcnobj
-            real(real64), intent(in), dimension(:) :: x, y
-            class(errors), intent(inout), optional, target :: err
-            real(real64), allocatable, dimension(:,:) :: rst
-        end function
     end interface
 
+! ******************************************************************************
+! INTEGRAL_ODE_RK45.F90
+! ------------------------------------------------------------------------------
+    !> @brief Defines a Runge-Kutta integrator based upon the 4th/5th order
+    !! Dormand-Prince formulation.  This integrator solves the system of
+    !! equations Y' = F(X, Y), and is best suited for non-stiff problems.
+    !!
+    !! @par Remarks
+    !! The integrator utilizes the DOPRI5 code to solve the system of equations.
+    !! Notice, this system can solve the system of equations Y' = F(X, Y), it 
+    !! cannot handle constraints on the solution or the inclusion of a mass 
+    !! matrix.  If constraints are necessary then @p ode_auto is recommended; 
+    !! however, if a mass matrix is defined such that the problem is
+    !! M * Y' = F(X, Y) then @p ode_irk is recommended.
+    !!
+    !! @par Example
+    !! The following example illustrates the use of @p ode_rk45 and compares 
+    !! with @p ode_irko to determine the solution to Duffing's equation.
+    !! @code{.f90}
+    !! program example
+    !!     use iso_fortran_env
+    !!     use integral_core
+    !!     use fplot_core
+    !!     implicit none
+    !!
+    !!     ! Local Variables
+    !!     procedure(ode_fcn), pointer :: ptr
+    !!     type(ode_helper) :: fcn
+    !!     type(ode_rk45) :: integrator1
+    !!     type(ode_irk) :: integrator2
+    !!     type(plot_2d) :: plt
+    !!     type(plot_data_2d) :: d1, d2
+    !!     class(plot_axis), pointer :: xAxis, yAxis
+    !!     type(legend), pointer :: lgnd
+    !!     real(real64) :: ts(2), ic(2)
+    !!     real(real64), allocatable, dimension(:,:) :: z1, z2
+    !!
+    !!     ! Set up the integrators
+    !!     ptr => eqns
+    !!     call fcn%define_equations(2, ptr)
+    !!
+    !!     ! Compute the solution
+    !!     ts = [0.0d0, 1.0d2]
+    !!     ic = [0.0d0, 0.0d0]
+    !!     z1 = integrator1%integrate(fcn, ts, ic)
+    !!     z2 = integrator2%integrate(fcn, ts, ic)
+    !!
+    !!     ! Display the number of solution points in each
+    !!     print '(AI0)', "ODE_RK45 Solution Point Count: ", size(z1, 1)
+    !!     print '(AI0)', "ODE_IRK Solution Point Count: ", size(z2, 1)
+    !!
+    !!     ! Plot the solution
+    !!     call plt%initialize()
+    !!     call plt%set_font_size(14)
+    !!
+    !!     lgnd => plt%get_legend()
+    !!     call lgnd%set_is_visible(.true.)
+    !!     call lgnd%set_vertical_position(LEGEND_BOTTOM)
+    !!
+    !!     xAxis => plt%get_x_axis()
+    !!     yAxis => plt%get_y_axis()
+    !!
+    !!     call xAxis%set_title("t")
+    !!     call yAxis%set_title("x(t)")
+    !!     call plt%set_title("Runge-Kutta Method Comparison")
+    !!
+    !!     call d1%set_name("4-5 Method")
+    !!     call d1%define_data(z1(:,1), z1(:,2))
+    !!     call plt%push(d1)
+    !!
+    !!     call d2%set_name("Implicit")
+    !!     call d2%define_data(z2(:,1), z2(:,2))
+    !!     call d2%set_line_color(CLR_RED)
+    !!     call d2%set_line_style(LINE_DASHED)
+    !!     call d2%set_line_width(2.0)
+    !!     call plt%push(d2)
+    !!
+    !!     call plt%draw()
+    !!
+    !! contains
+    !!     ! This is Duffing's equation of the form: 
+    !!     ! x" + s*x' + a*x + b*x**3 = g*sin(w * t)
+    !!     subroutine eqns(t, x, dxdt)
+    !!         real(real64), intent(in) :: t
+    !!         real(real64), intent(in), dimension(:) :: x
+    !!         real(real64), intent(out), dimension(:) :: dxdt
+    !!
+    !!         ! Variables
+    !!         real(real64), parameter :: s = 0.3d0
+    !!         real(real64), parameter :: a = -1.0d0
+    !!         real(real64), parameter :: b = 1.0d0
+    !!         real(real64), parameter :: g = 0.2d0
+    !!         real(real64), parameter :: w = 1.2d0
+    !!
+    !!         ! Derivatives
+    !!         dxdt(1) = x(2)
+    !!         dxdt(2) = g * sin(w * t) - (s * x(2) + a * x(1) + b * x(1)**3)
+    !!     end subroutine
+    !! end program
+    !! @endcode
+    !! The above program produces the following output.
+    !! @code{.txt}
+    !! ODE_RK45 Solution Point Count: 589
+    !! ODE_IRK Solution Point Count: 883
+    !! @endcode
+    !! @image html runge_kutta_comparison_duffing.png
+    type, extends(ode_integrator2) :: ode_rk45
+    private
+        !> A workspace array.
+        real(real64), allocatable, dimension(:) :: m_rwork
+        !> An integer workspace array.
+        integer(int32), allocatable, dimension(:) :: m_iwork
+    contains
+        !> @brief Takes a single integration step towards the desired point.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical function step(class(ode_rk45) this, class(ode_helper) fcn, real(real64) x, real(real64) y(:), real(real64) xout, real(real64) rtol(:), real(real64) atol(:), optional class(errors) err)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_rk45 object.
+        !! @param[in,out] fcn An ode_helper object containing the ODEs to
+        !!  integrate.
+        !! @param[in,out] x On input, the value of the independent variable at
+        !!  which to start.  On output, the value of the independent variable at
+        !!  which integration terminated.
+        !! @param[in,out] y On input, the value(s) of the dependent variable(s)
+        !!  at the initial value given in @p x.  On output, the value(s) of the
+        !!  dependent variable(s) as evaluated at the output given in @p x.
+        !! @param[in] xout The value of the independent variable at which the
+        !!  solution is desired.
+        !! @param[in] rtol An array containing relative tolerance information
+        !!  for each ODE.
+        !! @param[in] atol An array containing absolute tolerance information
+        !!  for each ODE.
+        !! @param[in,out] err An optional output that can be used to provide
+        !!  an error handling mechanism.  If not provided, a default error
+        !!  handling mechanism will be utilized.  Possible errors that may
+        !!  be encountered are as follows.
+        !!
+        !! @return Returns true if the integrator requests a stop; else, false,
+        !!  to continue as normal.
+        procedure, public :: step => ork45_step
+        !> @brief Resets the state of the integrator.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine reset(class(ode_rk45) this)
+        !! @endcode
+        !!
+        !! @param[in,out] this The ode_rk45 object.
+        procedure, public :: reset => ork45_reset_integrator
+
+        procedure, private :: init_workspace => ork45_init_workspace
+    end type
+
+    interface
+        module function ork45_step(this, fcn, x, y, xout, rtol, atol, err) result(brk)
+            class(ode_rk45), intent(inout) :: this
+            class(ode_helper), intent(inout) :: fcn
+            real(real64), intent(inout) :: x
+            real(real64), intent(inout), dimension(:) :: y
+            real(real64), intent(in) :: xout
+            real(real64), intent(in), dimension(:) :: rtol, atol
+            class(errors), intent(inout), optional, target :: err
+            logical :: brk
+        end function
+
+        module subroutine ork45_reset_integrator(this)
+            class(ode_rk45), intent(inout) :: this
+        end subroutine
+
+        module subroutine ork45_init_workspace(this, liw, lrw, err)
+            class(ode_rk45), intent(inout) :: this
+            integer(int32), intent(in) :: liw, lrw
+            class(errors), intent(inout) :: err
+        end subroutine
+    end interface
+
+! ------------------------------------------------------------------------------
 end module

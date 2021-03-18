@@ -30,3 +30,7 @@ target_link_libraries(infinite_integral_example_1 integral)
 # Infinite Limit Integration Example 2
 add_executable(infinite_integral_example_2 infinite_integral_example_2.f90)
 target_link_libraries(infinite_integral_example_2 integral)
+
+# Runge-Kutta Example 1
+add_executable(rk_example_1 rk_example_1.f90)
+target_link_libraries(rk_example_1 integral fplot fcore)
