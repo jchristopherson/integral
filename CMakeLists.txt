@@ -13,11 +13,7 @@ find_package(ferror 1.3.0)
 
 # If FERROR is not installed on the system, build the default implementation
 if (NOT ${ferror_FOUND})
-    message(STATUS "FERROR not found.  The default implementation will be used.")
-    add_subdirectory(src/external/ferror)
-    include_directories(src/external/ferror/include)
-    set(FERROR_LIBRARIES ferror)
-    set(ferror_LibLocation ${ferror_BINARY_DIR})
+    message(STATUS "FERROR not found.")
 else()
     message(STATUS "An acceptable version of FERROR (v" ${ferror_VERSION} ") was found, and will be utilized.")
     include_directories(${ferror_INCLUDE_DIRS})
