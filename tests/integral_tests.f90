@@ -3,6 +3,7 @@
 program tests
     use finite_interval_tests
     use ode_tests
+    use infinite_interval_tests
 
     ! Local Variables
     logical :: test_result, overall
@@ -25,6 +26,12 @@ program tests
     if (.not.test_result) overall = .false.
 
     test_result = ode_test_2()
+    if (.not.test_result) overall = .false.
+
+    test_result = inf_integral_test_1()
+    if (.not.test_result) overall = .false.
+
+    test_result = inf_integral_test_2()
     if (.not.test_result) overall = .false.
 
     ! Output

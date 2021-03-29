@@ -4,7 +4,7 @@ project(integral C CXX Fortran)
 
 # Define version information
 set(INTEGRAL_MAJOR_VERSION 1)
-set(INTEGRAL_MINOR_VERSION 0)
+set(INTEGRAL_MINOR_VERSION 1)
 set(INTEGRAL_PATCH_VERSION 0)
 set(INTEGRAL_VERSION ${INTEGRAL_MAJOR_VERSION}.${INTEGRAL_MINOR_VERSION}.${INTEGRAL_PATCH_VERSION})
 
@@ -13,11 +13,7 @@ find_package(ferror 1.3.0)
 
 # If FERROR is not installed on the system, build the default implementation
 if (NOT ${ferror_FOUND})
-    message(STATUS "FERROR not found.  The default implementation will be used.")
-    add_subdirectory(src/external/ferror)
-    include_directories(src/external/ferror/include)
-    set(FERROR_LIBRARIES ferror)
-    set(ferror_LibLocation ${ferror_BINARY_DIR})
+    message(STATUS "FERROR not found.")
 else()
     message(STATUS "An acceptable version of FERROR (v" ${ferror_VERSION} ") was found, and will be utilized.")
     include_directories(${ferror_INCLUDE_DIRS})
@@ -34,8 +30,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
 endif()
 
-# By default, shared library
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 # Export all symbols on Windows when building shared libraries
 SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)

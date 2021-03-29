@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage{ifthen}
+\usepackage{epsfig}
+\usepackage[utf8]{inputenc}
+\usepackage{newunicodechar}
+  \newunicodechar{⁻}{${}^{-}$}% Superscript minus
+  \newunicodechar{²}{${}^{2}$}% Superscript two
+  \newunicodechar{³}{${}^{3}$}% Superscript three
+
+\pagestyle{empty}
+\begin{document}
+$ \int_{a}^{b} x^2 \,dx \int_{-\infty}^{\infty} \frac{1}{1+x^2} \,dx $
+\pagebreak
+
+\end{document}

@@ -87,4 +87,18 @@ contains
     end subroutine
 
 ! ------------------------------------------------------------------------------
+    pure module function oh_is_mass_defined(this) result(rst)
+        class(ode_helper), intent(in) :: this
+        logical :: rst
+        rst = associated(this%m_mass)
+    end function
+
+! ------------------------------------------------------------------------------
+    module subroutine oh_eval_mass(this, m)
+        class(ode_helper), intent(inout) :: this
+        real(real64), intent(out), dimension(:,:) :: m
+        call this%m_mass(m)
+    end subroutine
+
+! ------------------------------------------------------------------------------
 end submodule

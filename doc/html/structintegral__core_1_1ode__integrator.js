@@ -9,6 +9,7 @@ var structintegral__core_1_1ode__integrator =
     [ "get_min_buffer_size", "structintegral__core_1_1ode__integrator.html#af9643c32f7e7f86315515ac0907d7187", null ],
     [ "get_provide_all_output", "structintegral__core_1_1ode__integrator.html#a5e1fc2ece794339bc5a0b7fca9639680", null ],
     [ "get_relative_tolerances", "structintegral__core_1_1ode__integrator.html#a3941696b3ba4def453621f42666e23ce", null ],
+    [ "initialize_integrator", "structintegral__core_1_1ode__integrator.html#a88f870e35c3a9fe596908b2d3dedfc9c", null ],
     [ "integrate", "structintegral__core_1_1ode__integrator.html#aa29c0067d3b5a56f084b1f5425356faa", null ],
     [ "reset", "structintegral__core_1_1ode__integrator.html#a0d54424dbe1176b8811e7ec66ac597ce", null ],
     [ "set_absolute_tolerances", "structintegral__core_1_1ode__integrator.html#a1247861c7b4178b1503f2b2eec911539", null ],
