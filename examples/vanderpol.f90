@@ -27,13 +27,14 @@ program example
     ic = [2.0d0, 0.0d0]
 
     ! Compute the solution
-    x1 = integrator1%integrate(fcn, t, ic)
-    x2 = integrator2%integrate(fcn, t, ic)
+    x1 = integrator1%integrate(fcn, t, ic)  ! ODE_IRK integrator
+    x2 = integrator2%integrate(fcn, t, ic)  ! ODE_AUTO integrator
 
     ! Display the number of solution points in each
     print '(AI0)', "ODE_IRK Solution Point Count: ", size(x1, 1)
     print '(AI0)', "ODE_AUTO Solution Point Count: ", size(x2, 1)
 
+    ! ---------------------------- PLOTTING CODE ----------------------------- !
     ! Plot the solution
     call plt%initialize()
     call plt%set_font_size(14)
