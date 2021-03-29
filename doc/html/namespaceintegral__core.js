@@ -14,9 +14,11 @@ var namespaceintegral__core =
     [ "ode_fcn", "interfaceintegral__core_1_1ode__fcn.html", "interfaceintegral__core_1_1ode__fcn" ],
     [ "ode_helper", "structintegral__core_1_1ode__helper.html", "structintegral__core_1_1ode__helper" ],
     [ "ode_integrator", "structintegral__core_1_1ode__integrator.html", "structintegral__core_1_1ode__integrator" ],
+    [ "ode_integrator2", "structintegral__core_1_1ode__integrator2.html", "structintegral__core_1_1ode__integrator2" ],
     [ "ode_integrator_interface", "interfaceintegral__core_1_1ode__integrator__interface.html", "interfaceintegral__core_1_1ode__integrator__interface" ],
     [ "ode_integrator_reset", "interfaceintegral__core_1_1ode__integrator__reset.html", "interfaceintegral__core_1_1ode__integrator__reset" ],
     [ "ode_irk", "structintegral__core_1_1ode__irk.html", "structintegral__core_1_1ode__irk" ],
     [ "ode_jacobian", "interfaceintegral__core_1_1ode__jacobian.html", "interfaceintegral__core_1_1ode__jacobian" ],
-    [ "ode_mass", "interfaceintegral__core_1_1ode__mass.html", "interfaceintegral__core_1_1ode__mass" ]
+    [ "ode_mass", "interfaceintegral__core_1_1ode__mass.html", "interfaceintegral__core_1_1ode__mass" ],
+    [ "ode_rk45", "structintegral__core_1_1ode__rk45.html", "structintegral__core_1_1ode__rk45" ]
 ];

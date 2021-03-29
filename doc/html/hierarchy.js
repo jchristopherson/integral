@@ -16,7 +16,10 @@ var hierarchy =
     [ "integral_core::ode_helper", "structintegral__core_1_1ode__helper.html", null ],
     [ "integral_core::ode_integrator", "structintegral__core_1_1ode__integrator.html", [
       [ "integral_core::ode_auto", "structintegral__core_1_1ode__auto.html", null ],
-      [ "integral_core::ode_irk", "structintegral__core_1_1ode__irk.html", null ]
+      [ "integral_core::ode_integrator2", "structintegral__core_1_1ode__integrator2.html", [
+        [ "integral_core::ode_irk", "structintegral__core_1_1ode__irk.html", null ],
+        [ "integral_core::ode_rk45", "structintegral__core_1_1ode__rk45.html", null ]
+      ] ]
     ] ],
     [ "integral_core::ode_integrator_interface", "interfaceintegral__core_1_1ode__integrator__interface.html", null ],
     [ "integral_core::ode_integrator_reset", "interfaceintegral__core_1_1ode__integrator__reset.html", null ],

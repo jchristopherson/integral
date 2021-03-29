@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>integral: integral_core::ode_auto Type Reference</title>
+<title>integral: integral_core::ode_integrator2 Type Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('structintegral__core_1_1ode__auto.html','');});
+$(document).ready(function(){initNavTree('structintegral__core_1_1ode__integrator2.html','');});
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -95,37 +95,32 @@ $(document).ready(function(){initNavTree('structintegral__core_1_1ode__auto.html
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="structintegral__core_1_1ode__auto-members.html">List of all members</a>  </div>
+<a href="structintegral__core_1_1ode__integrator2-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">integral_core::ode_auto Type Reference</div>  </div>
+<div class="title">integral_core::ode_integrator2 Type Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Defines an integrator for systems of first order ODEs that is capable of switching between an Adams method and a BDF method automatically. This integrator is able to handle both stiff and non-stiff systems of equations.  
- <a href="structintegral__core_1_1ode__auto.html#details">More...</a></p>
+<p>This class is an extension of the <a class="el" href="structintegral__core_1_1ode__integrator.html">ode_integrator</a> type, but tailored to support the Fortran libraries that require subroutine support to collect output from the integrator (e.g. RADAU5, DOPRI5, etc.).  
+ <a href="structintegral__core_1_1ode__integrator2.html#details">More...</a></p>
 <div class="dynheader">
-Inheritance diagram for integral_core::ode_auto:</div>
+Inheritance diagram for integral_core::ode_integrator2:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="structintegral__core_1_1ode__auto.png" usemap="#integral_5Fcore::ode_5Fauto_map" alt=""/>
-  <map id="integral_5Fcore::ode_5Fauto_map" name="integral_5Fcore::ode_5Fauto_map">
-<area href="structintegral__core_1_1ode__integrator.html" alt="integral_core::ode_integrator" shape="rect" coords="0,0,175,24"/>
+  <img src="structintegral__core_1_1ode__integrator2.png" usemap="#integral_5Fcore::ode_5Fintegrator2_map" alt=""/>
+  <map id="integral_5Fcore::ode_5Fintegrator2_map" name="integral_5Fcore::ode_5Fintegrator2_map">
+<area href="structintegral__core_1_1ode__integrator.html" alt="integral_core::ode_integrator" shape="rect" coords="96,0,278,24"/>
+<area href="structintegral__core_1_1ode__irk.html" title="Defines an integrator for systems of first order ODEs that is capable of solving the system of equati..." alt="integral_core::ode_irk" shape="rect" coords="0,112,182,136"/>
+<area href="structintegral__core_1_1ode__rk45.html" title="Defines a Runge-Kutta integrator based upon the 4th/5th order Dormand-Prince formulation...." alt="integral_core::ode_rk45" shape="rect" coords="192,112,374,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa750d26ae0ae31b5e7c1d45a11a4a5f0"><td class="memItemLeft" align="right" valign="top">procedure, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__auto.html#aa750d26ae0ae31b5e7c1d45a11a4a5f0">step</a> =&gt; oa_step</td></tr>
-<tr class="memdesc:aa750d26ae0ae31b5e7c1d45a11a4a5f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a single integration step towards the desired point.  <a href="structintegral__core_1_1ode__auto.html#aa750d26ae0ae31b5e7c1d45a11a4a5f0">More...</a><br /></td></tr>
-<tr class="separator:aa750d26ae0ae31b5e7c1d45a11a4a5f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac36e4a651771f34246340c806504434b"><td class="memItemLeft" align="right" valign="top">procedure, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__auto.html#ac36e4a651771f34246340c806504434b">reset</a> =&gt; oa_reset_integrator</td></tr>
-<tr class="memdesc:ac36e4a651771f34246340c806504434b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the state of the integrator.  <a href="structintegral__core_1_1ode__auto.html#ac36e4a651771f34246340c806504434b">More...</a><br /></td></tr>
-<tr class="separator:ac36e4a651771f34246340c806504434b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1398b5464a33536ccfea7ca999625c7f"><td class="memItemLeft" align="right" valign="top">procedure, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__auto.html#a1398b5464a33536ccfea7ca999625c7f">get_constraint_status</a> =&gt; oa_get_constraint_info</td></tr>
-<tr class="memdesc:a1398b5464a33536ccfea7ca999625c7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the status of each constraint equation.  <a href="structintegral__core_1_1ode__auto.html#a1398b5464a33536ccfea7ca999625c7f">More...</a><br /></td></tr>
-<tr class="separator:a1398b5464a33536ccfea7ca999625c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81c1c5e498337ef05d800161b1d159e2"><td class="memItemLeft" align="right" valign="top">procedure, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__integrator2.html#a81c1c5e498337ef05d800161b1d159e2">integrate</a> =&gt; oi2_integrate</td></tr>
+<tr class="memdesc:a81c1c5e498337ef05d800161b1d159e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the integration.  <a href="structintegral__core_1_1ode__integrator2.html#a81c1c5e498337ef05d800161b1d159e2">More...</a><br /></td></tr>
+<tr class="separator:a81c1c5e498337ef05d800161b1d159e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structintegral__core_1_1ode__integrator"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structintegral__core_1_1ode__integrator')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structintegral__core_1_1ode__integrator.html">integral_core::ode_integrator</a></td></tr>
 <tr class="memitem:aa29c0067d3b5a56f084b1f5425356faa inherit pub_methods_structintegral__core_1_1ode__integrator"><td class="memItemLeft" align="right" valign="top">procedure, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__integrator.html#aa29c0067d3b5a56f084b1f5425356faa">integrate</a> =&gt; oi_integrate</td></tr>
 <tr class="memdesc:aa29c0067d3b5a56f084b1f5425356faa inherit pub_methods_structintegral__core_1_1ode__integrator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the integration.  <a href="structintegral__core_1_1ode__integrator.html#aa29c0067d3b5a56f084b1f5425356faa">More...</a><br /></td></tr>
@@ -191,112 +186,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0d54424dbe1176b8811e7ec66ac597ce inherit pub_methods_structintegral__core_1_1ode__integrator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the state of the integrator.  <a href="structintegral__core_1_1ode__integrator.html#a0d54424dbe1176b8811e7ec66ac597ce">More...</a><br /></td></tr>
 <tr class="separator:a0d54424dbe1176b8811e7ec66ac597ce inherit pub_methods_structintegral__core_1_1ode__integrator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a558e473b0438b3acab769c9baaf906a3"><td class="memItemLeft" align="right" valign="top"><a id="a558e473b0438b3acab769c9baaf906a3"></a>
-procedure, private&#160;</td><td class="memItemRight" valign="bottom"><b>init_workspace</b> =&gt; oa_init_workspace</td></tr>
-<tr class="separator:a558e473b0438b3acab769c9baaf906a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:acf053c0ab90c954fbea452537ede1933"><td class="memItemLeft" align="right" valign="top"><a id="acf053c0ab90c954fbea452537ede1933"></a>
-real(real64), dimension(:), allocatable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__auto.html#acf053c0ab90c954fbea452537ede1933">m_rwork</a></td></tr>
-<tr class="memdesc:acf053c0ab90c954fbea452537ede1933"><td class="mdescLeft">&#160;</td><td class="mdescRight">A workspace array. <br /></td></tr>
-<tr class="separator:acf053c0ab90c954fbea452537ede1933"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af672d690a71a7658f25d7bf066fcea98"><td class="memItemLeft" align="right" valign="top"><a id="af672d690a71a7658f25d7bf066fcea98"></a>
-integer(int32), dimension(:), allocatable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__auto.html#af672d690a71a7658f25d7bf066fcea98">m_iwork</a></td></tr>
-<tr class="memdesc:af672d690a71a7658f25d7bf066fcea98"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integer workspace array. <br /></td></tr>
-<tr class="separator:af672d690a71a7658f25d7bf066fcea98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27a6078feaf046439a3678844c37788d"><td class="memItemLeft" align="right" valign="top"><a id="a27a6078feaf046439a3678844c37788d"></a>
-integer(int32), dimension(:), allocatable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__auto.html#a27a6078feaf046439a3678844c37788d">m_rststats</a></td></tr>
-<tr class="memdesc:a27a6078feaf046439a3678844c37788d"><td class="mdescLeft">&#160;</td><td class="mdescRight">An array used to contain information regarding constraint status. A value of 1 indicates the constraint was satisfied; else, a value of 0 indicates the constraint wasn't satisfied. There is one entry in the array for each constraint. <br /></td></tr>
-<tr class="separator:a27a6078feaf046439a3678844c37788d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57af60d28a09024a16287e13c77330f8"><td class="memItemLeft" align="right" valign="top"><a id="a57af60d28a09024a16287e13c77330f8"></a>
-integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__auto.html#a57af60d28a09024a16287e13c77330f8">m_istate</a> = 1</td></tr>
-<tr class="memdesc:a57af60d28a09024a16287e13c77330f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This flag is used directly by ODEPACK. Set to 1 for initial call. <br /></td></tr>
-<tr class="separator:a57af60d28a09024a16287e13c77330f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc491245987889a2140849b3f643bbbb"><td class="memItemLeft" align="right" valign="top"><a id="acc491245987889a2140849b3f643bbbb"></a>
+procedure(<a class="el" href="interfaceintegral__core_1_1ode__collect__results.html">ode_collect_results</a>), pointer, nopass&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__integrator2.html#acc491245987889a2140849b3f643bbbb">m_collector</a> =&gt; null()</td></tr>
+<tr class="memdesc:acc491245987889a2140849b3f643bbbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">A pointer to the routine used to collect the solution from the integrator. <br /></td></tr>
+<tr class="separator:acc491245987889a2140849b3f643bbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Defines an integrator for systems of first order ODEs that is capable of switching between an Adams method and a BDF method automatically. This integrator is able to handle both stiff and non-stiff systems of equations. </p>
-<dl class="section user"><dt>Remarks</dt><dd>This integrator is able to handle both stiff and non-stiff equations with ease by automatically switching between a BDF method and an Adams method dependent upon the nature of the problem terrain. With that said, this integrator is only capable of solving the system of equations Y' = F(X, Y); however, this integrator is capable of handling constraints on the solution. If your problem requires solution of M * Y' = F(X, Y), then it is recommended to utilize an integrator like <code><a class="el" href="structintegral__core_1_1ode__irk.html" title="Defines an integrator for systems of first order ODEs that is capable of solving the system of equati...">ode_irk</a></code>.</dd></dl>
-<dl class="section user"><dt>Example</dt><dd>The following example illustrates the use of this integrator to solve the Van Der Pol equation, which is a second-order ODE that does exhibit difficult and stiff behavior. <div class="fragment"><div class="line"><span class="keyword">program</span> example</div>
-<div class="line">    <span class="keywordtype">use </span>iso_fortran_env</div>
-<div class="line">    <span class="keywordtype">use </span><a class="code" href="namespaceintegral__core.html">integral_core</a></div>
-<div class="line">    <span class="keywordtype">use </span>fplot_core</div>
-<div class="line">    <span class="keywordtype">implicit none</span></div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">! Local Variables</span></div>
-<div class="line">    <span class="keywordtype">type</span>(ode_helper) :: fcn</div>
-<div class="line">    <span class="keywordtype">type</span>(ode_auto) :: integrator</div>
-<div class="line">    <span class="keywordtype">procedure</span>(ode_fcn), <span class="keywordtype">pointer</span> :: ptr</div>
-<div class="line"><span class="keywordtype">    real</span>(real64) :: ic(2), t(2)</div>
-<div class="line"><span class="keywordtype">    real</span>(real64), <span class="keywordtype">allocatable</span>, <span class="keywordtype">dimension(:,:)</span> :: x</div>
-<div class="line">    <span class="keywordtype">type</span>(plot_2d) :: plt</div>
-<div class="line">    <span class="keywordtype">type</span>(plot_data_2d) :: d1</div>
-<div class="line">    <span class="keywordtype">class</span>(plot_axis), <span class="keywordtype">pointer</span> :: xAxis, yAxis</div>
-<div class="line">    <span class="keywordtype">class</span>(legend), <span class="keywordtype">pointer</span> :: lgnd</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">! Set up the integrator</span></div>
-<div class="line">    ptr =&gt; vdp</div>
-<div class="line">    <span class="keyword">call </span>fcn%define_equations(2, ptr)</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">! Define the initial conditions</span></div>
-<div class="line">    t = [0.0d0, 8.0d1]</div>
-<div class="line">    ic = [2.0d0, 0.0d0]</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">! Compute the solution</span></div>
-<div class="line">    x = integrator%integrate(fcn, t, ic)</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">! Plot the solution</span></div>
-<div class="line">    <span class="keyword">call </span>plt%initialize()</div>
-<div class="line">    <span class="keyword">call </span>plt%set_font_size(14)</div>
-<div class="line"> </div>
-<div class="line">    lgnd =&gt; plt%get_legend()</div>
-<div class="line">    <span class="keyword">call </span>lgnd%set_is_visible(.false.)</div>
-<div class="line"> </div>
-<div class="line">    xaxis =&gt; plt%get_x_axis()</div>
-<div class="line">    <span class="keyword">call </span>xaxis%set_title(<span class="stringliteral">&quot;t&quot;</span>)</div>
-<div class="line"> </div>
-<div class="line">    yaxis =&gt; plt%get_y_axis()</div>
-<div class="line">    <span class="keyword">call </span>yaxis%set_title(<span class="stringliteral">&quot;x(t)&quot;</span>)</div>
-<div class="line"> </div>
-<div class="line">    <span class="keyword">call </span>d1%set_name(<span class="stringliteral">&quot;x(t)&quot;</span>)</div>
-<div class="line">    <span class="keyword">call </span>d1%set_line_width(2.0)</div>
-<div class="line">    <span class="keyword">call </span>d1%set_line_color(clr_blue)</div>
-<div class="line">    <span class="keyword">call </span>d1%define_data(x(:,1), x(:,2))</div>
-<div class="line"> </div>
-<div class="line">    <span class="keyword">call </span>plt%push(d1)</div>
-<div class="line">    <span class="keyword">call </span>plt%draw()</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">contains</span></div>
-<div class="line">    <span class="comment">! Van Der Pol Equation</span></div>
-<div class="line">    <span class="comment">! x&quot; + x - mu * (1 - x**2) * x&#39; = 0</span></div>
-<div class="line">    <span class="keyword">subroutine </span>vdp(t, x, dxdt)</div>
-<div class="line"><span class="keywordtype">        real</span>(real64), <span class="keywordtype">intent(in)</span> :: t</div>
-<div class="line"><span class="keywordtype">        real</span>(real64), <span class="keywordtype">intent(in)</span>, <span class="keywordtype">dimension(:)</span> :: x</div>
-<div class="line"><span class="keywordtype">        real</span>(real64), <span class="keywordtype">intent(out)</span>, <span class="keywordtype">dimension(:)</span> :: dxdt</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">        real</span>(real64), <span class="keywordtype">parameter</span> :: mu = 20.0d0</div>
-<div class="line"> </div>
-<div class="line">        dxdt(1) = x(2)</div>
-<div class="line">        dxdt(2) = mu * (1.0d0 - x(1)**2) * x(2) - x(1)</div>
-<div class="line">    <span class="keyword">end subroutine</span></div>
-<div class="line"><span class="keyword">end program</span></div>
-</div><!-- fragment --> The above program produces the following output. <div class="image">
-<img src="vanderpol_example.png" alt=""/>
-</div>
- </dd></dl>
+<div class="textblock"><p>This class is an extension of the <a class="el" href="structintegral__core_1_1ode__integrator.html">ode_integrator</a> type, but tailored to support the Fortran libraries that require subroutine support to collect output from the integrator (e.g. RADAU5, DOPRI5, etc.). </p>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01832">1832</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01946">1946</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
-<a id="a1398b5464a33536ccfea7ca999625c7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1398b5464a33536ccfea7ca999625c7f">&#9670;&nbsp;</a></span>get_constraint_status()</h2>
+<a id="a81c1c5e498337ef05d800161b1d159e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81c1c5e498337ef05d800161b1d159e2">&#9670;&nbsp;</a></span>integrate()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">procedure, public integral_core::ode_auto::get_constraint_status </td>
+          <td class="memname">procedure, public integral_core::ode_integrator2::integrate </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -304,92 +213,28 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
       </table>
 </div><div class="memdoc">
 
-<p>Gets the status of each constraint equation. </p>
-<dl class="section user"><dt>Syntax</dt><dd><div class="fragment"><div class="line"><span class="keyword">logical(:) </span><span class="keyword">function </span>get_constraint_status(class(ode_auto) this)</div>
+<p>Performs the integration. </p>
+<dl class="section user"><dt>Syntax</dt><dd><div class="fragment"><div class="line"><span class="keyword">logical </span><span class="keyword">function </span>integrate(class(ode_integrator2) this, class(ode_helper) fcnobj, real(real64) x(:), real(real64) y(:), optional class(errors) err)</div>
 </div><!-- fragment --></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>The <a class="el" href="structintegral__core_1_1ode__auto.html" title="Defines an integrator for systems of first order ODEs that is capable of switching between an Adams m...">ode_auto</a> object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An array containing the status of each constraint equation. A value of true indicates that the constraint was satisfied; else, a value of false indicates the constraint was not satisfied. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01906">1906</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
-
-</div>
-</div>
-<a id="ac36e4a651771f34246340c806504434b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac36e4a651771f34246340c806504434b">&#9670;&nbsp;</a></span>reset()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">procedure, public integral_core::ode_auto::reset </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Resets the state of the integrator. </p>
-<dl class="section user"><dt>Syntax</dt><dd><div class="fragment"><div class="line"><span class="keyword">subroutine </span>reset(class(ode_auto) this)</div>
-</div><!-- fragment --></dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>The <a class="el" href="structintegral__core_1_1ode__auto.html" title="Defines an integrator for systems of first order ODEs that is capable of switching between an Adams m...">ode_auto</a> object. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01894">1894</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
-
-</div>
-</div>
-<a id="aa750d26ae0ae31b5e7c1d45a11a4a5f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa750d26ae0ae31b5e7c1d45a11a4a5f0">&#9670;&nbsp;</a></span>step()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">procedure, public integral_core::ode_auto::step </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Takes a single integration step towards the desired point. </p>
-<dl class="section user"><dt>Syntax</dt><dd><div class="fragment"><div class="line"><span class="keyword">logical </span><span class="keyword">function </span>step(class(ode_auto) this, class(ode_helper) fcn, real(real64) x, real(real64) y(:), real(real64) xout, real(real64) rtol(:), real(real64) atol(:), optional class(errors) err)</div>
-</div><!-- fragment --></dd></dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>The <a class="el" href="structintegral__core_1_1ode__auto.html" title="Defines an integrator for systems of first order ODEs that is capable of switching between an Adams m...">ode_auto</a> object. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">fcn</td><td>An <a class="el" href="structintegral__core_1_1ode__helper.html" title="Defines a type used to pass information regarding the ODEs to the solver.">ode_helper</a> object containing the ODEs to integrate. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">x</td><td>On input, the value of the independent variable at which to start. On output, the value of the independent variable at which integration terminated. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">y</td><td>On input, the value(s) of the dependent variable(s) at the initial value given in <code>x</code>. On output, the value(s) of the dependent variable(s) as evaluated at the output given in <code>x</code>. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">xout</td><td>The value of the independent variable at which the solution is desired. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">rtol</td><td>An array containing relative tolerance information for each ODE. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">atol</td><td>An array containing absolute tolerance information for each ODE. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>The <a class="el" href="structintegral__core_1_1ode__integrator2.html" title="This class is an extension of the ode_integrator type, but tailored to support the Fortran libraries ...">ode_integrator2</a> object. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">fcnobj</td><td>The <a class="el" href="structintegral__core_1_1ode__helper.html" title="Defines a type used to pass information regarding the ODEs to the solver.">ode_helper</a> object containing the equations to integrate. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>An array containing the values of the independent variable at which the solution is desired. There must be at least two values in this array. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>An N-element array containing the initial conditions for each of the N ODEs. </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">err</td><td>An optional output that can be used to provide an error handling mechanism. If not provided, a default error handling mechanism will be utilized. Possible errors that may be encountered are as follows.<ul>
-<li>INT_EXCESSIVE_WORK_ERROR: Occurs if excessive work has been done.</li>
-<li>INT_IMPRACTICAL_TOLERANCE_ERROR: Occurs if the user-defined tolerances are not practically achievable.</li>
-<li>INT_INVALID_INPUT_ERROR: Occurs if an invalid input was supplied.</li>
-<li>INT_REPEATED_ERROR_TEST_FAILURE: Occurs if error testing repeatadly fails.</li>
-<li>INT_CONVERGENCE_ERROR: Occurs if the iteration process cannot converge.</li>
-<li>INT_INTEGRAND_BEHAVIOR_ERROR: Occurs if a component of the solution appears to vanish.</li>
+<li>INT_INVALID_INPUT_ERROR: An invalid input was supplied.</li>
+<li>INT_OUT_OF_MEMORY_ERROR: There is insufficient memory available.</li>
+<li>INT_LACK_OF_DEFINITION_ERROR: Occurs if no equations have been defined.</li>
+<li>INT_ARRAY_SIZE_MISMATCH_ERROR: Occurs if <code>y</code> is not sized to match the problem as defined in <code>fcnobj</code>, or if the tolerance arrays are not sized to match the problem as defined in <code>fcnobj</code>. Notice, specific integrators may have additional errors. See the <code>step</code> routine of the appropriate integrator for more information.</li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns true if the integrator requests a stop; else, false, to continue as normal. A possible sitaution resulting in a true value is in the event a constraint has been satisfied. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns the solution in a matrix of N+1 columns. The first column contains the values of the independent variable at which the solution was computed. The remaining columns contain the solution points for each ODE. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01885">1885</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integral__core_8f90_source.html#l01986">1986</a> of file <a class="el" href="integral__core_8f90_source.html">integral_core.f90</a>.</p>
 
 </div>
 </div>
@@ -398,11 +243,10 @@ integer(int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="anamespaceintegral__core_html"><div class="ttname"><a href="namespaceintegral__core.html">integral_core</a></div><div class="ttdoc">integral_core</div><div class="ttdef"><b>Definition:</b> <a href="integral__core_8f90_source.html#l00018">integral_core.f90:18</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespaceintegral__core.html">integral_core</a></li><li class="navelem"><a class="el" href="structintegral__core_1_1ode__auto.html">ode_auto</a></li>
+    <li class="navelem"><a class="el" href="namespaceintegral__core.html">integral_core</a></li><li class="navelem"><a class="el" href="structintegral__core_1_1ode__integrator2.html">ode_integrator2</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.16 </li>

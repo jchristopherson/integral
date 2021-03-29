@@ -8,5 +8,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "integral_ode_auto.f90", "integral__ode__auto_8f90_source.html", null ],
     [ "integral_ode_helper.f90", "integral__ode__helper_8f90_source.html", null ],
     [ "integral_ode_integrator.f90", "integral__ode__integrator_8f90_source.html", null ],
-    [ "integral_ode_irk.f90", "integral__ode__irk_8f90_source.html", null ]
+    [ "integral_ode_integrator2.f90", "integral__ode__integrator2_8f90_source.html", null ],
+    [ "integral_ode_irk.f90", "integral__ode__irk_8f90_source.html", null ],
+    [ "integral_ode_rk45.f90", "integral__ode__rk45_8f90_source.html", null ]
 ];

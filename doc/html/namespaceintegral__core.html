@@ -147,6 +147,9 @@ Data Types</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">type &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__integrator.html">ode_integrator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">type &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__integrator2.html">ode_integrator2</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This class is an extension of the <a class="el" href="structintegral__core_1_1ode__integrator.html">ode_integrator</a> type, but tailored to support the Fortran libraries that require subroutine support to collect output from the integrator (e.g. RADAU5, DOPRI5, etc.).  <a href="structintegral__core_1_1ode__integrator2.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceintegral__core_1_1ode__integrator__interface.html">ode_integrator_interface</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a routine for computing a single integration step in the direction of <code>xout</code>.  <a href="interfaceintegral__core_1_1ode__integrator__interface.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,6 +165,9 @@ Data Types</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceintegral__core_1_1ode__mass.html">ode_mass</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a routine capable of computing the mass matrix of a system of ODE's expressed as M * Y' = F(X, Y) where M is the mass matrix.  <a href="interfaceintegral__core_1_1ode__mass.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">type &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structintegral__core_1_1ode__rk45.html">ode_rk45</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a Runge-Kutta integrator based upon the 4th/5th order Dormand-Prince formulation. This integrator solves the system of equations Y' = F(X, Y), and is best suited for non-stiff problems.  <a href="structintegral__core_1_1ode__rk45.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -226,6 +232,10 @@ integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bot
 integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#ae27aad46cf7d333e09087d140a354b37">int_singular_matrix_error</a> = 15</td></tr>
 <tr class="memdesc:ae27aad46cf7d333e09087d140a354b37"><td class="mdescLeft">&#160;</td><td class="mdescRight">An error flag indicating a singular matrix error. <br /></td></tr>
 <tr class="separator:ae27aad46cf7d333e09087d140a354b37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab09b7103a91de1f16b2fc5bf91d9fbdb"><td class="memItemLeft" align="right" valign="top"><a id="ab09b7103a91de1f16b2fc5bf91d9fbdb"></a>
+integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#ab09b7103a91de1f16b2fc5bf91d9fbdb">int_improper_integrator_error</a> = 16</td></tr>
+<tr class="memdesc:ab09b7103a91de1f16b2fc5bf91d9fbdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">An error flag indicating the integrator is not well suited to the problem. <br /></td></tr>
+<tr class="separator:ab09b7103a91de1f16b2fc5bf91d9fbdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d7872c112bce9111b36213fc38134d9"><td class="memItemLeft" align="right" valign="top"><a id="a7d7872c112bce9111b36213fc38134d9"></a>
 integer(int32), parameter, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceintegral__core.html#a7d7872c112bce9111b36213fc38134d9">int_15_point_rule</a> = 15</td></tr>
 <tr class="memdesc:a7d7872c112bce9111b36213fc38134d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a 15-point Gauss-Kronrod integration rule. <br /></td></tr>
