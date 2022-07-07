@@ -188,9 +188,15 @@ contains
             if (size(this%m_iwork) < liw) then
                 deallocate(this%m_iwork)
                 allocate(this%m_iwork(liw), stat = flag)
+                this%m_iwork = 0
+                this%m_iwork(8) = 12
+                this%m_iwork(9) = 5
             end if
         else
             allocate(this%m_iwork(liw), stat = flag)
+            this%m_iwork = 0
+            this%m_iwork(8) = 12
+            this%m_iwork(9) = 5
         end if
 
         if (flag == 0) then
@@ -198,9 +204,11 @@ contains
                 if (size(this%m_rwork) < lrw) then
                     deallocate(this%m_rwork)
                     allocate(this%m_rwork(lrw), stat = flag)
+                    this%m_rwork = 0.0d0
                 end if
             else
                 allocate(this%m_rwork(lrw), stat = flag)
+                this%m_rwork = 0.0d0
             end if
         end if
 
